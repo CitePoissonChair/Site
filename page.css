@@ -173,7 +173,7 @@ html, body {
 	height: 60vh;
 	margin-left: 30vw;
 	margin-top: 20vh;
-    transform: rotate(-5deg);
+    transform: rotate(-4deg);
 }
 
 #description {
@@ -222,7 +222,7 @@ p1:hover {
 	position: absolute;
 	height: 60vh;
 	margin-left: 30vw;
-	margin-top: 100vh;
+	margin-top: 95vh;
     transform: rotate(-4deg);
 }
 
