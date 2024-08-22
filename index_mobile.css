@@ -1,0 +1,221 @@
+*{  margin: 0;
+  padding: 0;}
+html, body {
+  width: auto;
+ background: rgb(15,15,15);
+}
+
+@font-face {
+    font-family: "yatra_one";
+    src: url("fonts/YatraOne-Regular.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+#rectangle {
+  width: 100vw;
+  height: 21vh;
+  background-color: rgb(15,15,15);
+  top: 0;
+  left: 0;
+  position: fixed;
+}
+
+#cpc {
+    font-family: "";
+	left: 4vh;
+	top: 32.5vh;
+	position: fixed;
+	overflow: visible;
+	white-space: nowrap;
+	cursor: pointer;
+	text-align: center;
+	font-style: bold;
+	font-weight: normal;
+	font-size: 3vh;
+	color: rgb(250,250,250);
+    opacity: 0;
+}
+
+
+#buddy {
+    font-family: "";
+	left: 22.5vh;
+	top: 3vh;
+	position: fixed;
+	overflow: visible;
+	white-space: nowrap;
+	cursor: pointer;
+	text-align: center;
+	font-style: bold;
+	font-weight: normal;
+	font-size: 2.25vh;
+	color: rgb(250,250,250);
+}
+
+#illustrations {
+    font-family: "";
+	left: 40vh;
+	top: 3vh;
+	position: fixed;
+	overflow: visible;
+	white-space: nowrap;
+	cursor: pointer;
+	text-align: center;
+	font-style: bold;
+	font-weight: normal;
+	font-size: 2.25vh;
+	color: rgb(250,250,250);
+}
+
+#sculptures {
+    font-family: "";
+	left: 22.5vh;
+	top: 9vh;
+	position: fixed;
+	overflow: visible;
+	white-space: nowrap;
+	cursor: pointer;
+	text-align: center;
+	font-style: bold;
+	font-weight: normal;
+	font-size: 2.25vh;
+	color: rgb(250,250,250);
+}
+
+#audios {
+    font-family: "";
+	left: 35vh;
+	top: 9vh;
+	position: fixed;
+	overflow: visible;
+	white-space: nowrap;
+	cursor: pointer;
+	text-align: center;
+	font-style: bold;
+	font-weight: normal;
+	font-size: 2.25vh;
+	color: rgb(250,250,250);
+}
+
+#films {
+    font-family: "";
+	left: 45vh;
+	top: 9vh;
+	position: fixed;
+	overflow: visible;
+	white-space: nowrap;
+	cursor: pointer;
+	text-align: center;
+	font-style: bold;
+	font-weight: normal;
+	font-size: 2.25vh;
+	color: rgb(250,250,250);
+}
+
+#films:hover {
+    transform: rotate(2deg);
+}
+
+#ecrits {
+    font-family: "";
+	left: 22.5vh;
+	top: 15vh;
+	position: fixed;
+	overflow: visible;
+	white-space: nowrap;
+	cursor: pointer;
+	text-align: center;
+	font-style: bold;
+	font-weight: normal;
+	font-size: 2.25vh;
+	color: rgb(250,250,250);
+}
+
+#contact {
+    font-family: "";
+	left: 43vh;
+	top: 15vh;
+	position: fixed;
+	overflow: visible;
+	white-space: nowrap;
+	cursor: pointer;
+	text-align: center;
+	font-style: bold;
+	font-weight: normal;
+	font-size: 2.25vh;
+	color: rgb(250,250,250);
+}
+
+#logo{
+	position: fixed;
+	height: 15vh;
+	margin-left: 3vh;
+	margin-top: 3vh;
+    
+}
+
+#buddy1{
+	position: absolute;
+	height: 50vh;
+	margin-left: 20vw;
+	margin-top: 30vh;
+    transform: rotate(-5deg);
+}
+
+#description {
+    width: 65vw;
+    font-family: "";
+	left: 20vw;
+	top: 85vh;
+	position: absolute;
+	overflow: visible;
+	color: rgb(250,250,250);
+}
+
+h1{
+	font-size: 4vh;
+	font-style: normal;
+	font-weight: normal;
+	text-align: left;
+    font-family: "";
+	color: rgb(250,250,250);
+}
+
+p{
+	overflow: visible;
+	text-align: left;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 2vh;
+	margin-right: 2vw;
+	color: rgb(250,250,250);
+}
+
+p1{
+	text-align: left;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 2.25vh;
+	margin-right: 2vw;
+	color: #FFD501;
+}
+
+p1:hover {
+    text-decoration: underline; 
+}
+
+
+#bas_de_page {
+	margin-left: 45vw;
+	margin-top: 95vh;
+	position: absolute;
+	overflow: visible;
+	white-space: nowrap;
+	cursor: pointer;
+	text-align: left;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 3vh;
+	color: rgba(47,47,47,1);
+}
