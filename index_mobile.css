@@ -158,7 +158,7 @@ html, body {
 #buddy1{
 	position: absolute;
 	height: 45vh;
-	margin-left: 10vw;
+	margin-left: 20vw;
 	margin-top: 30vh;
     transform: rotate(-5deg);
 }
@@ -190,7 +190,7 @@ html, body {
 #description {
     width: 65vw;
     font-family: "";
-	left: 10vw;
+	left: 15vw;
 	top: 85vh;
 	position: absolute;
 	overflow: visible;
