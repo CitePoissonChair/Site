@@ -135,7 +135,7 @@ html, body {
 #instagram {
     font-family: "";
 	left: 43vh;
-	top: 15vh;
+	top: 10vh;
 	position: fixed;
 	overflow: visible;
 	white-space: nowrap;
@@ -157,7 +157,7 @@ html, body {
 
 #buddy1{
 	position: absolute;
-	height: 50vh;
+	height: 45vh;
 	margin-left: 20vw;
 	margin-top: 30vh;
     transform: rotate(-5deg);
@@ -165,7 +165,7 @@ html, body {
 
 #p1{
 	position: absolute;
-	height: 35vh;
+	height: 30vh;
 	margin-left: 15vw;
 	margin-top: 130vh;
     transform: rotate(-5deg);
@@ -173,7 +173,7 @@ html, body {
 
 #p2{
 	position: absolute;
-	height: 35vh;
+	height: 30vh;
 	margin-left: 15vw;
 	margin-top: 180vh;
     transform: rotate(-5deg);
@@ -181,7 +181,7 @@ html, body {
 
 #p3{
 	position: absolute;
-	height: 35vh;
+	height: 30vh;
 	margin-left: 15vw;
 	margin-top: 230vh;
     transform: rotate(-5deg);
