@@ -41,15 +41,17 @@ html, body {
 	font-weight: normal;
 	font-size: 2.25vh;
 	color: rgb(250,250,250);
-    text-decoration: line-through;
-    transform: rotate(2deg);
+}
+
+#buddy:hover {
+    transform: rotate(-2deg);
 }
 
 
 
 #illustrations {
     font-family: "";
-	left: 14vh;
+	left: 13vh;
 	top: 45vh;
 	position: fixed;
 	overflow: visible;
@@ -68,7 +70,7 @@ html, body {
 
 #sculptures {
     font-family: "";
-	left: 14.5vh;
+	left: 13vh;
 	top: 50vh;
 	position: fixed;
 	overflow: visible;
@@ -83,63 +85,6 @@ html, body {
 
 #sculptures:hover {
     transform: rotate(2deg);
-}
-
-#audios {
-    font-family: "";
-	left: 15.5vh;
-	top: 55vh;
-	position: fixed;
-	overflow: visible;
-	white-space: nowrap;
-	cursor: pointer;
-	text-align: center;
-	font-style: bold;
-	font-weight: normal;
-	font-size: 2.25vh;
-	color: rgb(250,250,250);
-}
-
-#audios:hover {
-    transform: rotate(-2deg);
-}
-
-#films {
-    font-family: "";
-	left: 16vh;
-	top: 60vh;
-	position: fixed;
-	overflow: visible;
-	white-space: nowrap;
-	cursor: pointer;
-	text-align: center;
-	font-style: bold;
-	font-weight: normal;
-	font-size: 2.25vh;
-	color: rgb(250,250,250);
-}
-
-#films:hover {
-    transform: rotate(2deg);
-}
-
-#ecrits {
-    font-family: "";
-	left: 16vh;
-	top: 65vh;
-	position: fixed;
-	overflow: visible;
-	white-space: nowrap;
-	cursor: pointer;
-	text-align: center;
-	font-style: bold;
-	font-weight: normal;
-	font-size: 2.25vh;
-	color: rgb(250,250,250);
-}
-
-#ecrits:hover {
-    transform: rotate(-2deg);
 }
 
 #instagram {
@@ -169,27 +114,42 @@ html, body {
     
 }
 
-#buddy1{
+#image1{
 	position: absolute;
 	height: 60vh;
-	margin-left: 30vw;
+	left: 30vw;
 	margin-top: 20vh;
     transform: rotate(-4deg);
 }
 
 
-#buddy1:hover {
+#image1:hover {
+    transform: rotate(2deg);
+}
+
+
+
+#image2{
+	position: absolute;
+	height: 60vh;
+	right: 10vw;
+	margin-top: 20vh;
+    transform: rotate(-4deg);
+}
+
+
+#image2:hover {
     transform: rotate(2deg);
 }
 
 #description {
-    width: 25vw;
+    width: 55vw;
     font-family: "";
-	left: 60vw;
-	top: 45vh;
+	left: 30vw;
+	top: 35vh;
 	position: absolute;
 	overflow: visible;
-	color: rgb(250,250,250);
+	color: red;
 }
 
 h1{
@@ -206,7 +166,7 @@ p{
 	text-align: left;
 	font-style: normal;
 	font-weight: normal;
-	font-size: 2vh;
+	font-size: 8vh;
 	margin-right: 2vw;
 	color: rgb(250,250,250);
 }
@@ -215,7 +175,7 @@ p1{
 	text-align: left;
 	font-style: normal;
 	font-weight: normal;
-	font-size: 2.25vh;
+	font-size: 8vh;
 	margin-right: 2vw;
 	color: #FFD501;
 }

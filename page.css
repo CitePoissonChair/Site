@@ -168,12 +168,12 @@ html, body {
     
 }
 
-#buddy1{
+#couverture{
 	position: absolute;
 	height: 60vh;
 	margin-left: 30vw;
 	margin-top: 20vh;
-    transform: rotate(-4deg);
+    transform: rotate(2deg);
 }
 
 #description {
@@ -195,12 +195,23 @@ h1{
 	color: rgb(250,250,250);
 }
 
+
+
+h2{
+	font-size: 3vh;
+	font-style: normal;
+	font-weight: normal;
+	text-align: left;
+    font-family: "";
+	color: rgb(250,250,250);
+}
+
 p{
 	overflow: visible;
 	text-align: left;
 	font-style: normal;
 	font-weight: normal;
-	font-size: 2vh;
+	font-size: 2.25vh;
 	margin-right: 2vw;
 	color: rgb(250,250,250);
 }
@@ -209,7 +220,7 @@ p1{
 	text-align: left;
 	font-style: normal;
 	font-weight: normal;
-	font-size: 2.25vh;
+	font-size: 2.5vh;
 	margin-right: 2vw;
 	color: #FFD501;
 }
@@ -218,7 +229,17 @@ p1:hover {
     text-decoration: underline; 
 }
 
-#p1{
+#resume{
+    width: 25vw;
+    font-family: "";
+	left: 30vw;
+	top: 90vh;
+	position: absolute;
+	overflow: visible;
+	color: rgb(250,250,250);
+}
+
+#page1{
 	position: absolute;
 	height: 60vh;
 	margin-left: 30vw;
@@ -226,7 +247,7 @@ p1:hover {
     transform: rotate(-4deg);
 }
 
-#p2{
+#page2{
 	position: absolute;
 	height: 60vh;
 	margin-left: 30vw;
@@ -234,12 +255,33 @@ p1:hover {
     transform: rotate(6deg);
 }
 
-#p3{
+#page3{
 	position: absolute;
 	height: 60vh;
 	margin-left: 30vw;
 	margin-top: 220vh;
     transform: rotate(-3deg);
+}
+
+
+
+#instagram {
+    font-family: "";
+	left: 15vh;
+	bottom: 5vh;
+	position: fixed;
+	overflow: visible;
+	white-space: nowrap;
+	cursor: pointer;
+	text-align: center;
+	font-style: bold;
+	font-weight: normal;
+	font-size: 2.25vh;
+	color: rgb(250,250,250);
+}
+
+#instagram:hover {
+    transform: rotate(2deg);
 }
 
 
