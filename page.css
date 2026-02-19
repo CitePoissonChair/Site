@@ -229,8 +229,31 @@ p1:hover {
     text-decoration: underline; 
 }
 
+p2{
+	text-align: justify;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 2.5vh;
+	margin-right: auto;
+	color: rgb(250,250,250);
+}
+
+p3{
+	text-align: left;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 2.5vh;
+	margin-right: 2vw;
+	color: #DCFEFF;
+}
+
+p3:hover {
+    text-decoration: underline; 
+}
+
 #resume{
-    width: 25vw;
+    width: 40vw;
+    text-align: justify;
     font-family: "";
 	left: 30vw;
 	top: 90vh;
@@ -263,6 +286,14 @@ p1:hover {
     transform: rotate(-3deg);
 }
 
+#image3{
+    position: absolute;
+    border : 2px solid rgb(15,15,15);
+	height: 60vh;
+	margin-left: 30vw;
+	margin-top: 220vh;
+    transform: rotate(-3deg);
+}
 
 
 #instagram {
@@ -298,3 +329,4 @@ p1:hover {
 	font-size: 3vh;
 	color: rgba(47,47,47,1);
 }
+
