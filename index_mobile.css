@@ -191,7 +191,7 @@ html, body {
 	position: absolute;
 	height: 30vh;
 	margin-left: 10vw;
-	margin-top: 210vh;
+	margin-top: 220vh;
     transform: rotate(5deg);
 }
 
@@ -200,7 +200,7 @@ html, body {
 	height: 30vh;
     border : 2px solid rgb(15,15,15);
 	margin-left: 10vw;
-	margin-top: 240vh;
+	margin-top: 250vh;
     transform: rotate(-5deg);
 }
 
@@ -249,7 +249,7 @@ h1{
 }
 
 h2{
-	font-size: 4vh;
+	font-size: 2.5vh;
 	font-style: normal;
 	font-weight: normal;
 	text-align: left;
@@ -321,4 +321,5 @@ p3{
 	font-size: 3vh;
 	color: rgba(47,47,47,1);
 }
+
 
