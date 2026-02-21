@@ -168,7 +168,7 @@ html, body {
 	position: absolute;
 	height: 40vh;
 	margin-left: 10vw;
-	margin-top: 60vh;
+	margin-top: 30vh;
     transform: rotate(-5deg);
 }
 #image1:hover {
@@ -179,7 +179,7 @@ html, body {
 	position: absolute;
 	height: 40vh;
 	margin-left: 10vw;
-	margin-top: 100vh;
+	margin-top: 80vh;
     transform: rotate(5deg);
 }
 
@@ -337,6 +337,7 @@ p3{
 	font-size: 3vh;
 	color: rgba(47,47,47,1);
 }
+
 
 
 
