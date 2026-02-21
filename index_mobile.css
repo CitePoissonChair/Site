@@ -200,16 +200,16 @@ html, body {
 	position: absolute;
 	height: 30vh;
 	margin-left: 10vw;
-	margin-top: 170vh;
-    transform: rotate(5deg);
+	margin-top: 190vh;
+    transform: rotate(-5deg);
 }
 #page2{
 	position: absolute;
 	height: 30vh;
 	margin-left: 10vw;
-	margin-top: 200vh;
+	margin-top: 220vh;
     border : 2px solid rgb(15,15,15);
-    transform: rotate(-5deg);
+    transform: rotate(5deg);
 }
 #page3{
 	position: absolute;
@@ -217,16 +217,16 @@ html, body {
 	height: 30vh;
 	margin-left: 10vw;
     border : 2px solid rgb(15,15,15);
-	margin-top: 140vh;
-    transform: rotate(-5deg);
+	margin-top: 160vh;
+    transform: rotate(5deg);
 }
 #page4{
 	position: absolute;
-    opacity:0.5;
 	height: 30vh;
-	margin-left: 55vw;
-	margin-top: 10vh;
-    transform: rotate(5deg);
+    border : 2px solid rgb(15,15,15);
+	margin-left: 10vw;
+	margin-top: 250vh;
+    transform: rotate(-5deg);
 }
 
 #couverture{
@@ -337,6 +337,7 @@ p3{
 	font-size: 3vh;
 	color: rgba(47,47,47,1);
 }
+
 
 
 
