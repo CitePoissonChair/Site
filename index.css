@@ -30,7 +30,7 @@ html, body {
 
 #prestations {
     left: 13vh;
-    top: 35vh; 
+    top: 40vh; 
     position: fixed;
     white-space: nowrap;
     cursor: pointer;
