@@ -30,7 +30,7 @@ html, body {
 
 #prestations {
     left: 13vh;
-    top: 55vh; /* juste sous "sculptures" (qui est à 50vh) */
+    top: 35vh; 
     position: fixed;
     white-space: nowrap;
     cursor: pointer;
