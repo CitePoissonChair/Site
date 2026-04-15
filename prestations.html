@@ -4,30 +4,43 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">    
 <title>Prestations</title>   
 
-<link rel="stylesheet" type="text/css" href="prestations.css"/>
+<link rel="stylesheet" href="prestations.css"/>
 </head>
 
 <body>
 
-<!-- LOGO / RETOUR -->
+<!-- LOGO -->
 <a href="index.html">
     <img id="logo" src="images/cpc_logo.png">
 </a>
 
-<!-- VIDEO PRESENTATION -->
+<!-- VIDEO HERO -->
 <div id="video_container">
-    <video controls>
+    <video autoplay muted loop>
         <source src="videos/demo.mp4" type="video/mp4">
     </video>
 </div>
 
 <!-- CATEGORIES -->
-<div id="categories">
+<div id="photos" class="bloc">
+    <a href="photos.html">
+        <img src="images/photos.jpg">
+        <div class="label">Photos</div>
+    </a>
+</div>
 
-    <a href="photos.html" class="categorie">Photos</a>
-    <a href="lives.html" class="categorie">Lives</a>
-    <a href="clips.html" class="categorie">Clips</a>
+<div id="lives" class="bloc">
+    <a href="lives.html">
+        <img src="images/lives.jpg">
+        <div class="label">Lives</div>
+    </a>
+</div>
 
+<div id="clips" class="bloc">
+    <a href="clips.html">
+        <img src="images/clips.jpg">
+        <div class="label">Clips</div>
+    </a>
 </div>
 
 </body>
