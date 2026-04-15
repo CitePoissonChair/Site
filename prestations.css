@@ -5,7 +5,6 @@
 
 body {
     background: rgb(15,15,15);
-    font-family: sans-serif;
 }
 
 /* LOGO */
@@ -14,32 +13,66 @@ body {
     height: 20vh;
     margin-left: 10vh;
     margin-top: 10vh;
+    z-index: 10;
 }
 
-/* VIDEO */
+/* VIDEO HERO */
 #video_container {
+    position: absolute;
     width: 60vw;
-    margin: 25vh auto 10vh auto;
+    left: 20vw;
+    top: 20vh;
+    transform: rotate(-2deg);
 }
 
 #video_container video {
     width: 100%;
+    filter: contrast(110%) brightness(90%);
 }
 
-/* CATEGORIES */
-#categories {
-    display: flex;
-    justify-content: center;
-    gap: 5vw;
-}
-
-.categorie {
-    color: white;
-    font-size: 3vh;
-    text-decoration: none;
+/* BLOCS */
+.bloc {
+    position: absolute;
     cursor: pointer;
 }
 
-.categorie:hover {
+/* IMAGES */
+.bloc img {
+    height: 35vh;
+    transition: transform 0.4s ease;
+}
+
+/* LABEL */
+.label {
+    color: white;
+    font-size: 2.5vh;
+    margin-top: 1vh;
+}
+
+/* POSITIONS + ROTATIONS */
+#photos {
+    left: 20vw;
+    top: 75vh;
+    transform: rotate(-4deg);
+}
+
+#lives {
+    left: 45vw;
+    top: 85vh;
+    transform: rotate(3deg);
+}
+
+#clips {
+    left: 70vw;
+    top: 75vh;
     transform: rotate(-2deg);
+}
+
+/* HOVER STYLE */
+.bloc:hover img {
+    transform: scale(1.05) rotate(2deg);
+}
+
+.bloc:hover .label {
+    text-decoration: underline;
 }
