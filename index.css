@@ -29,8 +29,8 @@ html, body {
 
 
 #prestations {
-    left: 13vh;
-    top: 40vh; 
+    left: 8vh;
+    top: 38vh; 
     position: fixed;
     white-space: nowrap;
     cursor: pointer;
