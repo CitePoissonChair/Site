@@ -71,17 +71,9 @@ export function Prestations() {
       <VideoHero />
 
       <section id="categories_section">
-        <div className="category-wrapper">
-          <ImageCarousel images={photosImages} />
-        </div>
-
-        <div className="category-wrapper">
-          <ImageCarousel images={livesImages} />
-        </div>
-
-        <div className="category-wrapper">
-          <ImageCarousel images={clipsImages} />
-        </div>
+        <ImageCarousel images={photosImages} />
+        <ImageCarousel images={livesImages} />
+        <ImageCarousel images={clipsImages} />
       </section>
     </div>
   );
