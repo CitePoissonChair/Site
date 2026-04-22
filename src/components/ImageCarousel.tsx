@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect } from 'react';
 
 interface ImageCarouselProps {
   images: Array<{
@@ -14,38 +14,55 @@ export function ImageCarousel({ images }: ImageCarouselProps) {
   const carouselRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const stickyRef = useRef<HTMLDivElement>(null);
-  const [translatePosition, setTranslatePosition] = useState(0);
+  const translatePositionRef = useRef<number>(0);
+  const isActiveRef = useRef<boolean>(false);
+
+  useEffect(() => {
+    const wrapper = wrapperRef.current;
+    if (!wrapper) return;
+
+    // Observer le wrapper directement : actif quand visible à 95% ou plus
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          isActiveRef.current = entry.intersectionRatio >= 0.95;
+        });
+      },
+      { threshold: [0, 0.95, 1] }
+    );
+
+    observer.observe(wrapper);
+
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const carousel = carouselRef.current;
-    const wrapper = wrapperRef.current;
     const sticky = stickyRef.current;
 
-    if (!carousel || !wrapper || !sticky) return;
+    if (!carousel || !sticky) return;
 
     const handleWheel = (e: WheelEvent) => {
-      // Vérifier si le wrapper est visible dans la viewport
-      const wrapperRect = wrapper.getBoundingClientRect();
-      const isInViewport = wrapperRect.top <= window.innerHeight && wrapperRect.bottom >= 0;
-
-      if (!isInViewport) return;
+      // Vérifier si cette catégorie est active (visible à 95%+)
+      if (!isActiveRef.current) return;
 
       const carouselWidth = carousel.scrollWidth;
       const stickyWidth = sticky.clientWidth;
       const maxScroll = carouselWidth - stickyWidth;
 
       // Vérifier si on peut scroller dans la direction demandée
-      const canScrollLeft = translatePosition > 0 && e.deltaY < 0;
-      const canScrollRight = translatePosition < maxScroll && e.deltaY > 0;
+      const currentPosition = translatePositionRef.current;
+      const canScrollLeft = currentPosition > 0 && e.deltaY < 0;
+      const canScrollRight = currentPosition < maxScroll && e.deltaY > 0;
 
       if (canScrollLeft || canScrollRight) {
         // Intercepter le scroll et faire défiler les images
         e.preventDefault();
-        
+
         // Accumuler le mouvement (1px de scroll = 1px de translation)
-        const newPosition = Math.min(Math.max(translatePosition + e.deltaY, 0), maxScroll);
-        setTranslatePosition(newPosition);
-        
+        const newPosition = Math.min(Math.max(currentPosition + e.deltaY, 0), maxScroll);
+        translatePositionRef.current = newPosition;
+
         // Appliquer la translation
         carousel.style.transform = `translateX(-${newPosition}px)`;
       }
@@ -54,7 +71,7 @@ export function ImageCarousel({ images }: ImageCarouselProps) {
     window.addEventListener('wheel', handleWheel, { passive: false });
 
     return () => window.removeEventListener('wheel', handleWheel);
-  }, [translatePosition]);
+  }, []);
 
   return (
     <div className="category-wrapper" ref={wrapperRef}>
