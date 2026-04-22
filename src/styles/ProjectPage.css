@@ -1,0 +1,114 @@
+.project-page {
+    width: 100%;
+    min-height: 100vh;
+    background: rgb(15, 15, 15);
+    color: rgb(250, 250, 250);
+    padding: 20vh 10vh;
+}
+
+.project-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 10vh;
+    z-index: 10;
+    background: rgba(15, 15, 15, 0.95);
+}
+
+.project-header img {
+    height: 15vh;
+    cursor: pointer;
+}
+
+.project-content {
+    margin-top: 30vh;
+    display: flex;
+    gap: 5vh;
+}
+
+#description {
+    flex: 0 0 35%;
+    position: sticky;
+    top: 35vh;
+    height: fit-content;
+}
+
+#description h1 {
+    font-size: 2.5vh;
+    margin-bottom: 1.5vh;
+    line-height: 1.4;
+}
+
+#description h1 b {
+    font-weight: bold;
+}
+
+#description h1 i {
+    font-style: italic;
+    display: block;
+    margin-top: 1vh;
+    font-size: 2vh;
+}
+
+#description p {
+    font-size: 1.5vh;
+    line-height: 1.8;
+    margin-bottom: 2vh;
+}
+
+#description i {
+    font-style: italic;
+    display: block;
+    margin-top: 1vh;
+    font-size: 1.3vh;
+}
+
+.images-gallery {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 3vh;
+}
+
+.gallery-image {
+    width: 100%;
+    max-height: 50vh;
+    object-fit: cover;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+}
+
+.gallery-image:hover {
+    opacity: 0.8;
+}
+
+@media screen and (max-width: 1000px) {
+    .project-page {
+        padding: 15vh 5vh;
+    }
+
+    .project-header {
+        padding: 5vh;
+    }
+
+    .project-header img {
+        height: 10vh;
+    }
+
+    .project-content {
+        flex-direction: column;
+        gap: 3vh;
+        margin-top: 15vh;
+    }
+
+    #description {
+        position: relative;
+        top: auto;
+        flex: 1;
+    }
+
+    .images-gallery {
+        flex: 1;
+    }
+}
