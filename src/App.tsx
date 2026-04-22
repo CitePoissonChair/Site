@@ -6,6 +6,7 @@ import { StationSoleilBleu } from './pages/StationSoleilBleu';
 import { Photos } from './pages/Photos';
 import { Captations } from './pages/Captations';
 import { Clips } from './pages/Clips';
+import { NotFound } from './pages/NotFound';
 import './styles/global.css';
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
         <Route path="/photos" element={<Photos />} />
         <Route path="/captations" element={<Captations />} />
         <Route path="/clips" element={<Clips />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
   );
