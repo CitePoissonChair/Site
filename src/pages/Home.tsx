@@ -15,19 +15,19 @@ export function Home() {
         </nav>
       </div>
 
-      <div className="flex flex-row justify-center items-start gap-[4vw] mt-[4vh] px-[4vw] max-[1000px]:flex-col max-[1000px]:items-center max-[1000px]:gap-[4vh] max-[1000px]:px-0">
-        <CoverImage
-          src="/images/Ecrits/Station Soleil Bleu/Couvertures/station_soleil_bleu_couv.png"
-          alt="Station Soleil Bleu"
-          to="/projet/station-soleil-bleu"
-          className="h-[60vh] -rotate-[4deg] hover:rotate-[2deg] transition-transform duration-200 max-[1000px]:h-auto max-[1000px]:w-[90%] max-[1000px]:rotate-0 max-[1000px]:hover:rotate-0"
-        />
-        <CoverImage
-          src="/images/Revues/Buddy System/Couvertures/Couv_1.jpg"
-          alt="Buddy System"
-          to="/buddy-1"
-          className="h-[60vh] -rotate-[4deg] hover:rotate-[2deg] transition-transform duration-200 max-[1000px]:h-auto max-[1000px]:w-[90%] max-[1000px]:rotate-0 max-[1000px]:hover:rotate-0"
-        />
+       <div className="flex flex-row justify-center items-start gap-[4vw] mt-[4vh] px-[4vw] max-[1000px]:flex-col max-[1000px]:items-center max-[1000px]:gap-[4vh] max-[1000px]:px-0">
+         <CoverImage
+           src="/images/Ecrits/Station Soleil Bleu/Couvertures/station_soleil_bleu_couv.png"
+           alt="Station Soleil Bleu"
+           to="/projet/station-soleil-bleu"
+           className="h-[60vh] -rotate-[4deg] hover:rotate-[2deg] transition-transform duration-200 max-[1000px]:h-auto max-[1000px]:w-[90%] max-[1000px]:mx-auto max-[1000px]:rotate-0 max-[1000px]:hover:rotate-0"
+         />
+         <CoverImage
+           src="/images/Revues/Buddy System/Couvertures/Couv_1.jpg"
+           alt="Buddy System"
+           to="/buddy-1"
+           className="h-[60vh] -rotate-[4deg] hover:rotate-[2deg] transition-transform duration-200 max-[1000px]:h-auto max-[1000px]:w-[90%] max-[1000px]:mx-auto max-[1000px]:rotate-0 max-[1000px]:hover:rotate-0"
+         />
       </div>
     </div>
   );
