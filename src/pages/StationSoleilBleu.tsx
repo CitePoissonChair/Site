@@ -19,17 +19,17 @@ export function StationSoleilBleu() {
           </h1>
           <br />
           <p>
-            Un clip musical aux frontières de plusieurs univers
+           
             <br />
             <br />
             <i>
-              Direction artistique et réalisation
+             
               <br />
-              Cité Poisson-Chair
+              
             </i>
           </p>
           <p>
-            Station Soleil Bleu est une exploration visuelle et sonore mêlant plusieurs disciplines artistiques.
+            
           </p>
         </div>
 
