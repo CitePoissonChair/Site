@@ -25,11 +25,15 @@ export function BuddySystem1() {
             <i>
               Avec des contributions de :
               <br />
-              Lorem Ipsum
+              Amaury Hardré
+              Virgile Mollat
+              Margaux Tailame
+              Alexanndre Lécroart
+              Raoul Deloffre
             </i>
           </p>
           <p>
-            Description du projet Buddy System n°1. Ce projet explore les thèmes de la corporalité et de la transformation.
+           
           </p>
         </div>
 
