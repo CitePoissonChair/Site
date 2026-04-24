@@ -21,7 +21,15 @@ export function BuddySystem1() {
             <i className="italic block mt-[1vh] text-[1.3vh]">
               Avec des contributions de :
               <br />
-              Lorem Ipsum
+              Amaury Hardré
+              <br />
+              Virgile Mollat
+              <br />
+              Margaux Tailame
+              <br />
+              Alexandre Lécroart
+              <br />
+              Raoul Deloffre
             </i>
           </p>
           <p className="text-[1.5vh] leading-[1.8] mb-[2vh]">

@@ -21,7 +21,7 @@ export function StationSoleilBleu() {
             <i className="italic block mt-[1vh] text-[1.3vh]">
               Direction artistique et réalisation
               <br />
-              Cité Poisson-Chair
+              
             </i>
           </p>
           <p className="text-[1.5vh] leading-[1.8] mb-[2vh]">
