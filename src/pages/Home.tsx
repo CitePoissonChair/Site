@@ -9,7 +9,7 @@ export function Home() {
 
       <div id="description">
         <p>
-          Cité Poisson-Chair est un collectif basé à Paris.
+          Cité Poisson-Chair est une association et un collectif basé à Paris.
         </p>
       </div>
 
