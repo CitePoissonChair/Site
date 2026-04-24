@@ -28,7 +28,7 @@ export function BuddySystem1() {
               Amaury Hardré
               Virgile Mollat
               Margaux Tailame
-              Alexanndre Lécroart
+              Alexandre Lécroart
               Raoul Deloffre
             </i>
           </p>
