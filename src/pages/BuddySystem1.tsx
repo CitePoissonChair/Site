@@ -26,9 +26,13 @@ export function BuddySystem1() {
               Avec des contributions de :
               <br />
               Amaury Hardré
+              <br />
               Virgile Mollat
+              <br />
               Margaux Tailame
+              <br />
               Alexandre Lécroart
+              <br />
               Raoul Deloffre
             </i>
           </p>
