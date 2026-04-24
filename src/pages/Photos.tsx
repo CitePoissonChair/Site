@@ -1,25 +1,22 @@
-import { Link } from 'react-router-dom';
-import '../styles/ProjectPage.css';
+import { SiteHeader } from '../components/SiteHeader';
 
 export function Photos() {
   return (
-    <div className="project-page">
-      <div className="project-header">
-        <Link to="/">
-          <img src="/images/cpc_logo.png" alt="CPC Logo" />
-        </Link>
+    <div className="w-full min-h-screen bg-[rgb(15,15,15)] text-[rgb(250,250,250)] px-[10vh] py-[4vh] max-[1000px]:px-[5vh]">
+      <div className="w-full flex justify-center">
+        <SiteHeader title="Photos" showBack backTo="/prestations" />
       </div>
 
-      <div className="project-content">
-        <div id="description">
-          <h1>
-            <b>Photos</b>
+      <div className="mt-[4vh] flex gap-[5vh] max-[1000px]:flex-col max-[1000px]:gap-[3vh]">
+        <div className="flex-[0_0_35%] sticky top-[35vh] h-fit max-[1000px]:relative max-[1000px]:top-auto max-[1000px]:flex-1">
+          <h1 className="text-[2.5vh] mb-[1.5vh] leading-[1.4]">
+            <b className="font-bold">Photos</b>
           </h1>
-          <p>Galerie de photos - À venir</p>
+          <p className="text-[1.5vh] leading-[1.8] mb-[2vh]">Galerie de photos - À venir</p>
         </div>
 
-        <div className="images-gallery">
-          <p>Contenu à venir...</p>
+        <div className="flex-1 flex flex-col gap-[3vh]">
+          <p className="text-[1.5vh]">Contenu à venir...</p>
         </div>
       </div>
     </div>

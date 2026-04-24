@@ -130,7 +130,7 @@ html, body {
 	position: absolute;
 	height: 60vh;
 	left: 30vw;
-	margin-top: 20vh;
+	margin-top: 1vh;
     transform: rotate(-4deg);
 }
 
@@ -145,7 +145,7 @@ html, body {
 	position: absolute;
 	height: 60vh;
 	right: 10vw;
-	margin-top: 20vh;
+	margin-top: 1vh;
     transform: rotate(-4deg);
 }
 

@@ -3,13 +3,9 @@ import { useState } from 'react';
 export function VideoHero() {
   const [videoError, setVideoError] = useState(false);
 
-  const handleIframeError = () => {
-    setVideoError(true);
-  };
-
   return (
-    <section id="video_hero_section">
-      <div id="video_container">
+    <section className="flex justify-center items-center w-full h-screen relative">
+      <div className="w-full h-full flex justify-center items-center">
         {!videoError ? (
           <iframe
             width="560"
@@ -19,11 +15,12 @@ export function VideoHero() {
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen
+            className="w-full h-full block border-0 p-0 m-0"
             style={{ pointerEvents: 'none' }}
-            onError={handleIframeError}
+            onError={() => setVideoError(true)}
           />
         ) : (
-          <p id="video-error" style={{ color: 'white', textAlign: 'center', marginTop: '20px' }}>
+          <p className="text-[rgb(250,250,250)] text-center mt-[20px]">
             La vidéo n'est pas disponible. Vérifiez que la vidéo YouTube peut être partagée.
           </p>
         )}

@@ -4,13 +4,13 @@ interface CoverImageProps {
   src: string;
   alt: string;
   to: string;
-  id?: string;
+  className?: string;
 }
 
-export function CoverImage({ src, alt, to, id }: CoverImageProps) {
+export function CoverImage({ src, alt, to, className }: CoverImageProps) {
   return (
     <Link to={to}>
-      <img id={id} src={src} alt={alt} />
+      <img src={src} alt={alt} className={className} />
     </Link>
   );
 }

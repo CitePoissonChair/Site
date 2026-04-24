@@ -1,107 +1,57 @@
-import { useRef, useEffect } from 'react';
+import { forwardRef } from 'react';
+import { Link } from 'react-router-dom';
 
 interface ImageCarouselProps {
   images: Array<{
     src: string;
     alt: string;
     label?: string;
-    labelClass?: string;
     link?: string;
   }>;
 }
 
-export function ImageCarousel({ images }: ImageCarouselProps) {
-  const carouselRef = useRef<HTMLDivElement>(null);
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  const stickyRef = useRef<HTMLDivElement>(null);
-  const translatePositionRef = useRef<number>(0);
-  const isActiveRef = useRef<boolean>(false);
-
-  useEffect(() => {
-    const wrapper = wrapperRef.current;
-    if (!wrapper) return;
-
-    // Observer le wrapper directement : actif quand visible à 95% ou plus
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          isActiveRef.current = entry.intersectionRatio >= 0.95;
-        });
-      },
-      { threshold: [0, 0.95, 1] }
-    );
-
-    observer.observe(wrapper);
-
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    const carousel = carouselRef.current;
-    const sticky = stickyRef.current;
-
-    if (!carousel || !sticky) return;
-
-    const handleWheel = (e: WheelEvent) => {
-      // Vérifier si cette catégorie est active (visible à 95%+)
-      if (!isActiveRef.current) return;
-
-      const carouselWidth = carousel.scrollWidth;
-      const stickyWidth = sticky.clientWidth;
-      const maxScroll = carouselWidth - stickyWidth;
-
-      // Vérifier si on peut scroller dans la direction demandée
-      const currentPosition = translatePositionRef.current;
-      const canScrollLeft = currentPosition > 0 && e.deltaY < 0;
-      const canScrollRight = currentPosition < maxScroll && e.deltaY > 0;
-
-      if (canScrollLeft || canScrollRight) {
-        // Intercepter le scroll et faire défiler les images
-        e.preventDefault();
-
-        // Accumuler le mouvement (1px de scroll = 1px de translation)
-        const newPosition = Math.min(Math.max(currentPosition + e.deltaY, 0), maxScroll);
-        translatePositionRef.current = newPosition;
-
-        // Appliquer la translation
-        carousel.style.transform = `translateX(-${newPosition}px)`;
-      }
-    };
-
-    window.addEventListener('wheel', handleWheel, { passive: false });
-
-    return () => window.removeEventListener('wheel', handleWheel);
-  }, []);
-
-  return (
-    <div className="category-wrapper" ref={wrapperRef}>
-      <div className="carousel-sticky-wrapper" ref={stickyRef}>
-        <div className="images-carousel" ref={carouselRef}>
-          {images.map((image, index) => (
-            <div key={index} className="image-item">
-              {image.link ? (
-                <a href={image.link}>
-                  <img src={image.src} alt={image.alt} />
-                  {image.label && (
-                    <div className={`image-label ${image.labelClass || ''}`}>
-                      {image.label}
-                    </div>
-                  )}
-                </a>
-              ) : (
-                <>
-                  <img src={image.src} alt={image.alt} />
-                  {image.label && (
-                    <div className={`image-label ${image.labelClass || ''}`}>
-                      {image.label}
-                    </div>
-                  )}
-                </>
-              )}
-            </div>
-          ))}
+// Le ref est forwardé vers le div interne qui reçoit le translateX
+// Le parent manipule directement ref.current.style.transform — aucun re-render React
+export const ImageCarousel = forwardRef<HTMLDivElement, ImageCarouselProps>(
+  ({ images }, ref) => {
+    return (
+      <div className="w-full h-screen relative overflow-hidden flex-none">
+        <div className="w-full h-full flex items-center overflow-hidden">
+          <div
+            ref={ref}
+            className="flex gap-[50px] w-full h-full px-[25px] will-change-transform"
+          >
+            {images.map((image, index) => (
+              <div
+                key={index}
+                className="flex-none h-full min-w-[100vw] flex items-center justify-center relative"
+              >
+                {image.link ? (
+                  <Link to={image.link} className="w-full h-full flex items-center justify-center relative">
+                    <img src={image.src} alt={image.alt} className="w-full h-full object-cover block" />
+                    {image.label && (
+                      <div className="absolute bottom-[20px] left-[20px] bg-[rgba(0,0,0,0.7)] text-[rgb(250,250,250)] px-[20px] py-[10px] text-[2rem] font-bold z-[2]">
+                        {image.label}
+                      </div>
+                    )}
+                  </Link>
+                ) : (
+                  <>
+                    <img src={image.src} alt={image.alt} className="w-full h-full object-cover block" />
+                    {image.label && (
+                      <div className="absolute bottom-[20px] left-[20px] bg-[rgba(0,0,0,0.7)] text-[rgb(250,250,250)] px-[20px] py-[10px] text-[2rem] font-bold z-[2]">
+                        {image.label}
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
+);
+
+ImageCarousel.displayName = 'ImageCarousel';
