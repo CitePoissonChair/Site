@@ -28,7 +28,7 @@ export const ImageCarousel = forwardRef<HTMLDivElement, ImageCarouselProps>(
               >
                 {image.link ? (
                   <Link to={image.link} className="w-full h-full flex items-center justify-center relative">
-                    <img src={image.src} alt={image.alt} className="w-full h-full object-cover block" />
+                    <img src={image.src} alt={image.alt} loading="lazy" className="w-full h-full object-cover block" />
                     {image.label && (
                       <div className="absolute bottom-[20px] left-[20px] bg-[rgba(0,0,0,0.7)] text-[rgb(250,250,250)] px-[20px] py-[10px] text-[2rem] font-bold z-[2]">
                         {image.label}
@@ -37,7 +37,7 @@ export const ImageCarousel = forwardRef<HTMLDivElement, ImageCarouselProps>(
                   </Link>
                 ) : (
                   <>
-                    <img src={image.src} alt={image.alt} className="w-full h-full object-cover block" />
+                    <img src={image.src} alt={image.alt} loading="lazy" className="w-full h-full object-cover block" />
                     {image.label && (
                       <div className="absolute bottom-[20px] left-[20px] bg-[rgba(0,0,0,0.7)] text-[rgb(250,250,250)] px-[20px] py-[10px] text-[2rem] font-bold z-[2]">
                         {image.label}

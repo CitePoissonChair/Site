@@ -15,6 +15,7 @@ export function VideoHero() {
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen
+            loading="lazy"
             className="w-full h-full block border-0 p-0 m-0"
             style={{ pointerEvents: 'none' }}
             onError={() => setVideoError(true)}

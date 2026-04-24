@@ -31,16 +31,19 @@ export function Prestations() {
   const contentRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef<number | null>(null);
 
-  // Refs vers les divs internes des carousels (pour manipulation DOM directe)
   const carouselInnerRefs = useRef<(HTMLDivElement | null)[]>([null, null, null]);
 
-  // Positions cibles
   const targetYRef = useRef(0);
   const targetXRefs = useRef([0, 0, 0]);
-
-  // Positions courantes (interpolées)
   const currentYRef = useRef(0);
   const currentXRefs = useRef([0, 0, 0]);
+
+  // Cache des offsets — évite les reflows à chaque event wheel
+  const cachedOffsetsRef = useRef<{ top: number; height: number }[]>([]);
+
+  // Dernières valeurs appliquées au DOM — évite les re-paints inutiles
+  const lastYRef = useRef(-1);
+  const lastXRef = useRef([-1, -1, -1]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -50,28 +53,24 @@ export function Prestations() {
     const getMaxScrollY = () => content.scrollHeight - window.innerHeight;
     const getMaxScrollX = (numImages: number) => (numImages - 1) * (window.innerWidth + 50);
 
-    // Offsets réels des carousels dans le DOM (recalculés à chaque appel car le layout peut changer)
-    const getCarouselOffsets = () => {
+    // Calcule et met en cache les offsets — appelé une seule fois au mount + resize
+    const cacheOffsets = () => {
       const children = content.children;
-      return [2, 3, 4].map((i) => {
+      cachedOffsetsRef.current = [2, 3, 4].map((i) => {
         const el = children[i] as HTMLElement;
         return { top: el.offsetTop, height: el.offsetHeight };
       });
     };
 
-    // Un carousel est actif quand il est pleinement visible :
-    // currentY >= offsetTop (son haut est au haut de l'écran)
-    // On utilise currentY (position affichée) et non targetY
+    cacheOffsets();
+    window.addEventListener('resize', cacheOffsets);
+
     const getActiveCarousel = () => {
       const y = currentYRef.current;
-      const offsets = getCarouselOffsets();
+      const offsets = cachedOffsetsRef.current;
       for (let i = 0; i < offsets.length; i++) {
         const { top, height } = offsets[i];
-        // Actif quand le haut du carousel est aligné avec le haut de l'écran
-        // Tolérance de 2px pour éviter les problèmes de flottants
-        if (y >= top - 2 && y < top + height - 2) {
-          return i;
-        }
+        if (y >= top - 2 && y < top + height - 2) return i;
       }
       return -1;
     };
@@ -84,9 +83,15 @@ export function Prestations() {
       } else {
         currentYRef.current = targetYRef.current;
       }
-      content.style.transform = `translateY(-${currentYRef.current}px)`;
 
-      // --- Lerp horizontal (manipulation DOM directe, zéro re-render React) ---
+      // Écriture DOM uniquement si la valeur a changé
+      const roundedY = Math.round(currentYRef.current * 100) / 100;
+      if (roundedY !== lastYRef.current) {
+        content.style.transform = `translateY(-${roundedY}px)`;
+        lastYRef.current = roundedY;
+      }
+
+      // --- Lerp horizontal ---
       for (let i = 0; i < 3; i++) {
         const diffX = targetXRefs.current[i] - currentXRefs.current[i];
         if (Math.abs(diffX) > 0.1) {
@@ -94,8 +99,13 @@ export function Prestations() {
         } else {
           currentXRefs.current[i] = targetXRefs.current[i];
         }
-        const el = carouselInnerRefs.current[i];
-        if (el) el.style.transform = `translateX(-${currentXRefs.current[i]}px)`;
+
+        const roundedX = Math.round(currentXRefs.current[i] * 100) / 100;
+        if (roundedX !== lastXRef.current[i]) {
+          const el = carouselInnerRefs.current[i];
+          if (el) el.style.transform = `translateX(-${roundedX}px)`;
+          lastXRef.current[i] = roundedX;
+        }
       }
 
       rafRef.current = requestAnimationFrame(animate);
@@ -111,26 +121,22 @@ export function Prestations() {
       const carouselIndex = getActiveCarousel();
 
       if (carouselIndex === -1) {
-        // Pas dans un carousel → scroll vertical pur
         targetYRef.current = Math.max(0, Math.min(targetYRef.current + delta, maxY));
         return;
       }
 
-      const offsets = getCarouselOffsets();
+      const offsets = cachedOffsetsRef.current;
       const numImages = carousels[carouselIndex].length;
       const maxX = getMaxScrollX(numImages);
       const currentX = targetXRefs.current[carouselIndex];
 
       if (delta > 0 && currentX < maxX) {
-        // Scroll horizontal vers la droite → snap Y + avancer X
         targetYRef.current = offsets[carouselIndex].top;
         targetXRefs.current[carouselIndex] = Math.min(currentX + delta, maxX);
       } else if (delta < 0 && currentX > 0) {
-        // Scroll horizontal vers la gauche → snap Y + reculer X
         targetYRef.current = offsets[carouselIndex].top;
         targetXRefs.current[carouselIndex] = Math.max(currentX + delta, 0);
       } else {
-        // Carousel épuisé → scroll vertical libre, pas de snap
         targetYRef.current = Math.max(0, Math.min(targetYRef.current + delta, maxY));
       }
     };
@@ -139,6 +145,7 @@ export function Prestations() {
 
     return () => {
       container.removeEventListener('wheel', handleWheel);
+      window.removeEventListener('resize', cacheOffsets);
       if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
     };
   }, []);
@@ -150,15 +157,12 @@ export function Prestations() {
       style={{ background: 'rgb(15,15,15)' }}
     >
       <div ref={contentRef} className="will-change-transform">
-        {/* Header — taille naturelle */}
         <div className="flex flex-col items-center">
           <SiteHeader title="Prestations" showBack />
         </div>
 
-        {/* Vidéo — 100vh */}
         <VideoHero />
 
-        {/* Carousels — chacun 100vh, ref DOM direct */}
         <ImageCarousel
           images={photosImages}
           ref={(el) => { carouselInnerRefs.current[0] = el; }}
