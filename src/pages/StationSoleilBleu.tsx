@@ -26,7 +26,7 @@ export function StationSoleilBleu() {
         Une chose est sûre : si l’avenir est cadenassé, le mystérieux vieillard est persuadé d’en détenir la clef.
             <br /><br />
             <i className="italic block mt-[1vh] text-[1.3vh]">
-              Direction artistique et réalisation
+              Un livre d'Alexandre Lécroart
               <br />
               
             </i>
