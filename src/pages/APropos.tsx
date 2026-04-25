@@ -17,6 +17,9 @@ export function APropos() {
         <p>
           Le collectif intervient également en tant que prestataire dans le domaine de la photographie de concert et de la captation de lives et de performances scéniques.
         </p>
+         <p>
+          citepoissonchair@gmail.com
+        </p>
       </div>
     </div>
   );
