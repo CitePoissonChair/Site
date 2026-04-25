@@ -6,10 +6,10 @@ export function APropos() {
       <SiteHeader title="À propos" showBack />
       <div className="max-w-[60ch] mt-[4vh] flex flex-col gap-[2.5vh] text-[rgb(220,220,220)] text-[1.8vh] leading-relaxed">
         <p>
-          Cité Poisson-Chair est un collectif artistique basé à Lyon, explorant les croisements entre les disciplines artistiques.
+          Cité Poisson-Chair est un collectif artistique basé à Paris, explorant les croisements entre les disciplines artistiques.
         </p>
         <p>
-          À travers ses projets, le collectif mêle écriture, image, son et performance pour produire des œuvres hybrides qui questionnent les frontières entre les formes d'expression. Chaque création est pensée comme un espace de rencontre — entre les corps, les médiums et les imaginaires.
+          À travers ses projets, le collectif mêle écriture, image et son. Chaque création est pensée comme un espace de rencontre — entre les corps, les médiums et les imaginaires.
         </p>
         <p>
           Cité Poisson-Chair publie la revue <em>Buddy System</em>, un fanzine qui réunit des contributions écrites et visuelles autour de thèmes traversant la corporalité, la transformation et le collectif. La revue est disponible à la commande en ligne.
