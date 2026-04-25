@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 
 interface SiteHeaderProps {
@@ -9,9 +9,12 @@ interface SiteHeaderProps {
 export function SiteHeader({ title, showBack = false }: SiteHeaderProps) {
   const [hovered, setHovered] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleBack = () => {
-    if (window.history.length > 1) {
+    if (location.state?.from) {
+      navigate(location.state.from);
+    } else if (window.history.length > 1) {
       navigate(-1);
     } else {
       navigate('/');
@@ -20,8 +23,6 @@ export function SiteHeader({ title, showBack = false }: SiteHeaderProps) {
 
   return (
     <div className="flex flex-col items-center pt-[4vh] pb-[2vh]">
-      
-      {/* Logo */}
       <Link to="/">
         <img
           src={hovered ? "/images/cpc_logo_hover.png" : "/images/cpc_logo.png"}
@@ -32,12 +33,10 @@ export function SiteHeader({ title, showBack = false }: SiteHeaderProps) {
         />
       </Link>
 
-      {/* Title */}
       <h1 className="font-normal text-[3vh] text-[rgb(250,250,250)] whitespace-nowrap text-center max-[1000px]:text-[4vh]">
         {title ?? 'Cité Poisson-Chair'}
       </h1>
 
-      {/* Back button */}
       {showBack && (
         <button
           onClick={handleBack}
