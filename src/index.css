@@ -46,4 +46,15 @@
   button {
     @apply cursor-pointer border-0 bg-transparent p-0;
   }
+  
+} #logo {
+    @apply inline-block;
+    transition: transform 0.2s ease;
+    cursor: pointer;
+  }
+
+  #logo:hover {
+    transform: scale(1.05);
+    content: url("/images/cpc_logo_hover.png");
+  }
 }
