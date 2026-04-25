@@ -1,38 +1,50 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
 interface SiteHeaderProps {
   title?: string;
   showBack?: boolean;
-  backTo?: string;
 }
 
-export function SiteHeader({ title, showBack = false, backTo = '/' }: SiteHeaderProps) {
+export function SiteHeader({ title, showBack = false }: SiteHeaderProps) {
   const [hovered, setHovered] = useState(false);
+  const navigate = useNavigate();
+
+  const handleBack = () => {
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate('/');
+    }
+  };
 
   return (
     <div className="flex flex-col items-center pt-[4vh] pb-[2vh]">
+      
+      {/* Logo */}
       <Link to="/">
         <img
           src={hovered ? "/images/cpc_logo_hover.png" : "/images/cpc_logo.png"}
           alt="Logo Cité Poisson-Chair"
-          className="h-[12vh] mb-[1.5vh] max-[1000px]:h-[10vh] transition-transform duration-200 ease-in-out hover:scale-105 cursor-pointer"
+          className="h-[12vh] mb-[1.5vh] max-[1000px]:h-[10vh] transition-all duration-200 ease-in-out hover:scale-105 hover:brightness-110 cursor-pointer"
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}
         />
       </Link>
 
+      {/* Title */}
       <h1 className="font-normal text-[3vh] text-[rgb(250,250,250)] whitespace-nowrap text-center max-[1000px]:text-[4vh]">
         {title ?? 'Cité Poisson-Chair'}
       </h1>
 
+      {/* Back button */}
       {showBack && (
-        <Link
-          to={backTo}
-          className="mt-[0.4vh] text-[2vh] text-[rgb(200,200,200)] no-underline hover:underline"
+        <button
+          onClick={handleBack}
+          className="mt-[0.4vh] text-[2vh] text-[rgb(200,200,200)] hover:text-white hover:underline transition-colors duration-150"
         >
           ← Retour
-        </Link>
+        </button>
       )}
     </div>
   );
