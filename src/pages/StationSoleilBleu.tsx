@@ -32,8 +32,16 @@ export function StationSoleilBleu() {
             </i>
           </p>
           <p className="text-[1.5vh] leading-[1.8] mb-[2vh]">
-            Station Soleil Bleu est une exploration visuelle et sonore mêlant plusieurs disciplines artistiques.
+           246 pages avec 13 illustrations, 18 euros (version physique) - 4 euros (version numérique)
           </p>
+            <a
+            href="https://www.helloasso.com/associations/cite-poisson-chair/boutiques/cite-poisson-chair"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block mt-[2vh] text-[1.5vh] text-[rgb(250,250,250)] border border-[rgb(250,250,250)] px-[1.5vh] py-[0.8vh] hover:bg-[rgb(250,250,250)] hover:text-[rgb(15,15,15)] transition-colors duration-200"
+          >
+            Commander le livre
+          </a>
         </div>
 
         <div className="flex-1 flex flex-col gap-[3vh]">
