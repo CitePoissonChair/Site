@@ -33,7 +33,7 @@ export function BuddySystem1() {
             </i>
           </p>
           <p className="text-[1.5vh] leading-[1.8] mb-[2vh]">
-            Description du projet Buddy System n°1. Ce projet explore les thèmes de la corporalité et de la transformation.
+          
           </p>
           <a
             href="https://www.helloasso.com/associations/cite-poisson-chair/boutiques/cite-poisson-chair"
