@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { SiteHeader } from '../components/SiteHeader';
 import { VideoHero } from '../components/VideoHero';
 import { ImageCarousel } from '../components/ImageCarousel';
@@ -25,6 +25,7 @@ const clipsImages = [
 ];
 
 const carousels = [photosImages, livesImages, clipsImages];
+const titles = ['Photos', 'Captations', 'Clips'];
 
 export function Prestations() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -38,10 +39,13 @@ export function Prestations() {
   const currentYRef = useRef(0);
   const currentXRefs = useRef([0, 0, 0]);
 
-  const cachedOffsetsRef = useRef<{ top: number; height: number }[]>([];
+  const cachedOffsetsRef = useRef<{ top: number; height: number }[]>([]);
 
   const lastYRef = useRef(-1);
   const lastXRef = useRef([-1, -1, -1]);
+
+  // 👉 NOUVEAU : section active
+  const [activeSection, setActiveSection] = useState(0);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -73,6 +77,7 @@ export function Prestations() {
     };
 
     const animate = () => {
+      // Scroll vertical
       const diffY = targetYRef.current - currentYRef.current;
       currentYRef.current += Math.abs(diffY) > 0.1 ? diffY * LERP : diffY;
 
@@ -82,6 +87,7 @@ export function Prestations() {
         lastYRef.current = roundedY;
       }
 
+      // Scroll horizontal
       for (let i = 0; i < 3; i++) {
         const diffX = targetXRefs.current[i] - currentXRefs.current[i];
         currentXRefs.current[i] += Math.abs(diffX) > 0.1 ? diffX * LERP : diffX;
@@ -92,6 +98,12 @@ export function Prestations() {
           if (el) el.style.transform = `translateX(-${roundedX}px)`;
           lastXRef.current[i] = roundedX;
         }
+      }
+
+      // 👉 Mise à jour du titre actif
+      const active = getActiveCarousel();
+      if (active !== -1) {
+        setActiveSection(active);
       }
 
       rafRef.current = requestAnimationFrame(animate);
@@ -142,6 +154,11 @@ export function Prestations() {
       className="h-screen overflow-hidden relative"
       style={{ background: 'rgb(15,15,15)' }}
     >
+      {/* 🔥 TITRE FIXE */}
+      <div className="fixed top-[18vh] left-[5vw] z-20 text-[4vh] font-bold pointer-events-none transition-all duration-300 hover:scale-105">
+        {titles[activeSection]}
+      </div>
+
       <div ref={contentRef} className="will-change-transform">
 
         <div className="flex flex-col items-center">
@@ -150,38 +167,20 @@ export function Prestations() {
 
         <VideoHero />
 
-        {/* PHOTOS */}
-        <div className="w-full mt-[8vh]">
-          <h2 className="text-[4vh] font-bold px-[5vw] mb-[2vh] transition-all duration-200 ease-in-out hover:scale-105 hover:tracking-wide cursor-default">
-            Photos
-          </h2>
-          <ImageCarousel
-            images={photosImages}
-            ref={(el) => { carouselInnerRefs.current[0] = el; }}
-          />
-        </div>
+        <ImageCarousel
+          images={photosImages}
+          ref={(el) => { carouselInnerRefs.current[0] = el; }}
+        />
 
-        {/* CAPTATIONS */}
-        <div className="w-full mt-[8vh]">
-          <h2 className="text-[4vh] font-bold px-[5vw] mb-[2vh] transition-all duration-200 ease-in-out hover:scale-105 hover:tracking-wide cursor-default">
-            Captations
-          </h2>
-          <ImageCarousel
-            images={livesImages}
-            ref={(el) => { carouselInnerRefs.current[1] = el; }}
-          />
-        </div>
+        <ImageCarousel
+          images={livesImages}
+          ref={(el) => { carouselInnerRefs.current[1] = el; }}
+        />
 
-        {/* CLIPS */}
-        <div className="w-full mt-[8vh]">
-          <h2 className="text-[4vh] font-bold px-[5vw] mb-[2vh] transition-all duration-200 ease-in-out hover:scale-105 hover:tracking-wide cursor-default">
-            Clips
-          </h2>
-          <ImageCarousel
-            images={clipsImages}
-            ref={(el) => { carouselInnerRefs.current[2] = el; }}
-          />
-        </div>
+        <ImageCarousel
+          images={clipsImages}
+          ref={(el) => { carouselInnerRefs.current[2] = el; }}
+        />
 
       </div>
     </div>
