@@ -39,12 +39,10 @@ export function Prestations() {
   const currentYRef = useRef(0);
   const currentXRefs = useRef([0, 0, 0]);
 
-  const cachedOffsetsRef = useRef<{ top: number; height: number }[]>([]);
-
   const lastYRef = useRef(-1);
   const lastXRef = useRef([-1, -1, -1]);
 
-  // 👉 NOUVEAU : section active
+  // ✅ section active
   const [activeSection, setActiveSection] = useState(0);
 
   useEffect(() => {
@@ -55,29 +53,8 @@ export function Prestations() {
     const getMaxScrollY = () => content.scrollHeight - window.innerHeight;
     const getMaxScrollX = (numImages: number) => (numImages - 1) * (window.innerWidth + 50);
 
-    const cacheOffsets = () => {
-      const children = content.children;
-      cachedOffsetsRef.current = [2, 3, 4].map((i) => {
-        const el = children[i] as HTMLElement;
-        return { top: el.offsetTop, height: el.offsetHeight };
-      });
-    };
-
-    cacheOffsets();
-    window.addEventListener('resize', cacheOffsets);
-
-    const getActiveCarousel = () => {
-      const y = currentYRef.current;
-      const offsets = cachedOffsetsRef.current;
-      for (let i = 0; i < offsets.length; i++) {
-        const { top, height } = offsets[i];
-        if (y >= top - 2 && y < top + height - 2) return i;
-      }
-      return -1;
-    };
-
     const animate = () => {
-      // Scroll vertical
+      // --- scroll vertical ---
       const diffY = targetYRef.current - currentYRef.current;
       currentYRef.current += Math.abs(diffY) > 0.1 ? diffY * LERP : diffY;
 
@@ -87,7 +64,7 @@ export function Prestations() {
         lastYRef.current = roundedY;
       }
 
-      // Scroll horizontal
+      // --- scroll horizontal ---
       for (let i = 0; i < 3; i++) {
         const diffX = targetXRefs.current[i] - currentXRefs.current[i];
         currentXRefs.current[i] += Math.abs(diffX) > 0.1 ? diffX * LERP : diffX;
@@ -100,10 +77,18 @@ export function Prestations() {
         }
       }
 
-      // 👉 Mise à jour du titre actif
-      const active = getActiveCarousel();
-      if (active !== -1) {
-        setActiveSection(active);
+      // ✅ LOGIQUE SIMPLE ET FIABLE
+      const y = currentYRef.current;
+      const sectionHeight = window.innerHeight;
+
+      let index = 0;
+
+      if (y > sectionHeight * 1.5) index = 2;
+      else if (y > sectionHeight * 0.5) index = 1;
+      else index = 0;
+
+      if (index !== activeSection) {
+        setActiveSection(index);
       }
 
       rafRef.current = requestAnimationFrame(animate);
@@ -116,37 +101,17 @@ export function Prestations() {
 
       const delta = e.deltaY * SPEED;
       const maxY = getMaxScrollY();
-      const carouselIndex = getActiveCarousel();
 
-      if (carouselIndex === -1) {
-        targetYRef.current = Math.max(0, Math.min(targetYRef.current + delta, maxY));
-        return;
-      }
-
-      const offsets = cachedOffsetsRef.current;
-      const numImages = carousels[carouselIndex].length;
-      const maxX = getMaxScrollX(numImages);
-      const currentX = targetXRefs.current[carouselIndex];
-
-      if (delta > 0 && currentX < maxX) {
-        targetYRef.current = offsets[carouselIndex].top;
-        targetXRefs.current[carouselIndex] = Math.min(currentX + delta, maxX);
-      } else if (delta < 0 && currentX > 0) {
-        targetYRef.current = offsets[carouselIndex].top;
-        targetXRefs.current[carouselIndex] = Math.max(currentX + delta, 0);
-      } else {
-        targetYRef.current = Math.max(0, Math.min(targetYRef.current + delta, maxY));
-      }
+      targetYRef.current = Math.max(0, Math.min(targetYRef.current + delta, maxY));
     };
 
     container.addEventListener('wheel', handleWheel, { passive: false });
 
     return () => {
       container.removeEventListener('wheel', handleWheel);
-      window.removeEventListener('resize', cacheOffsets);
       if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
     };
-  }, []);
+  }, [activeSection]);
 
   return (
     <div
@@ -155,7 +120,7 @@ export function Prestations() {
       style={{ background: 'rgb(15,15,15)' }}
     >
       {/* 🔥 TITRE FIXE */}
-      <div className="fixed top-[18vh] left-[5vw] z-20 text-[4vh] font-bold pointer-events-none transition-all duration-300 hover:scale-105">
+      <div className="fixed top-[18vh] left-[5vw] z-20 text-[4vh] font-bold transition-all duration-300 hover:scale-105">
         {titles[activeSection]}
       </div>
 
