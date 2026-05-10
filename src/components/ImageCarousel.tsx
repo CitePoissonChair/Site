@@ -15,8 +15,14 @@ export const ImageCarousel = forwardRef<HTMLDivElement, ImageCarouselProps>(
     return (
       <div className="w-full h-screen relative flex-none overflow-hidden">
         
-        {/* viewport */}
-        <div className="w-full h-full flex items-center overflow-x-auto overflow-y-hidden scrollbar-hide">
+        {/* VIEWPORT */}
+        <div
+          className="
+            w-full h-full flex items-center
+            overflow-x-auto overflow-y-hidden
+            scrollbar-hide
+          "
+        >
           
           {/* TRACK */}
           <div
@@ -25,7 +31,6 @@ export const ImageCarousel = forwardRef<HTMLDivElement, ImageCarouselProps>(
               flex h-full
               will-change-transform
               select-none
-              gap-0
               pr-8
             "
           >
@@ -115,7 +120,7 @@ export const ImageCarousel = forwardRef<HTMLDivElement, ImageCarouselProps>(
               </div>
             ))}
 
-            {/* ✅ SPACER FINAL PROPRE (IMPORTANT) */}
+            {/* spacer fin propre */}
             <div className="flex-none w-8 h-full" />
           </div>
         </div>
