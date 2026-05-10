@@ -18,10 +18,7 @@ export const ImageCarousel = forwardRef<HTMLDivElement, ImageCarouselProps>(
         {/* TRACK */}
         <div
           ref={ref}
-          className="
-            flex w-full h-full
-            will-change-transform
-          "
+          className="flex w-full h-full will-change-transform"
         >
           {images.map((img, i) => (
             <div
@@ -32,46 +29,73 @@ export const ImageCarousel = forwardRef<HTMLDivElement, ImageCarouselProps>(
                 group
               "
             >
-              <Link to={img.link ?? '#'} className="w-full h-full block relative">
+              {img.link ? (
+                <Link to={img.link} className="w-full h-full block relative">
 
-                {/* IMAGE (parallax léger) */}
-                <div className="
-                  absolute inset-0 scale-110
-                  transition-transform duration-[1200ms]
-                  group-hover:scale-125
-                ">
-                  <img
-                    src={img.src}
-                    alt={img.alt}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-
-                {/* OVERLAY */}
-                <div className="
-                  absolute inset-0 bg-black/30
-                  group-hover:bg-black/10
-                  transition
-                " />
-
-                {/* LABEL */}
-                {img.label && (
+                  {/* PARALLAX BACK LAYER */}
                   <div className="
-                    absolute inset-0 flex items-center justify-center
-                    pointer-events-none
+                    absolute inset-0 scale-110
+                    transition-transform duration-[1200ms] ease-out
+                    group-hover:scale-125
                   ">
+                    <img
+                      src={img.src}
+                      alt={img.alt}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+
+                  {/* DARK OVERLAY */}
+                  <div className="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition" />
+
+                  {/* LABEL */}
+                  {img.label && (
                     <div className="
-                      text-[7vh] font-bold text-white
-                      transition-all duration-300
+                      absolute inset-0
+                      flex items-center justify-center
+                      pointer-events-none
+                    ">
+                      <div className="
+                        text-[7vh] font-bold text-white
+                        transition-all duration-300
+                        group-hover:text-yellow-400
+                        group-hover:scale-110
+                      ">
+                        {img.label}
+                      </div>
+                    </div>
+                  )}
+
+                </Link>
+              ) : (
+                <>
+                  <div className="
+                    absolute inset-0 scale-110
+                    transition-transform duration-[1200ms]
+                    group-hover:scale-125
+                  ">
+                    <img
+                      src={img.src}
+                      alt={img.alt}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+
+                  <div className="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition" />
+
+                  {img.label && (
+                    <div className="
+                      absolute inset-0 flex items-center justify-center
+                      text-white text-[7vh] font-bold
+                      pointer-events-none
+                      transition-colors duration-300
                       group-hover:text-yellow-400
-                      group-hover:scale-110
                     ">
                       {img.label}
                     </div>
-                  </div>
-                )}
-
-              </Link>
+                  )}
+                </>
+              )}
             </div>
           ))}
         </div>
