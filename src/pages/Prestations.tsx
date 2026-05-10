@@ -96,6 +96,10 @@ export function Prestations() {
     return () => container.removeEventListener('wheel', handleWheel);
   }, []);
 
+  const setRef = (i: number) => (el: HTMLDivElement | null) => {
+    refs.current[i] = el;
+  };
+
   return (
     <div ref={containerRef} className="h-screen overflow-hidden bg-[rgb(15,15,15)]">
       <div ref={contentRef} className="will-change-transform">
@@ -107,24 +111,25 @@ export function Prestations() {
 
         <ImageCarousel
           images={photosImages}
-          ref={(el) => { refs.current[0] = el; }}
+          ref={setRef(0)}
         />
 
         <div className="h-[10vh]" />
 
         <ImageCarousel
           images={livesImages}
-          ref={(el) => { refs.current[1] = el; }}
+          ref={setRef(1)}
         />
 
         <div className="h-[10vh]" />
 
         <ImageCarousel
           images={clipsImages}
-          ref={(el) => { refs.current[2] = el; }}
+          ref={setRef(2)}
         />
 
         <div className="h-[20vh]" />
+
       </div>
     </div>
   );
