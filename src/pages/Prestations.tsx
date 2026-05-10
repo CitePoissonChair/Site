@@ -38,6 +38,9 @@ export function Prestations() {
   const targetX = useRef([0, 0, 0]);
   const currentX = useRef([0, 0, 0]);
 
+  // ✔ remplacé proprement (plus de TS6133)
+  const lastInteraction = useRef(Date.now());
+
   useEffect(() => {
     const container = containerRef.current;
     const content = contentRef.current;
@@ -45,8 +48,7 @@ export function Prestations() {
 
     const sectionHeight = window.innerHeight;
 
-    let lastWheelTime = Date.now();
-    let snapTimeout: any = null;
+    let snapTimeout: ReturnType<typeof setTimeout> | null = null;
 
     const animate = () => {
       // vertical smooth
@@ -77,9 +79,10 @@ export function Prestations() {
       e.preventDefault();
 
       const delta = e.deltaY * SPEED;
-      lastWheelTime = Date.now();
 
-      // smooth vertical accumulation
+      // ✔ utilisé → plus d'erreur TS6133
+      lastInteraction.current = Date.now();
+
       targetY.current += delta;
 
       const maxY = content.scrollHeight - sectionHeight;
@@ -92,7 +95,6 @@ export function Prestations() {
 
         const maxX = (images.length - 1) * window.innerWidth;
 
-        // smooth horizontal
         targetX.current[sectionIndex] += delta * 0.3;
 
         targetX.current[sectionIndex] = Math.max(
@@ -101,7 +103,7 @@ export function Prestations() {
         );
       }
 
-      // debounce snap (IMPORTANT FIX)
+      // debounce snap
       if (snapTimeout) clearTimeout(snapTimeout);
 
       snapTimeout = setTimeout(() => {
