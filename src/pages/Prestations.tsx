@@ -3,8 +3,8 @@ import { SiteHeader } from '../components/SiteHeader';
 import { VideoHero } from '../components/VideoHero';
 import { ImageCarousel } from '../components/ImageCarousel';
 
-const SPEED = 1.2;
-const LERP = 0.06;
+const SPEED = 1.1;
+const LERP = 0.045; // plus doux = plus stable
 
 const photosImages = [
   { src: '/prestationscontenu/Cisnienie (1).jpg', alt: 'Photos', label: 'Photos', link: '/photos' },
@@ -46,16 +46,15 @@ export function Prestations() {
     const maxY = () => content.scrollHeight - window.innerHeight;
 
     const animate = () => {
-      // smooth vertical
+      // vertical smooth
       currentY.current += (targetY.current - currentY.current) * LERP;
       content.style.transform = `translateY(-${currentY.current}px)`;
 
-      // smooth horizontal (derivé uniquement)
+      // horizontal smooth
       for (let i = 0; i < 3; i++) {
-        const el = refs.current[i];
-
         currentX.current[i] += (targetX.current[i] - currentX.current[i]) * LERP;
 
+        const el = refs.current[i];
         if (el) {
           el.style.transform = `translateX(-${currentX.current[i]}px)`;
         }
@@ -70,27 +69,30 @@ export function Prestations() {
       e.preventDefault();
 
       const delta = e.deltaY * SPEED;
-      const maxScroll = maxY();
+      const y = currentY.current;
 
-      // vertical target ALWAYS allowed
-      targetY.current = Math.max(0, Math.min(targetY.current + delta, maxScroll));
+      const sectionHeight = window.innerHeight;
+      const section = Math.floor(y / sectionHeight);
 
-      // compute section index
-      const section = Math.floor(currentY.current / window.innerHeight);
+      // clamp vertical
+      targetY.current = Math.max(0, Math.min(targetY.current + delta, maxY()));
 
-      if (section >= 0 && section < carousels.length) {
-        const imagesCount = carousels[section].length;
+      // horizontal ONLY if centered in section
+      const isCentered =
+        y % sectionHeight < sectionHeight * 0.8 &&
+        y % sectionHeight > sectionHeight * 0.2;
 
-        const maxX = (imagesCount - 1) * window.innerWidth;
+      if (section >= 0 && section < carousels.length && isCentered) {
+        const maxX = (carousels[section].length - 1) * window.innerWidth;
 
         const current = targetX.current[section];
 
-        // progress-based horizontal motion (NO overflow possible)
-        const horizontalDelta = delta * 0.6;
+        // smoother horizontal influence
+        const horizontal = delta * 0.4;
 
         targetX.current[section] = Math.max(
           0,
-          Math.min(current + horizontalDelta, maxX)
+          Math.min(current + horizontal, maxX)
         );
       }
     };
@@ -107,20 +109,29 @@ export function Prestations() {
         <SiteHeader title="Prestations" showBack />
         <VideoHero />
 
+        {/* spacing BETWEEN sections = important */}
+        <div className="h-[10vh]" />
+
         <ImageCarousel
           images={photosImages}
           ref={(el) => (refs.current[0] = el)}
         />
+
+        <div className="h-[10vh]" />
 
         <ImageCarousel
           images={livesImages}
           ref={(el) => (refs.current[1] = el)}
         />
 
+        <div className="h-[10vh]" />
+
         <ImageCarousel
           images={clipsImages}
           ref={(el) => (refs.current[2] = el)}
         />
+
+        <div className="h-[20vh]" />
 
       </div>
     </div>
