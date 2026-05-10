@@ -3,8 +3,8 @@ import { SiteHeader } from '../components/SiteHeader';
 import { VideoHero } from '../components/VideoHero';
 import { ImageCarousel } from '../components/ImageCarousel';
 
-const SPEED = 1.1;
-const LERP = 0.06;
+const SPEED = 1.2;
+const LERP = 0.08;
 
 const photosImages = [
   { src: '/prestationscontenu/Cisnienie (1).jpg', alt: 'Photos', label: 'Photos', link: '/photos' },
@@ -38,24 +38,17 @@ export function Prestations() {
   const targetX = useRef([0, 0, 0]);
   const currentX = useRef([0, 0, 0]);
 
-  // ✔ remplacé proprement (plus de TS6133)
-  const lastInteraction = useRef(Date.now());
-
   useEffect(() => {
     const container = containerRef.current;
     const content = contentRef.current;
     if (!container || !content) return;
 
-    const sectionHeight = window.innerHeight;
-
-    let snapTimeout: ReturnType<typeof setTimeout> | null = null;
-
     const animate = () => {
-      // vertical smooth
+      // vertical smooth scroll
       currentY.current += (targetY.current - currentY.current) * LERP;
       content.style.transform = `translateY(-${currentY.current}px)`;
 
-      // horizontal smooth
+      // horizontal smooth per section
       for (let i = 0; i < sections.length; i++) {
         currentX.current[i] += (targetX.current[i] - currentX.current[i]) * LERP;
 
@@ -70,52 +63,38 @@ export function Prestations() {
 
     animate();
 
-    const snapToSection = () => {
-      const index = Math.round(currentY.current / sectionHeight);
-      targetY.current = index * sectionHeight;
-    };
-
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
 
       const delta = e.deltaY * SPEED;
 
-      // ✔ utilisé → plus d'erreur TS6133
-      lastInteraction.current = Date.now();
-
       targetY.current += delta;
 
-      const maxY = content.scrollHeight - sectionHeight;
+      const maxY = content.scrollHeight - window.innerHeight;
       targetY.current = Math.max(0, Math.min(targetY.current, maxY));
 
-      const sectionIndex = Math.round(targetY.current / sectionHeight);
+      // detect section (smooth, no snap)
+      const sectionIndex = Math.min(
+        sections.length - 1,
+        Math.max(0, Math.floor(targetY.current / window.innerHeight))
+      );
 
-      if (sectionIndex >= 0 && sectionIndex < sections.length) {
-        const images = sections[sectionIndex];
+      const images = sections[sectionIndex];
 
-        const maxX = (images.length - 1) * window.innerWidth;
+      const maxX = (images.length - 1) * window.innerWidth;
 
-        targetX.current[sectionIndex] += delta * 0.3;
+      targetX.current[sectionIndex] += delta * 0.3;
 
-        targetX.current[sectionIndex] = Math.max(
-          0,
-          Math.min(targetX.current[sectionIndex], maxX)
-        );
-      }
-
-      // debounce snap
-      if (snapTimeout) clearTimeout(snapTimeout);
-
-      snapTimeout = setTimeout(() => {
-        snapToSection();
-      }, 120);
+      targetX.current[sectionIndex] = Math.max(
+        0,
+        Math.min(targetX.current[sectionIndex], maxX)
+      );
     };
 
     container.addEventListener('wheel', handleWheel, { passive: false });
 
     return () => {
       container.removeEventListener('wheel', handleWheel);
-      if (snapTimeout) clearTimeout(snapTimeout);
     };
   }, []);
 
