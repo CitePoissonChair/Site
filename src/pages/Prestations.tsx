@@ -24,13 +24,14 @@ const clipsImages = [
   { src: '/images/Ecrits/Station Soleil Bleu/Contenus/CPC_station_soleil_bleu_2.jpg', alt: 'Clips', link: '/clips' },
 ];
 
-const carousels = [photosImages, livesImages, clipsImages];
+const sections = [photosImages, livesImages, clipsImages];
 
 export function Prestations() {
   const containerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
-  const refs = useRef<(HTMLDivElement | null)[]>([]);
+  // ✅ FIX TS BUILD SAFE
+  const carRefs = useRef<Array<HTMLDivElement | null>>([]);
 
   const targetY = useRef(0);
   const currentY = useRef(0);
@@ -43,16 +44,16 @@ export function Prestations() {
     const content = contentRef.current;
     if (!container || !content) return;
 
-    const maxY = () => content.scrollHeight - window.innerHeight;
+    const sectionHeight = window.innerHeight;
 
     const animate = () => {
       currentY.current += (targetY.current - currentY.current) * LERP;
       content.style.transform = `translateY(-${currentY.current}px)`;
 
-      for (let i = 0; i < carousels.length; i++) {
+      for (let i = 0; i < sections.length; i++) {
         currentX.current[i] += (targetX.current[i] - currentX.current[i]) * LERP;
 
-        const el = refs.current[i];
+        const el = carRefs.current[i];
         if (el) {
           el.style.transform = `translateX(-${currentX.current[i]}px)`;
         }
@@ -68,23 +69,23 @@ export function Prestations() {
 
       const delta = e.deltaY * SPEED;
 
-      const sectionHeight = window.innerHeight;
-      const section = Math.floor(currentY.current / sectionHeight);
+      targetY.current += delta;
 
-      // 🔥 vertical toujours actif (base)
-      targetY.current = Math.max(
-        0,
-        Math.min(targetY.current + delta, maxY())
-      );
+      const maxY = content.scrollHeight - sectionHeight;
+      targetY.current = Math.max(0, Math.min(targetY.current, maxY));
 
-      // 🔥 horizontal PRIORITAIRE si section valide
-      if (section >= 0 && section < carousels.length) {
-        const images = carousels[section];
+      const sectionIndex = Math.floor(targetY.current / sectionHeight);
+
+      if (sectionIndex >= 0 && sectionIndex < sections.length) {
+        const images = sections[sectionIndex];
+
         const maxX = (images.length - 1) * window.innerWidth;
 
-        targetX.current[section] = Math.max(
+        targetX.current[sectionIndex] += delta * 0.35;
+
+        targetX.current[sectionIndex] = Math.max(
           0,
-          Math.min(targetX.current[section] + delta * 0.4, maxX)
+          Math.min(targetX.current[sectionIndex], maxX)
         );
       }
     };
@@ -103,19 +104,20 @@ export function Prestations() {
         <SiteHeader title="Prestations" showBack />
         <VideoHero />
 
-        <div className="h-[10vh]" />
+        <ImageCarousel
+          images={photosImages}
+          ref={(el) => { carRefs.current[0] = el; }}
+        />
 
-        <ImageCarousel images={photosImages} ref={(el) => (refs.current[0] = el)} />
+        <ImageCarousel
+          images={livesImages}
+          ref={(el) => { carRefs.current[1] = el; }}
+        />
 
-        <div className="h-[10vh]" />
-
-        <ImageCarousel images={livesImages} ref={(el) => (refs.current[1] = el)} />
-
-        <div className="h-[10vh]" />
-
-        <ImageCarousel images={clipsImages} ref={(el) => (refs.current[2] = el)} />
-
-        <div className="h-[20vh]" />
+        <ImageCarousel
+          images={clipsImages}
+          ref={(el) => { carRefs.current[2] = el; }}
+        />
 
       </div>
     </div>
