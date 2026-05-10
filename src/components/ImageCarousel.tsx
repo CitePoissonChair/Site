@@ -37,10 +37,10 @@ export const ImageCarousel = forwardRef<HTMLDivElement, ImageCarouselProps>(
                       className="w-full h-full object-cover block transition-transform duration-500 group-hover:scale-105"
                     />
 
-                    {/* LABEL SIMPLE (SANS BACKGROUND) */}
+                    {/* LABEL PLUS GROS */}
                     {image.label && (
                       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                        <div className="text-[4vh] font-bold text-white transition-colors duration-300 group-hover:text-yellow-400">
+                        <div className="text-[6vh] font-bold text-white transition-all duration-300 group-hover:text-yellow-400 group-hover:scale-110 tracking-wide">
                           {image.label}
                         </div>
                       </div>
@@ -56,10 +56,10 @@ export const ImageCarousel = forwardRef<HTMLDivElement, ImageCarouselProps>(
                       className="w-full h-full object-cover block transition-transform duration-500 group-hover:scale-105"
                     />
 
-                    {/* LABEL SIMPLE */}
+                    {/* LABEL PLUS GROS */}
                     {image.label && (
                       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                        <div className="text-[4vh] font-bold text-white transition-colors duration-300 group-hover:text-yellow-400">
+                        <div className="text-[6vh] font-bold text-white transition-all duration-300 group-hover:text-yellow-400 group-hover:scale-110 tracking-wide">
                           {image.label}
                         </div>
                       </div>
