@@ -7,7 +7,7 @@ interface SiteHeaderProps {
   backTo?: string;
 }
 
-export function SiteHeader({ title, showBack = false }: SiteHeaderProps) {
+export function SiteHeader({ title, showBack = false, backTo }: SiteHeaderProps) {
   const [hovered, setHovered] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
