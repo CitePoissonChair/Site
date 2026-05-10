@@ -39,8 +39,6 @@ export function Prestations() {
   const currentXRefs = useRef([0, 0, 0]);
 
   const cachedOffsetsRef = useRef<{ top: number; height: number }[]>([]);
-  const lastYRef = useRef(-1);
-  const lastXRef = useRef([-1, -1, -1]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -64,6 +62,7 @@ export function Prestations() {
     const getActiveCarousel = () => {
       const y = currentYRef.current;
       const offsets = cachedOffsetsRef.current;
+
       for (let i = 0; i < offsets.length; i++) {
         const { top, height } = offsets[i];
         if (y >= top - 2 && y < top + height - 2) return i;
@@ -125,7 +124,7 @@ export function Prestations() {
     return () => {
       container.removeEventListener('wheel', handleWheel);
       window.removeEventListener('resize', cacheOffsets);
-      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
   }, []);
 
@@ -143,26 +142,24 @@ export function Prestations() {
 
         <VideoHero />
 
-        {/* ✅ ESPACEMENT PROPRE ENTRE LES CARROUSELS */}
-
         <div className="mb-10">
           <ImageCarousel
             images={photosImages}
-            ref={(el) => { carouselInnerRefs.current[0] = el; }}
+            ref={(el) => (carouselInnerRefs.current[0] = el)}
           />
         </div>
 
         <div className="mb-10">
           <ImageCarousel
             images={livesImages}
-            ref={(el) => { carouselInnerRefs.current[1] = el; }}
+            ref={(el) => (carouselInnerRefs.current[1] = el)}
           />
         </div>
 
         <div className="mb-10">
           <ImageCarousel
             images={clipsImages}
-            ref={(el) => { carouselInnerRefs.current[2] = el; }}
+            ref={(el) => (carouselInnerRefs.current[2] = el)}
           />
         </div>
 
