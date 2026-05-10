@@ -38,19 +38,23 @@ export function Prestations() {
   const targetX = useRef([0, 0, 0]);
   const currentX = useRef([0, 0, 0]);
 
+  const activeSection = useRef(-1);
+
   useEffect(() => {
     const container = containerRef.current;
     const content = contentRef.current;
     if (!container || !content) return;
 
-    const maxY = () => content.scrollHeight - window.innerHeight;
+    const getSectionIndex = () =>
+      Math.floor(currentY.current / window.innerHeight);
 
     const animate = () => {
-      // vertical smooth
       currentY.current += (targetY.current - currentY.current) * LERP;
       content.style.transform = `translateY(-${currentY.current}px)`;
 
-      // horizontal smooth
+      const index = getSectionIndex();
+      activeSection.current = index;
+
       for (let i = 0; i < sections.length; i++) {
         currentX.current[i] += (targetX.current[i] - currentX.current[i]) * LERP;
 
@@ -70,29 +74,42 @@ export function Prestations() {
 
       const delta = e.deltaY * SPEED;
 
-      // 👉 vertical : fluid without snapping
-      targetY.current = Math.max(
-        0,
-        Math.min(targetY.current + delta, maxY())
-      );
+      const sectionIndex = getSectionIndex();
 
-      const sectionHeight = window.innerHeight;
-      const sectionIndex = Math.floor(targetY.current / sectionHeight);
+      const images = sections[sectionIndex];
+
+      const maxX = (images.length - 1) * window.innerWidth;
+
+      const x = targetX.current[sectionIndex];
+
+      const isAtStart = x <= 0;
+      const isAtEnd = x >= maxX;
+
+      // 🧠 LOGIQUE PRINCIPALE
 
       if (sectionIndex >= 0 && sectionIndex < sections.length) {
-        const images = sections[sectionIndex];
 
-        const maxX = (images.length - 1) * window.innerWidth;
+        // 👉 SI on est dans la section ET qu’on peut encore scroller horizontal
+        if ((delta > 0 && !isAtEnd) || (delta < 0 && !isAtStart)) {
+          targetX.current[sectionIndex] += delta * 0.6;
 
-        // 👉 horizontal progress smooth (NOT instant jump)
-        targetX.current[sectionIndex] = Math.max(
-          0,
-          Math.min(
-            targetX.current[sectionIndex] + delta * 0.4,
-            maxX
-          )
-        );
+          targetX.current[sectionIndex] = Math.max(
+            0,
+            Math.min(targetX.current[sectionIndex], maxX)
+          );
+
+          return; // ❌ bloque vertical
+        }
       }
+
+      // 👉 sinon scroll vertical normal
+      targetY.current = Math.max(
+        0,
+        Math.min(
+          targetY.current + delta,
+          content.scrollHeight - window.innerHeight
+        )
+      );
     };
 
     container.addEventListener('wheel', handleWheel, { passive: false });
