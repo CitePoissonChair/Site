@@ -38,10 +38,7 @@ export function Prestations() {
   const currentYRef = useRef(0);
   const currentXRefs = useRef([0, 0, 0]);
 
-  // Cache des offsets — évite les reflows à chaque event wheel
   const cachedOffsetsRef = useRef<{ top: number; height: number }[]>([]);
-
-  // Dernières valeurs appliquées au DOM — évite les re-paints inutiles
   const lastYRef = useRef(-1);
   const lastXRef = useRef([-1, -1, -1]);
 
@@ -53,7 +50,6 @@ export function Prestations() {
     const getMaxScrollY = () => content.scrollHeight - window.innerHeight;
     const getMaxScrollX = (numImages: number) => (numImages - 1) * (window.innerWidth + 50);
 
-    // Calcule et met en cache les offsets — appelé une seule fois au mount + resize
     const cacheOffsets = () => {
       const children = content.children;
       cachedOffsetsRef.current = [2, 3, 4].map((i) => {
@@ -76,35 +72,18 @@ export function Prestations() {
     };
 
     const animate = () => {
-      // --- Lerp vertical ---
       const diffY = targetYRef.current - currentYRef.current;
-      if (Math.abs(diffY) > 0.1) {
-        currentYRef.current += diffY * LERP;
-      } else {
-        currentYRef.current = targetYRef.current;
-      }
+      currentYRef.current += diffY * LERP;
 
-      // Écriture DOM uniquement si la valeur a changé
-      const roundedY = Math.round(currentYRef.current * 100) / 100;
-      if (roundedY !== lastYRef.current) {
-        content.style.transform = `translateY(-${roundedY}px)`;
-        lastYRef.current = roundedY;
-      }
+      content.style.transform = `translateY(-${currentYRef.current}px)`;
 
-      // --- Lerp horizontal ---
       for (let i = 0; i < 3; i++) {
         const diffX = targetXRefs.current[i] - currentXRefs.current[i];
-        if (Math.abs(diffX) > 0.1) {
-          currentXRefs.current[i] += diffX * LERP;
-        } else {
-          currentXRefs.current[i] = targetXRefs.current[i];
-        }
+        currentXRefs.current[i] += diffX * LERP;
 
-        const roundedX = Math.round(currentXRefs.current[i] * 100) / 100;
-        if (roundedX !== lastXRef.current[i]) {
-          const el = carouselInnerRefs.current[i];
-          if (el) el.style.transform = `translateX(-${roundedX}px)`;
-          lastXRef.current[i] = roundedX;
+        const el = carouselInnerRefs.current[i];
+        if (el) {
+          el.style.transform = `translateX(-${currentXRefs.current[i]}px)`;
         }
       }
 
@@ -157,24 +136,36 @@ export function Prestations() {
       style={{ background: 'rgb(15,15,15)' }}
     >
       <div ref={contentRef} className="will-change-transform">
+
         <div className="flex flex-col items-center">
           <SiteHeader title="Prestations" showBack />
         </div>
 
         <VideoHero />
 
-        <ImageCarousel
-          images={photosImages}
-          ref={(el) => { carouselInnerRefs.current[0] = el; }}
-        />
-        <ImageCarousel
-          images={livesImages}
-          ref={(el) => { carouselInnerRefs.current[1] = el; }}
-        />
-        <ImageCarousel
-          images={clipsImages}
-          ref={(el) => { carouselInnerRefs.current[2] = el; }}
-        />
+        {/* ✅ ESPACEMENT PROPRE ENTRE LES CARROUSELS */}
+
+        <div className="mb-10">
+          <ImageCarousel
+            images={photosImages}
+            ref={(el) => { carouselInnerRefs.current[0] = el; }}
+          />
+        </div>
+
+        <div className="mb-10">
+          <ImageCarousel
+            images={livesImages}
+            ref={(el) => { carouselInnerRefs.current[1] = el; }}
+          />
+        </div>
+
+        <div className="mb-10">
+          <ImageCarousel
+            images={clipsImages}
+            ref={(el) => { carouselInnerRefs.current[2] = el; }}
+          />
+        </div>
+
       </div>
     </div>
   );
