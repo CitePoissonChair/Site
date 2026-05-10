@@ -46,11 +46,9 @@ export function Prestations() {
     const sectionHeight = window.innerHeight;
 
     const animate = () => {
-      // smooth vertical (snap feeling)
       currentY.current += (targetY.current - currentY.current) * LERP;
       content.style.transform = `translateY(-${currentY.current}px)`;
 
-      // smooth horizontal per section
       for (let i = 0; i < 3; i++) {
         currentX.current[i] += (targetX.current[i] - currentX.current[i]) * LERP;
 
@@ -72,8 +70,8 @@ export function Prestations() {
 
       const nextY = targetY.current + delta;
 
-      // SNAP VERTICAL (sections)
-      const snappedSection = Math.round(nextY / sectionHeight) * sectionHeight;
+      const snappedSection =
+        Math.round(nextY / sectionHeight) * sectionHeight;
 
       targetY.current = Math.max(
         0,
@@ -89,7 +87,6 @@ export function Prestations() {
 
         const nextX = targetX.current[sectionIndex] + delta * 0.5;
 
-        // SNAP horizontal image by image
         const snappedX =
           Math.round(nextX / window.innerWidth) * window.innerWidth;
 
@@ -119,17 +116,17 @@ export function Prestations() {
 
         <ImageCarousel
           images={photosImages}
-          ref={(el) => (carRefs.current[0] = el)}
+          ref={(el) => { carRefs.current[0] = el; }}
         />
 
         <ImageCarousel
           images={livesImages}
-          ref={(el) => (carRefs.current[1] = el)}
+          ref={(el) => { carRefs.current[1] = el; }}
         />
 
         <ImageCarousel
           images={clipsImages}
-          ref={(el) => (carRefs.current[2] = el)}
+          ref={(el) => { carRefs.current[2] = el; }}
         />
 
       </div>
