@@ -19,27 +19,19 @@ export const ImageCarousel = forwardRef<HTMLDivElement, ImageCarouselProps>(
           {/* TRACK */}
           <div
             ref={ref}
-            className="
-              flex w-full h-full
-              will-change-transform
-              select-none
-            "
+            className="flex w-full h-full will-change-transform select-none"
           >
             {images.map((image, index) => (
               <div
                 key={index}
-                className="
-                  flex-none w-screen h-full
-                  flex items-center justify-center
-                  relative group
-                "
+                className="flex-none w-screen h-full flex items-center justify-center relative group overflow-hidden"
               >
                 {image.link ? (
                   <Link
                     to={image.link}
                     className="w-full h-full flex items-center justify-center relative overflow-hidden"
                   >
-                    {/* IMAGE */}
+                    {/* IMAGE + PARALLAX BASE */}
                     <img
                       src={image.src}
                       alt={image.alt}
@@ -52,16 +44,16 @@ export const ImageCarousel = forwardRef<HTMLDivElement, ImageCarouselProps>(
                       "
                     />
 
-                    {/* overlay cinéma subtil */}
+                    {/* overlay cinéma doux */}
                     <div className="
                       absolute inset-0
-                      bg-black/10
+                      bg-black/20
                       opacity-60
                       group-hover:opacity-30
                       transition-opacity duration-700
                     " />
 
-                    {/* LABEL */}
+                    {/* TITRE */}
                     {image.label && (
                       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                         <div
@@ -80,7 +72,6 @@ export const ImageCarousel = forwardRef<HTMLDivElement, ImageCarouselProps>(
                   </Link>
                 ) : (
                   <>
-                    {/* IMAGE */}
                     <img
                       src={image.src}
                       alt={image.alt}
@@ -93,16 +84,14 @@ export const ImageCarousel = forwardRef<HTMLDivElement, ImageCarouselProps>(
                       "
                     />
 
-                    {/* overlay cinéma */}
                     <div className="
                       absolute inset-0
-                      bg-black/10
+                      bg-black/20
                       opacity-60
                       group-hover:opacity-30
                       transition-opacity duration-700
                     " />
 
-                    {/* LABEL */}
                     {image.label && (
                       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                         <div
@@ -120,14 +109,10 @@ export const ImageCarousel = forwardRef<HTMLDivElement, ImageCarouselProps>(
                     )}
                   </>
                 )}
-
-                {/* 🔥 padding fin de scroll (respiration UX) */}
-                {index === images.length - 1 && (
-                  <div className="flex-none w-[25vw] h-full" />
-                )}
               </div>
             ))}
           </div>
+
         </div>
       </div>
     );
