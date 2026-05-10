@@ -3,8 +3,8 @@ import { SiteHeader } from '../components/SiteHeader';
 import { VideoHero } from '../components/VideoHero';
 import { ImageCarousel } from '../components/ImageCarousel';
 
-const LERP = 0.08;
-const SPEED = 1.8;
+const LERP = 0.06; // plus smooth (important)
+const SPEED = 1.6;
 
 const photosImages = [
   { src: '/prestationscontenu/Cisnienie (1).jpg', alt: 'Photos 1', label: 'Photos', link: '/photos' },
@@ -29,152 +29,104 @@ const carousels = [photosImages, livesImages, clipsImages];
 export function Prestations() {
   const containerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
-  const rafRef = useRef<number | null>(null);
 
-  const carouselInnerRefs = useRef<(HTMLDivElement | null)[]>([null, null, null]);
+  const carouselRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  const targetYRef = useRef(0);
-  const targetXRefs = useRef([0, 0, 0]);
-  const currentYRef = useRef(0);
-  const currentXRefs = useRef([0, 0, 0]);
+  const targetY = useRef(0);
+  const currentY = useRef(0);
 
-  // Cache des offsets — évite les reflows à chaque event wheel
-  const cachedOffsetsRef = useRef<{ top: number; height: number }[]>([]);
+  const targetX = useRef([0, 0, 0]);
+  const currentX = useRef([0, 0, 0]);
 
-  // Dernières valeurs appliquées au DOM — évite les re-paints inutiles
-  const lastYRef = useRef(-1);
-  const lastXRef = useRef([-1, -1, -1]);
+  const activeSection = useRef<number | null>(null);
 
   useEffect(() => {
     const container = containerRef.current;
     const content = contentRef.current;
     if (!container || !content) return;
 
-    const getMaxScrollY = () => content.scrollHeight - window.innerHeight;
-    const getMaxScrollX = (numImages: number) => (numImages - 1) * (window.innerWidth + 50);
-
-    // Calcule et met en cache les offsets — appelé une seule fois au mount + resize
-    const cacheOffsets = () => {
-      const children = content.children;
-      cachedOffsetsRef.current = [2, 3, 4].map((i) => {
-        const el = children[i] as HTMLElement;
-        return { top: el.offsetTop, height: el.offsetHeight };
-      });
-    };
-
-    cacheOffsets();
-    window.addEventListener('resize', cacheOffsets);
-
-    const getActiveCarousel = () => {
-      const y = currentYRef.current;
-      const offsets = cachedOffsetsRef.current;
-      for (let i = 0; i < offsets.length; i++) {
-        const { top, height } = offsets[i];
-        if (y >= top - 2 && y < top + height - 2) return i;
-      }
-      return -1;
-    };
+    const getMaxY = () => content.scrollHeight - window.innerHeight;
+    const getMaxX = (n: number) => (n - 1) * window.innerWidth;
 
     const animate = () => {
-      // --- Lerp vertical ---
-      const diffY = targetYRef.current - currentYRef.current;
-      if (Math.abs(diffY) > 0.1) {
-        currentYRef.current += diffY * LERP;
-      } else {
-        currentYRef.current = targetYRef.current;
-      }
+      // smooth vertical scroll (parallax feel)
+      currentY.current += (targetY.current - currentY.current) * LERP;
+      content.style.transform = `translateY(-${currentY.current}px)`;
 
-      // Écriture DOM uniquement si la valeur a changé
-      const roundedY = Math.round(currentYRef.current * 100) / 100;
-      if (roundedY !== lastYRef.current) {
-        content.style.transform = `translateY(-${roundedY}px)`;
-        lastYRef.current = roundedY;
-      }
-
-      // --- Lerp horizontal ---
+      // horizontal scroll
       for (let i = 0; i < 3; i++) {
-        const diffX = targetXRefs.current[i] - currentXRefs.current[i];
-        if (Math.abs(diffX) > 0.1) {
-          currentXRefs.current[i] += diffX * LERP;
-        } else {
-          currentXRefs.current[i] = targetXRefs.current[i];
-        }
+        currentX.current[i] += (targetX.current[i] - currentX.current[i]) * LERP;
 
-        const roundedX = Math.round(currentXRefs.current[i] * 100) / 100;
-        if (roundedX !== lastXRef.current[i]) {
-          const el = carouselInnerRefs.current[i];
-          if (el) el.style.transform = `translateX(-${roundedX}px)`;
-          lastXRef.current[i] = roundedX;
+        const el = carouselRefs.current[i];
+        if (el) {
+          el.style.transform = `translateX(-${currentX.current[i]}px)`;
         }
       }
 
-      rafRef.current = requestAnimationFrame(animate);
+      requestAnimationFrame(animate);
     };
 
-    rafRef.current = requestAnimationFrame(animate);
+    animate();
 
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
 
       const delta = e.deltaY * SPEED;
-      const maxY = getMaxScrollY();
-      const carouselIndex = getActiveCarousel();
+      const maxY = getMaxY();
 
-      if (carouselIndex === -1) {
-        targetYRef.current = Math.max(0, Math.min(targetYRef.current + delta, maxY));
-        return;
+      // détection section simple mais stable
+      const section = Math.floor(currentY.current / window.innerHeight);
+
+      if (section >= 0 && section < 3) {
+        const maxX = getMaxX(carousels[section].length);
+        const current = targetX.current[section];
+
+        if (delta > 0 && current < maxX) {
+          targetX.current[section] = Math.min(current + delta, maxX);
+          activeSection.current = section;
+          return;
+        }
+
+        if (delta < 0 && current > 0) {
+          targetX.current[section] = Math.max(current + delta, 0);
+          activeSection.current = section;
+          return;
+        }
       }
 
-      const offsets = cachedOffsetsRef.current;
-      const numImages = carousels[carouselIndex].length;
-      const maxX = getMaxScrollX(numImages);
-      const currentX = targetXRefs.current[carouselIndex];
-
-      if (delta > 0 && currentX < maxX) {
-        targetYRef.current = offsets[carouselIndex].top;
-        targetXRefs.current[carouselIndex] = Math.min(currentX + delta, maxX);
-      } else if (delta < 0 && currentX > 0) {
-        targetYRef.current = offsets[carouselIndex].top;
-        targetXRefs.current[carouselIndex] = Math.max(currentX + delta, 0);
-      } else {
-        targetYRef.current = Math.max(0, Math.min(targetYRef.current + delta, maxY));
-      }
+      targetY.current = Math.max(0, Math.min(targetY.current + delta, maxY));
     };
 
     container.addEventListener('wheel', handleWheel, { passive: false });
 
-    return () => {
-      container.removeEventListener('wheel', handleWheel);
-      window.removeEventListener('resize', cacheOffsets);
-      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
-    };
+    return () => container.removeEventListener('wheel', handleWheel);
   }, []);
 
   return (
-    <div
-      ref={containerRef}
-      className="h-screen overflow-hidden relative"
-      style={{ background: 'rgb(15,15,15)' }}
-    >
+    <div ref={containerRef} className="h-screen overflow-hidden bg-[rgb(15,15,15)]">
       <div ref={contentRef} className="will-change-transform">
-        <div className="flex flex-col items-center">
-          <SiteHeader title="Prestations" showBack />
-        </div>
 
+        <SiteHeader title="Prestations" showBack />
         <VideoHero />
 
+        {/* PHOTOS */}
         <ImageCarousel
           images={photosImages}
-          ref={(el) => { carouselInnerRefs.current[0] = el; }}
+          ref={(el) => (carouselRefs.current[0] = el)}
         />
+
+        {/* CAPTATIONS */}
         <ImageCarousel
           images={livesImages}
-          ref={(el) => { carouselInnerRefs.current[1] = el; }}
+          ref={(el) => (carouselRefs.current[1] = el)}
         />
+
+        {/* CLIPS */}
         <ImageCarousel
           images={clipsImages}
-          ref={(el) => { carouselInnerRefs.current[2] = el; }}
+          ref={(el) => (carouselRefs.current[2] = el)}
         />
+
       </div>
     </div>
   );
