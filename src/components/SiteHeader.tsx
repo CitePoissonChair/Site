@@ -4,6 +4,7 @@ import { useState } from 'react';
 interface SiteHeaderProps {
   title?: string;
   showBack?: boolean;
+  backTo?: string;
 }
 
 export function SiteHeader({ title, showBack = false }: SiteHeaderProps) {
@@ -12,14 +13,16 @@ export function SiteHeader({ title, showBack = false }: SiteHeaderProps) {
   const location = useLocation();
 
   const handleBack = () => {
-    if (location.state?.from) {
-      navigate(location.state.from);
-    } else if (window.history.length > 1) {
-      navigate(-1);
-    } else {
-      navigate('/');
-    }
-  };
+  if (backTo) {
+    navigate(backTo);
+  } else if (location.state?.from) {
+    navigate(location.state.from);
+  } else if (window.history.length > 1) {
+    navigate(-1);
+  } else {
+    navigate('/');
+  }
+};
 
   return (
     <div className="flex flex-col items-center pt-[4vh] pb-[2vh]">
