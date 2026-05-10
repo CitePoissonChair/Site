@@ -3,8 +3,8 @@ import { SiteHeader } from '../components/SiteHeader';
 import { VideoHero } from '../components/VideoHero';
 import { ImageCarousel } from '../components/ImageCarousel';
 
-const SPEED = 1.4;
-const LERP = 0.055;
+const SPEED = 1.2;
+const LERP = 0.06;
 
 const photosImages = [
   { src: '/prestationscontenu/Cisnienie (1).jpg', alt: 'Photos', label: 'Photos', link: '/photos' },
@@ -38,27 +38,24 @@ export function Prestations() {
   const targetX = useRef([0, 0, 0]);
   const currentX = useRef([0, 0, 0]);
 
-  const mode = useRef<'vertical' | 'horizontal'>('vertical');
-  const active = useRef<number | null>(null);
-
   useEffect(() => {
     const container = containerRef.current;
     const content = contentRef.current;
     if (!container || !content) return;
 
     const maxY = () => content.scrollHeight - window.innerHeight;
-    const maxX = (i: number) => (carousels[i].length - 1) * window.innerWidth;
 
     const animate = () => {
-      // smooth Y
+      // smooth vertical
       currentY.current += (targetY.current - currentY.current) * LERP;
       content.style.transform = `translateY(-${currentY.current}px)`;
 
-      // smooth X
+      // smooth horizontal (derivé uniquement)
       for (let i = 0; i < 3; i++) {
+        const el = refs.current[i];
+
         currentX.current[i] += (targetX.current[i] - currentX.current[i]) * LERP;
 
-        const el = refs.current[i];
         if (el) {
           el.style.transform = `translateX(-${currentX.current[i]}px)`;
         }
@@ -69,52 +66,33 @@ export function Prestations() {
 
     animate();
 
-    const getSection = () => {
-      return Math.floor(currentY.current / window.innerHeight);
-    };
-
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
 
       const delta = e.deltaY * SPEED;
-      const section = getSection();
+      const maxScroll = maxY();
 
-      // SWITCH MODE
-      if (section >= 0 && section < 3) {
+      // vertical target ALWAYS allowed
+      targetY.current = Math.max(0, Math.min(targetY.current + delta, maxScroll));
+
+      // compute section index
+      const section = Math.floor(currentY.current / window.innerHeight);
+
+      if (section >= 0 && section < carousels.length) {
+        const imagesCount = carousels[section].length;
+
+        const maxX = (imagesCount - 1) * window.innerWidth;
+
         const current = targetX.current[section];
-        const limit = maxX(section);
 
-        if (Math.abs(current) < limit + 5) {
-          mode.current = 'horizontal';
-          active.current = section;
-        } else {
-          mode.current = 'vertical';
-          active.current = null;
-        }
+        // progress-based horizontal motion (NO overflow possible)
+        const horizontalDelta = delta * 0.6;
+
+        targetX.current[section] = Math.max(
+          0,
+          Math.min(current + horizontalDelta, maxX)
+        );
       }
-
-      // HORIZONTAL LOCK
-      if (mode.current === 'horizontal' && active.current !== null) {
-        const i = active.current;
-        const limit = maxX(i);
-        const x = targetX.current[i];
-
-        if (delta > 0 && x < limit) {
-          targetX.current[i] = Math.min(x + delta, limit);
-          return;
-        }
-
-        if (delta < 0 && x > 0) {
-          targetX.current[i] = Math.max(x + delta, 0);
-          return;
-        }
-
-        mode.current = 'vertical';
-        active.current = null;
-      }
-
-      // VERTICAL
-      targetY.current = Math.max(0, Math.min(targetY.current + delta, maxY()));
     };
 
     container.addEventListener('wheel', handleWheel, { passive: false });
@@ -126,11 +104,7 @@ export function Prestations() {
     <div ref={containerRef} className="h-screen overflow-hidden bg-[rgb(15,15,15)]">
       <div ref={contentRef} className="will-change-transform">
 
-        {/* MORPH FEEL HEADER */}
-        <div className="transition-all duration-700 ease-out">
-          <SiteHeader title="Prestations" showBack />
-        </div>
-
+        <SiteHeader title="Prestations" showBack />
         <VideoHero />
 
         <ImageCarousel
