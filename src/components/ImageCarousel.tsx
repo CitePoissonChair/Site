@@ -13,27 +13,21 @@ interface ImageCarouselProps {
 export const ImageCarousel = forwardRef<HTMLDivElement, ImageCarouselProps>(
   ({ images }, ref) => {
     return (
-      <div className="w-full h-screen overflow-hidden">
+      <div className="w-full h-screen overflow-hidden relative">
         
-        {/* horizontal scroll natif */}
+        {/* TRACK */}
         <div
           ref={ref}
           className="
             flex h-full w-full
-            overflow-x-auto overflow-y-hidden
-            scroll-smooth
-            snap-x snap-mandatory
-            no-scrollbar
+            will-change-transform
+            select-none
           "
         >
           {images.map((img, i) => (
             <div
               key={i}
-              className="
-                flex-none w-screen h-full
-                snap-center
-                relative
-              "
+              className="flex-none w-screen h-full relative"
             >
               <div className="w-full h-full relative">
 
@@ -71,6 +65,7 @@ export const ImageCarousel = forwardRef<HTMLDivElement, ImageCarouselProps>(
             </div>
           ))}
         </div>
+
       </div>
     );
   }
