@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react';
+import { forwardRef } from 'react';
 import { Link } from 'react-router-dom';
 
 interface ImageCarouselProps {
@@ -15,7 +15,7 @@ export const ImageCarousel = forwardRef<HTMLDivElement, ImageCarouselProps>(
     return (
       <div className="w-full h-screen overflow-hidden flex-none relative">
         <div className="w-full h-full flex items-center">
-          
+
           {/* TRACK */}
           <div
             ref={ref}
