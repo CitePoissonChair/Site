@@ -16,14 +16,23 @@ export const ImageCarousel = forwardRef<HTMLDivElement, ImageCarouselProps>(
       <div className="w-full h-screen overflow-hidden flex-none relative">
         <div className="w-full h-full flex items-center">
 
+          {/* TRACK */}
           <div
             ref={ref}
-            className="flex w-full h-full will-change-transform select-none"
+            className="
+              flex w-full h-full
+              will-change-transform
+              select-none
+            "
           >
             {images.map((img, i) => (
               <div
                 key={i}
-                className="flex-none w-screen h-full flex items-center justify-center relative group"
+                className="
+                  flex-none w-screen h-full
+                  flex items-center justify-center
+                  relative group
+                "
               >
                 <div className="w-full h-full relative overflow-hidden">
 
@@ -32,14 +41,30 @@ export const ImageCarousel = forwardRef<HTMLDivElement, ImageCarouselProps>(
                       <img
                         src={img.src}
                         alt={img.alt}
-                        className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-110"
+                        className="
+                          w-full h-full object-cover
+                          transition-transform duration-1000 ease-out
+                          group-hover:scale-110
+                        "
                       />
 
-                      <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition" />
+                      <div className="
+                        absolute inset-0
+                        bg-black/20
+                        group-hover:bg-black/10
+                        transition
+                      " />
 
                       {img.label && (
-                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                          <div className="text-[7vh] font-bold text-white group-hover:text-yellow-400 transition">
+                        <div className="
+                          absolute inset-0 flex items-center justify-center
+                          pointer-events-none
+                        ">
+                          <div className="
+                            text-[7vh] font-bold text-white
+                            transition-all duration-500
+                            group-hover:text-yellow-400
+                          ">
                             {img.label}
                           </div>
                         </div>
@@ -54,7 +79,11 @@ export const ImageCarousel = forwardRef<HTMLDivElement, ImageCarouselProps>(
                       />
 
                       {img.label && (
-                        <div className="absolute inset-0 flex items-center justify-center text-[7vh] font-bold text-white pointer-events-none">
+                        <div className="
+                          absolute inset-0 flex items-center justify-center
+                          text-[7vh] font-bold text-white
+                          pointer-events-none
+                        ">
                           {img.label}
                         </div>
                       )}
