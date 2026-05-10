@@ -3,8 +3,8 @@ import { SiteHeader } from '../components/SiteHeader';
 import { VideoHero } from '../components/VideoHero';
 import { ImageCarousel } from '../components/ImageCarousel';
 
-const SPEED = 1.2;
-const LERP = 0.08;
+const SPEED = 1.1;   // ↓ un peu plus doux
+const LERP = 0.06;   // ↓ plus fluide
 
 const photosImages = [
   { src: '/prestationscontenu/Cisnienie (1).jpg', alt: 'Photos', label: 'Photos', link: '/photos' },
@@ -45,10 +45,14 @@ export function Prestations() {
 
     const sectionHeight = window.innerHeight;
 
+    let lastWheelTime = Date.now();
+
     const animate = () => {
+      // smooth vertical
       currentY.current += (targetY.current - currentY.current) * LERP;
       content.style.transform = `translateY(-${currentY.current}px)`;
 
+      // smooth horizontal
       for (let i = 0; i < 3; i++) {
         currentX.current[i] += (targetX.current[i] - currentX.current[i]) * LERP;
 
@@ -63,20 +67,23 @@ export function Prestations() {
 
     animate();
 
+    const snapToSection = () => {
+      const index = Math.round(currentY.current / sectionHeight);
+      targetY.current = index * sectionHeight;
+    };
+
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
 
       const delta = e.deltaY * SPEED;
+      lastWheelTime = Date.now();
 
-      const nextY = targetY.current + delta;
+      // ❌ ON SUPPRIME LE SNAP DIRECT
+      targetY.current += delta;
 
-      const snappedSection =
-        Math.round(nextY / sectionHeight) * sectionHeight;
-
-      targetY.current = Math.max(
-        0,
-        Math.min(snappedSection, content.scrollHeight - sectionHeight)
-      );
+      // clamp vertical normal (PAS snap ici)
+      const maxY = content.scrollHeight - sectionHeight;
+      targetY.current = Math.max(0, Math.min(targetY.current, maxY));
 
       const sectionIndex = Math.round(targetY.current / sectionHeight);
 
@@ -85,22 +92,28 @@ export function Prestations() {
 
         const maxX = (images.length - 1) * window.innerWidth;
 
-        const nextX = targetX.current[sectionIndex] + delta * 0.5;
-
-        const snappedX =
-          Math.round(nextX / window.innerWidth) * window.innerWidth;
+        // horizontal smooth (NO SNAP immédiat)
+        targetX.current[sectionIndex] += delta * 0.35;
 
         targetX.current[sectionIndex] = Math.max(
           0,
-          Math.min(snappedX, maxX)
+          Math.min(targetX.current[sectionIndex], maxX)
         );
       }
     };
 
     container.addEventListener('wheel', handleWheel, { passive: false });
 
+    // 🔥 SNAP AUTOMATIQUE quand scroll s’arrête
+    const interval = setInterval(() => {
+      if (Date.now() - lastWheelTime > 120) {
+        snapToSection();
+      }
+    }, 100);
+
     return () => {
       container.removeEventListener('wheel', handleWheel);
+      clearInterval(interval);
     };
   }, []);
 
@@ -116,17 +129,17 @@ export function Prestations() {
 
         <ImageCarousel
           images={photosImages}
-          ref={(el) => { carRefs.current[0] = el; }}
+          ref={(el) => (carRefs.current[0] = el)}
         />
 
         <ImageCarousel
           images={livesImages}
-          ref={(el) => { carRefs.current[1] = el; }}
+          ref={(el) => (carRefs.current[1] = el)}
         />
 
         <ImageCarousel
           images={clipsImages}
-          ref={(el) => { carRefs.current[2] = el; }}
+          ref={(el) => (carRefs.current[2] = el)}
         />
 
       </div>
