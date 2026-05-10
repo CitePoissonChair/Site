@@ -31,7 +31,7 @@ export function Prestations() {
   const contentRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef<number | null>(null);
 
-  const carouselInnerRefs = useRef<(HTMLDivElement | null)[]>([null, null, null]);
+  const carouselInnerRefs = useRef<Array<HTMLDivElement | null>>([null, null, null]);
 
   const targetYRef = useRef(0);
   const targetXRefs = useRef([0, 0, 0]);
@@ -39,6 +39,11 @@ export function Prestations() {
   const currentXRefs = useRef([0, 0, 0]);
 
   const cachedOffsetsRef = useRef<{ top: number; height: number }[]>([]);
+
+  // ✅ CLEAN ref setter (fix TS2322)
+  const setCarouselRef = (index: number) => (el: HTMLDivElement | null) => {
+    carouselInnerRefs.current[index] = el;
+  };
 
   useEffect(() => {
     const container = containerRef.current;
@@ -50,6 +55,7 @@ export function Prestations() {
 
     const cacheOffsets = () => {
       const children = content.children;
+
       cachedOffsetsRef.current = [2, 3, 4].map((i) => {
         const el = children[i] as HTMLElement;
         return { top: el.offsetTop, height: el.offsetHeight };
@@ -143,24 +149,15 @@ export function Prestations() {
         <VideoHero />
 
         <div className="mb-10">
-          <ImageCarousel
-            images={photosImages}
-            ref={(el) => (carouselInnerRefs.current[0] = el)}
-          />
+          <ImageCarousel images={photosImages} ref={setCarouselRef(0)} />
         </div>
 
         <div className="mb-10">
-          <ImageCarousel
-            images={livesImages}
-            ref={(el) => (carouselInnerRefs.current[1] = el)}
-          />
+          <ImageCarousel images={livesImages} ref={setCarouselRef(1)} />
         </div>
 
         <div className="mb-10">
-          <ImageCarousel
-            images={clipsImages}
-            ref={(el) => (carouselInnerRefs.current[2] = el)}
-          />
+          <ImageCarousel images={clipsImages} ref={setCarouselRef(2)} />
         </div>
 
       </div>
