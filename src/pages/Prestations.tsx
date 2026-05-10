@@ -3,9 +3,8 @@ import { SiteHeader } from '../components/SiteHeader';
 import { VideoHero } from '../components/VideoHero';
 import { ImageCarousel } from '../components/ImageCarousel';
 
-const SPEED_Y = 1.2;
-const SPEED_X = 0.9;
-const LERP = 0.08;
+const SPEED = 1.1;
+const LERP = 0.045; // plus doux = plus stable
 
 const photosImages = [
   { src: '/prestationscontenu/Cisnienie (1).jpg', alt: 'Photos', label: 'Photos', link: '/photos' },
@@ -25,16 +24,13 @@ const clipsImages = [
   { src: '/images/Ecrits/Station Soleil Bleu/Contenus/CPC_station_soleil_bleu_2.jpg', alt: 'Clips', link: '/clips' },
 ];
 
-const sections = [photosImages, livesImages, clipsImages];
+const carousels = [photosImages, livesImages, clipsImages];
 
 export function Prestations() {
   const containerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
-  const carRefs = useRef<(HTMLDivElement | null)[]>([]);
-
-  const mode = useRef<'vertical' | 'horizontal'>('vertical');
-  const active = useRef(0);
+  const refs = useRef<(HTMLDivElement | null)[]>([]);
 
   const targetY = useRef(0);
   const currentY = useRef(0);
@@ -47,18 +43,18 @@ export function Prestations() {
     const content = contentRef.current;
     if (!container || !content) return;
 
-    const sectionHeight = window.innerHeight;
+    const maxY = () => content.scrollHeight - window.innerHeight;
 
     const animate = () => {
-      // vertical
+      // vertical smooth
       currentY.current += (targetY.current - currentY.current) * LERP;
       content.style.transform = `translateY(-${currentY.current}px)`;
 
-      // horizontal
-      for (let i = 0; i < sections.length; i++) {
+      // horizontal smooth
+      for (let i = 0; i < 3; i++) {
         currentX.current[i] += (targetX.current[i] - currentX.current[i]) * LERP;
 
-        const el = carRefs.current[i];
+        const el = refs.current[i];
         if (el) {
           el.style.transform = `translateX(-${currentX.current[i]}px)`;
         }
@@ -69,102 +65,73 @@ export function Prestations() {
 
     animate();
 
-    const getSection = () =>
-      Math.round(currentY.current / sectionHeight);
-
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
 
-      const deltaY = e.deltaY * SPEED_Y;
+      const delta = e.deltaY * SPEED;
+      const y = currentY.current;
 
-      // =========================
-      // MODE VERTICAL
-      // =========================
-      if (mode.current === 'vertical') {
-        targetY.current += deltaY;
+      const sectionHeight = window.innerHeight;
+      const section = Math.floor(y / sectionHeight);
 
-        const section = getSection();
-        active.current = section;
+      // clamp vertical
+      targetY.current = Math.max(0, Math.min(targetY.current + delta, maxY()));
 
-        // clamp
-        const maxY = content.scrollHeight - sectionHeight;
-        targetY.current = Math.max(0, Math.min(targetY.current, maxY));
+      // horizontal ONLY if centered in section
+      const isCentered =
+        y % sectionHeight < sectionHeight * 0.8 &&
+        y % sectionHeight > sectionHeight * 0.2;
 
-        // 🔥 entrer en mode horizontal si section carrousel
-        if (section >= 0 && section < sections.length) {
-          const elTop = section * sectionHeight;
+      if (section >= 0 && section < carousels.length && isCentered) {
+        const maxX = (carousels[section].length - 1) * window.innerWidth;
 
-          const distance = Math.abs(targetY.current - elTop);
+        const current = targetX.current[section];
 
-          // si on est "assez proche", on lock horizontal
-          if (distance < 40) {
-            mode.current = 'horizontal';
-            targetY.current = elTop;
-          }
-        }
-      }
+        // smoother horizontal influence
+        const horizontal = delta * 0.4;
 
-      // =========================
-      // MODE HORIZONTAL
-      // =========================
-      else if (mode.current === 'horizontal') {
-        const i = active.current;
-        const images = sections[i];
-
-        const maxX = (images.length - 1) * window.innerWidth;
-
-        targetX.current[i] += deltaY * SPEED_X;
-
-        // clamp horizontal
-        if (targetX.current[i] <= 0) {
-          targetX.current[i] = 0;
-
-          // retour vertical vers haut
-          if (deltaY < 0) mode.current = 'vertical';
-        }
-
-        if (targetX.current[i] >= maxX) {
-          targetX.current[i] = maxX;
-
-          // fin → retour vertical
-          if (deltaY > 0) {
-            mode.current = 'vertical';
-          }
-        }
+        targetX.current[section] = Math.max(
+          0,
+          Math.min(current + horizontal, maxX)
+        );
       }
     };
 
     container.addEventListener('wheel', handleWheel, { passive: false });
 
-    return () => {
-      container.removeEventListener('wheel', handleWheel);
-    };
+    return () => container.removeEventListener('wheel', handleWheel);
   }, []);
 
   return (
-    <div
-      ref={containerRef}
-      className="h-screen overflow-hidden bg-[rgb(15,15,15)]"
-    >
+    <div ref={containerRef} className="h-screen overflow-hidden bg-[rgb(15,15,15)]">
       <div ref={contentRef} className="will-change-transform">
 
         <SiteHeader title="Prestations" showBack />
         <VideoHero />
 
+        {/* spacing BETWEEN sections = important */}
+        <div className="h-[10vh]" />
+
         <ImageCarousel
           images={photosImages}
-          ref={(el) => { carRefs.current[0] = el; }}
+          ref={(el) => (refs.current[0] = el)}
         />
+
+        <div className="h-[10vh]" />
 
         <ImageCarousel
           images={livesImages}
-          ref={(el) => { carRefs.current[1] = el; }}
+          ref={(el) => (refs.current[1] = el)}
         />
+
+        <div className="h-[10vh]" />
 
         <ImageCarousel
           images={clipsImages}
-          ref={(el) => { carRefs.current[2] = el; }}
+          ref={(el) => (refs.current[2] = el)}
         />
+
+        <div className="h-[20vh]" />
 
       </div>
     </div>
