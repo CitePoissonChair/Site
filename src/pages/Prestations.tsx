@@ -7,9 +7,9 @@ const LERP = 0.08;
 const SPEED = 1.8;
 
 const photosImages = [
-  { src: '/prestationscontenu/Cisnienie (1).jpg', alt: 'Photos 1', label: 'Photos', link: '/photos' },
-  { src: '/prestationscontenu/Madame loyal (5).jpg', alt: 'Photos 2', link: '/photos' },
-  { src: '/prestationscontenu/Youth Code (1).jpg', alt: 'Photos 3', link: '/photos' },
+  { src: '/prestationscontenu/Cisnienie-1.jpg', alt: 'Photos 1', label: 'Photos', link: '/photos' },
+  { src: '/prestationscontenu/Madame-loyal-5.jpg', alt: 'Photos 2', link: '/photos' },
+  { src: '/prestationscontenu/Youth-Code-1.jpg', alt: 'Photos 3', link: '/photos' },
 ];
 
 const livesImages = [
