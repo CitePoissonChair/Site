@@ -3,8 +3,8 @@ import { SiteHeader } from '../components/SiteHeader';
 import { VideoHero } from '../components/VideoHero';
 import { ImageCarousel } from '../components/ImageCarousel';
 
-const SPEED = 1;
-const LERP = 0.08;
+const SPEED = 1.1;
+const LERP = 0.045;
 
 const photosImages = [
   { src: '/prestationscontenu/Cisnienie (1).jpg', alt: 'Photos', label: 'Photos', link: '/photos' },
@@ -24,13 +24,13 @@ const clipsImages = [
   { src: '/images/Ecrits/Station Soleil Bleu/Contenus/CPC_station_soleil_bleu_2.jpg', alt: 'Clips', link: '/clips' },
 ];
 
-const sections = [photosImages, livesImages, clipsImages];
+const carousels = [photosImages, livesImages, clipsImages];
 
 export function Prestations() {
   const containerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
-  const carRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const refs = useRef<(HTMLDivElement | null)[]>([]);
 
   const targetY = useRef(0);
   const currentY = useRef(0);
@@ -38,27 +38,21 @@ export function Prestations() {
   const targetX = useRef([0, 0, 0]);
   const currentX = useRef([0, 0, 0]);
 
-  const activeSection = useRef(-1);
-
   useEffect(() => {
     const container = containerRef.current;
     const content = contentRef.current;
     if (!container || !content) return;
 
-    const getSectionIndex = () =>
-      Math.floor(currentY.current / window.innerHeight);
+    const maxY = () => content.scrollHeight - window.innerHeight;
 
     const animate = () => {
       currentY.current += (targetY.current - currentY.current) * LERP;
       content.style.transform = `translateY(-${currentY.current}px)`;
 
-      const index = getSectionIndex();
-      activeSection.current = index;
-
-      for (let i = 0; i < sections.length; i++) {
+      for (let i = 0; i < carousels.length; i++) {
         currentX.current[i] += (targetX.current[i] - currentX.current[i]) * LERP;
 
-        const el = carRefs.current[i];
+        const el = refs.current[i];
         if (el) {
           el.style.transform = `translateX(-${currentX.current[i]}px)`;
         }
@@ -74,42 +68,25 @@ export function Prestations() {
 
       const delta = e.deltaY * SPEED;
 
-      const sectionIndex = getSectionIndex();
+      const sectionHeight = window.innerHeight;
+      const section = Math.floor(currentY.current / sectionHeight);
 
-      const images = sections[sectionIndex];
-
-      const maxX = (images.length - 1) * window.innerWidth;
-
-      const x = targetX.current[sectionIndex];
-
-      const isAtStart = x <= 0;
-      const isAtEnd = x >= maxX;
-
-      // 🧠 LOGIQUE PRINCIPALE
-
-      if (sectionIndex >= 0 && sectionIndex < sections.length) {
-
-        // 👉 SI on est dans la section ET qu’on peut encore scroller horizontal
-        if ((delta > 0 && !isAtEnd) || (delta < 0 && !isAtStart)) {
-          targetX.current[sectionIndex] += delta * 0.6;
-
-          targetX.current[sectionIndex] = Math.max(
-            0,
-            Math.min(targetX.current[sectionIndex], maxX)
-          );
-
-          return; // ❌ bloque vertical
-        }
-      }
-
-      // 👉 sinon scroll vertical normal
+      // 🔥 vertical toujours actif (base)
       targetY.current = Math.max(
         0,
-        Math.min(
-          targetY.current + delta,
-          content.scrollHeight - window.innerHeight
-        )
+        Math.min(targetY.current + delta, maxY())
       );
+
+      // 🔥 horizontal PRIORITAIRE si section valide
+      if (section >= 0 && section < carousels.length) {
+        const images = carousels[section];
+        const maxX = (images.length - 1) * window.innerWidth;
+
+        targetX.current[section] = Math.max(
+          0,
+          Math.min(targetX.current[section] + delta * 0.4, maxX)
+        );
+      }
     };
 
     container.addEventListener('wheel', handleWheel, { passive: false });
@@ -120,29 +97,25 @@ export function Prestations() {
   }, []);
 
   return (
-    <div
-      ref={containerRef}
-      className="h-screen overflow-hidden bg-[rgb(15,15,15)]"
-    >
+    <div ref={containerRef} className="h-screen overflow-hidden bg-[rgb(15,15,15)]">
       <div ref={contentRef} className="will-change-transform">
 
         <SiteHeader title="Prestations" showBack />
         <VideoHero />
 
-        <ImageCarousel
-          images={photosImages}
-          ref={(el) => { carRefs.current[0] = el }}
-        />
+        <div className="h-[10vh]" />
 
-        <ImageCarousel
-          images={livesImages}
-          ref={(el) => { carRefs.current[1] = el }}
-        />
+        <ImageCarousel images={photosImages} ref={(el) => (refs.current[0] = el)} />
 
-        <ImageCarousel
-          images={clipsImages}
-          ref={(el) => { carRefs.current[2] = el }}
-        />
+        <div className="h-[10vh]" />
+
+        <ImageCarousel images={livesImages} ref={(el) => (refs.current[1] = el)} />
+
+        <div className="h-[10vh]" />
+
+        <ImageCarousel images={clipsImages} ref={(el) => (refs.current[2] = el)} />
+
+        <div className="h-[20vh]" />
 
       </div>
     </div>
