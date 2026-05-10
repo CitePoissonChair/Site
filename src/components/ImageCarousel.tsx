@@ -15,14 +15,24 @@ export const ImageCarousel = forwardRef<HTMLDivElement, ImageCarouselProps>(
     return (
       <div className="w-full h-screen relative overflow-hidden flex-none">
         <div className="w-full h-full flex items-center overflow-hidden">
+
+          {/* TRACK */}
           <div
             ref={ref}
-            className="flex gap-[50px] w-full h-full px-[25px] will-change-transform"
+            className="
+              flex w-full h-full
+              will-change-transform
+              select-none
+            "
           >
             {images.map((image, index) => (
               <div
                 key={index}
-                className="flex-none h-full min-w-[100vw] flex items-center justify-center relative group"
+                className="
+                  flex-none w-screen h-full
+                  flex items-center justify-center
+                  relative group
+                "
               >
                 {image.link ? (
                   <Link
@@ -35,24 +45,30 @@ export const ImageCarousel = forwardRef<HTMLDivElement, ImageCarouselProps>(
                       alt={image.alt}
                       loading="lazy"
                       className="
-                        w-full h-full object-cover block
+                        w-full h-full object-cover
                         will-change-transform
-                        transition-transform duration-700 ease-out
+                        transition-transform duration-1000 ease-out
                         group-hover:scale-110
                       "
                     />
 
-                    {/* léger voile cinéma */}
-                    <div className="absolute inset-0 bg-black/10 opacity-60 group-hover:opacity-30 transition-opacity duration-500" />
+                    {/* overlay cinéma subtil */}
+                    <div className="
+                      absolute inset-0
+                      bg-black/10
+                      opacity-60
+                      group-hover:opacity-30
+                      transition-opacity duration-700
+                    " />
 
-                    {/* TITRE */}
+                    {/* LABEL */}
                     {image.label && (
                       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                         <div
                           className="
                             text-[7vh] font-bold text-white
                             tracking-wide
-                            transition-all duration-300 ease-out
+                            transition-all duration-500 ease-out
                             group-hover:text-yellow-400
                             group-hover:scale-110
                           "
@@ -63,31 +79,37 @@ export const ImageCarousel = forwardRef<HTMLDivElement, ImageCarouselProps>(
                     )}
                   </Link>
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center relative overflow-hidden">
+                  <>
                     {/* IMAGE */}
                     <img
                       src={image.src}
                       alt={image.alt}
                       loading="lazy"
                       className="
-                        w-full h-full object-cover block
+                        w-full h-full object-cover
                         will-change-transform
-                        transition-transform duration-700 ease-out
+                        transition-transform duration-1000 ease-out
                         group-hover:scale-110
                       "
                     />
 
-                    {/* voile */}
-                    <div className="absolute inset-0 bg-black/10 opacity-60 group-hover:opacity-30 transition-opacity duration-500" />
+                    {/* overlay cinéma */}
+                    <div className="
+                      absolute inset-0
+                      bg-black/10
+                      opacity-60
+                      group-hover:opacity-30
+                      transition-opacity duration-700
+                    " />
 
-                    {/* TITRE */}
+                    {/* LABEL */}
                     {image.label && (
                       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                         <div
                           className="
                             text-[7vh] font-bold text-white
                             tracking-wide
-                            transition-all duration-300 ease-out
+                            transition-all duration-500 ease-out
                             group-hover:text-yellow-400
                             group-hover:scale-110
                           "
@@ -96,7 +118,12 @@ export const ImageCarousel = forwardRef<HTMLDivElement, ImageCarouselProps>(
                         </div>
                       </div>
                     )}
-                  </div>
+                  </>
+                )}
+
+                {/* 🔥 padding fin de scroll (respiration UX) */}
+                {index === images.length - 1 && (
+                  <div className="flex-none w-[25vw] h-full" />
                 )}
               </div>
             ))}
