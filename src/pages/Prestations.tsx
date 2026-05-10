@@ -1,10 +1,6 @@
-import { useEffect, useRef } from 'react';
 import { SiteHeader } from '../components/SiteHeader';
 import { VideoHero } from '../components/VideoHero';
 import { ImageCarousel } from '../components/ImageCarousel';
-
-const SPEED = 1.1;
-const LERP = 0.045;
 
 const photosImages = [
   { src: '/prestationscontenu/Cisnienie (1).jpg', alt: 'Photos', label: 'Photos', link: '/photos' },
@@ -24,113 +20,37 @@ const clipsImages = [
   { src: '/images/Ecrits/Station Soleil Bleu/Contenus/CPC_station_soleil_bleu_2.jpg', alt: 'Clips', link: '/clips' },
 ];
 
-const carousels = [photosImages, livesImages, clipsImages];
-
 export function Prestations() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
-
-  const refs = useRef<(HTMLDivElement | null)[]>([]);
-
-  const targetY = useRef(0);
-  const currentY = useRef(0);
-
-  const targetX = useRef([0, 0, 0]);
-  const currentX = useRef([0, 0, 0]);
-
-  useEffect(() => {
-    const container = containerRef.current;
-    const content = contentRef.current;
-    if (!container || !content) return;
-
-    const maxY = () => content.scrollHeight - window.innerHeight;
-
-    const animate = () => {
-      currentY.current += (targetY.current - currentY.current) * LERP;
-      content.style.transform = `translateY(-${currentY.current}px)`;
-
-      for (let i = 0; i < 3; i++) {
-        currentX.current[i] += (targetX.current[i] - currentX.current[i]) * LERP;
-
-        const el = refs.current[i];
-        if (el) {
-          el.style.transform = `translateX(-${currentX.current[i]}px)`;
-        }
-      }
-
-      requestAnimationFrame(animate);
-    };
-
-    animate();
-
-    const handleWheel = (e: WheelEvent) => {
-      e.preventDefault();
-
-      const delta = e.deltaY * SPEED;
-      const y = currentY.current;
-
-      const sectionHeight = window.innerHeight;
-      const section = Math.floor(y / sectionHeight);
-
-      targetY.current = Math.max(0, Math.min(targetY.current + delta, maxY()));
-
-      const isCentered =
-        y % sectionHeight < sectionHeight * 0.8 &&
-        y % sectionHeight > sectionHeight * 0.2;
-
-      if (section >= 0 && section < carousels.length && isCentered) {
-        const maxX = (carousels[section].length - 1) * window.innerWidth;
-        const current = targetX.current[section];
-
-        const horizontal = delta * 0.4;
-
-        targetX.current[section] = Math.max(
-          0,
-          Math.min(current + horizontal, maxX)
-        );
-      }
-    };
-
-    container.addEventListener('wheel', handleWheel, { passive: false });
-
-    return () => container.removeEventListener('wheel', handleWheel);
-  }, []);
-
-  const setRef = (i: number) => (el: HTMLDivElement | null) => {
-    refs.current[i] = el;
-  };
-
   return (
-    <div ref={containerRef} className="h-screen overflow-hidden bg-[rgb(15,15,15)]">
-      <div ref={contentRef} className="will-change-transform">
+    <div className="bg-[rgb(15,15,15)] text-white">
 
-        <SiteHeader title="Prestations" showBack />
-        <VideoHero />
+      <SiteHeader title="Prestations" showBack />
 
-        <div className="h-[10vh]" />
+      {/* HERO */}
+      <VideoHero />
 
-        <ImageCarousel
-          images={photosImages}
-          ref={setRef(0)}
-        />
+      {/* SECTION 1 */}
+      <section className="h-screen flex items-center justify-center">
+        <h1 className="text-6xl font-bold">Scroll ↓</h1>
+      </section>
 
-        <div className="h-[10vh]" />
+      {/* SECTION 2 - HORIZONTAL */}
+      <section>
+        <ImageCarousel images={photosImages} />
+      </section>
 
-        <ImageCarousel
-          images={livesImages}
-          ref={setRef(1)}
-        />
+      {/* SECTION 3 - HORIZONTAL */}
+      <section>
+        <ImageCarousel images={livesImages} />
+      </section>
 
-        <div className="h-[10vh]" />
+      {/* SECTION 4 - HORIZONTAL */}
+      <section>
+        <ImageCarousel images={clipsImages} />
+      </section>
 
-        <ImageCarousel
-          images={clipsImages}
-          ref={setRef(2)}
-        />
-
-        <div className="h-[20vh]" />
-
-      </div>
+      {/* END */}
+      <section className="h-[40vh]" />
     </div>
   );
 }
