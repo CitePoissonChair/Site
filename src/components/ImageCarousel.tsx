@@ -30,87 +30,67 @@ export const ImageCarousel = forwardRef<HTMLDivElement, ImageCarouselProps>(
                 key={i}
                 className="
                   flex-none w-screen h-full
-                  relative flex items-center justify-center
-                  overflow-hidden group
+                  flex items-center justify-center
+                  relative group
                 "
               >
-                {img.link ? (
-                  <Link
-                    to={img.link}
-                    className="w-full h-full block relative"
-                  >
-                    {/* IMAGE */}
-                    <img
-                      src={img.src}
-                      alt={img.alt}
-                      className="
-                        w-full h-full object-cover
-                        transition-transform duration-1000 ease-out
-                        group-hover:scale-110
-                        will-change-transform
-                      "
-                    />
+                <div className="w-full h-full relative overflow-hidden">
 
-                    {/* overlay léger */}
-                    <div className="
-                      absolute inset-0
-                      bg-black/20
-                      group-hover:bg-black/10
-                      transition-all duration-700
-                    " />
+                  {img.link ? (
+                    <Link to={img.link} className="w-full h-full block">
+                      <img
+                        src={img.src}
+                        alt={img.alt}
+                        className="
+                          w-full h-full object-cover
+                          transition-transform duration-1000 ease-out
+                          group-hover:scale-110
+                        "
+                      />
 
-                    {/* label */}
-                    {img.label && (
                       <div className="
                         absolute inset-0
-                        flex items-center justify-center
-                        pointer-events-none
-                      ">
+                        bg-black/20
+                        group-hover:bg-black/10
+                        transition
+                      " />
+
+                      {img.label && (
                         <div className="
+                          absolute inset-0 flex items-center justify-center
+                          pointer-events-none
+                        ">
+                          <div className="
+                            text-[7vh] font-bold text-white
+                            transition-all duration-500
+                            group-hover:text-yellow-400
+                          ">
+                            {img.label}
+                          </div>
+                        </div>
+                      )}
+                    </Link>
+                  ) : (
+                    <>
+                      <img
+                        src={img.src}
+                        alt={img.alt}
+                        className="w-full h-full object-cover"
+                      />
+
+                      {img.label && (
+                        <div className="
+                          absolute inset-0 flex items-center justify-center
                           text-[7vh] font-bold text-white
-                          transition-all duration-500
-                          group-hover:text-yellow-400
-                          group-hover:scale-110
+                          pointer-events-none
                         ">
                           {img.label}
                         </div>
-                      </div>
-                    )}
-                  </Link>
-                ) : (
-                  <>
-                    <img
-                      src={img.src}
-                      alt={img.alt}
-                      className="
-                        w-full h-full object-cover
-                        transition-transform duration-1000 ease-out
-                        group-hover:scale-110
-                      "
-                    />
+                      )}
+                    </>
+                  )}
 
-                    <div className="
-                      absolute inset-0 bg-black/20
-                      group-hover:bg-black/10
-                      transition-all duration-700
-                    " />
-
-                    {img.label && (
-                      <div className="
-                        absolute inset-0 flex items-center justify-center pointer-events-none
-                      ">
-                        <div className="
-                          text-[7vh] font-bold text-white
-                          group-hover:text-yellow-400
-                          transition-all duration-500
-                          group-hover:scale-110
-                        ">
-                          {img.label}
-                        </div>
-                      </div>
-                    )}
-                  </>
-                )}
+                </div>
               </div>
             ))}
           </div>
