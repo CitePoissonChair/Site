@@ -3,25 +3,25 @@ import { SiteHeader } from '../components/SiteHeader';
 import { VideoHero } from '../components/VideoHero';
 import { ImageCarousel } from '../components/ImageCarousel';
 
-const LERP = 0.06; // plus smooth (important)
-const SPEED = 1.6;
+const SPEED = 1.4;
+const LERP = 0.055;
 
 const photosImages = [
-  { src: '/prestationscontenu/Cisnienie (1).jpg', alt: 'Photos 1', label: 'Photos', link: '/photos' },
-  { src: '/prestationscontenu/Madame loyal (8).jpg', alt: 'Photos 2', link: '/photos' },
-  { src: '/prestationscontenu/Youth Code (1).jpg', alt: 'Photos 3', link: '/photos' },
+  { src: '/prestationscontenu/Cisnienie (1).jpg', alt: 'Photos', label: 'Photos', link: '/photos' },
+  { src: '/prestationscontenu/Madame loyal (8).jpg', alt: 'Photos', link: '/photos' },
+  { src: '/prestationscontenu/Youth Code (1).jpg', alt: 'Photos', link: '/photos' },
 ];
 
 const livesImages = [
-  { src: '/prestationscontenu/24012026-Street Sects (6).jpg', alt: 'Lives 1', label: 'Lives', link: '/captations' },
-  { src: '/images/Revues/Buddy System/Buddy 1/buddy_1_p1.jpg', alt: 'Lives 2', link: '/captations' },
-  { src: '/images/Revues/Buddy System/Buddy 1/buddy_1_p2.jpg', alt: 'Lives 3', link: '/captations' },
+  { src: '/prestationscontenu/24012026-Street Sects (6).jpg', alt: 'Lives', label: 'Lives', link: '/captations' },
+  { src: '/images/Revues/Buddy System/Buddy 1/buddy_1_p1.jpg', alt: 'Lives', link: '/captations' },
+  { src: '/images/Revues/Buddy System/Buddy 1/buddy_1_p2.jpg', alt: 'Lives', link: '/captations' },
 ];
 
 const clipsImages = [
-  { src: '/images/Revues/Buddy System/Buddy 1/buddy_1_p3.jpg', alt: 'Clips 1', label: 'Clips', link: '/clips' },
-  { src: '/images/Ecrits/Station Soleil Bleu/Contenus/CPC_station_soleil_bleu_1.jpg', alt: 'Clips 2', link: '/clips' },
-  { src: '/images/Ecrits/Station Soleil Bleu/Contenus/CPC_station_soleil_bleu_2.jpg', alt: 'Clips 3', link: '/clips' },
+  { src: '/images/Revues/Buddy System/Buddy 1/buddy_1_p3.jpg', alt: 'Clips', label: 'Clips', link: '/clips' },
+  { src: '/images/Ecrits/Station Soleil Bleu/Contenus/CPC_station_soleil_bleu_1.jpg', alt: 'Clips', link: '/clips' },
+  { src: '/images/Ecrits/Station Soleil Bleu/Contenus/CPC_station_soleil_bleu_2.jpg', alt: 'Clips', link: '/clips' },
 ];
 
 const carousels = [photosImages, livesImages, clipsImages];
@@ -30,7 +30,7 @@ export function Prestations() {
   const containerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
-  const carouselRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const refs = useRef<(HTMLDivElement | null)[]>([]);
 
   const targetY = useRef(0);
   const currentY = useRef(0);
@@ -38,26 +38,27 @@ export function Prestations() {
   const targetX = useRef([0, 0, 0]);
   const currentX = useRef([0, 0, 0]);
 
-  const activeSection = useRef<number | null>(null);
+  const mode = useRef<'vertical' | 'horizontal'>('vertical');
+  const active = useRef<number | null>(null);
 
   useEffect(() => {
     const container = containerRef.current;
     const content = contentRef.current;
     if (!container || !content) return;
 
-    const getMaxY = () => content.scrollHeight - window.innerHeight;
-    const getMaxX = (n: number) => (n - 1) * window.innerWidth;
+    const maxY = () => content.scrollHeight - window.innerHeight;
+    const maxX = (i: number) => (carousels[i].length - 1) * window.innerWidth;
 
     const animate = () => {
-      // smooth vertical scroll (parallax feel)
+      // smooth Y
       currentY.current += (targetY.current - currentY.current) * LERP;
       content.style.transform = `translateY(-${currentY.current}px)`;
 
-      // horizontal scroll
+      // smooth X
       for (let i = 0; i < 3; i++) {
         currentX.current[i] += (targetX.current[i] - currentX.current[i]) * LERP;
 
-        const el = carouselRefs.current[i];
+        const el = refs.current[i];
         if (el) {
           el.style.transform = `translateX(-${currentX.current[i]}px)`;
         }
@@ -68,33 +69,52 @@ export function Prestations() {
 
     animate();
 
+    const getSection = () => {
+      return Math.floor(currentY.current / window.innerHeight);
+    };
+
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
 
       const delta = e.deltaY * SPEED;
-      const maxY = getMaxY();
+      const section = getSection();
 
-      // détection section simple mais stable
-      const section = Math.floor(currentY.current / window.innerHeight);
-
+      // SWITCH MODE
       if (section >= 0 && section < 3) {
-        const maxX = getMaxX(carousels[section].length);
         const current = targetX.current[section];
+        const limit = maxX(section);
 
-        if (delta > 0 && current < maxX) {
-          targetX.current[section] = Math.min(current + delta, maxX);
-          activeSection.current = section;
-          return;
-        }
-
-        if (delta < 0 && current > 0) {
-          targetX.current[section] = Math.max(current + delta, 0);
-          activeSection.current = section;
-          return;
+        if (Math.abs(current) < limit + 5) {
+          mode.current = 'horizontal';
+          active.current = section;
+        } else {
+          mode.current = 'vertical';
+          active.current = null;
         }
       }
 
-      targetY.current = Math.max(0, Math.min(targetY.current + delta, maxY));
+      // HORIZONTAL LOCK
+      if (mode.current === 'horizontal' && active.current !== null) {
+        const i = active.current;
+        const limit = maxX(i);
+        const x = targetX.current[i];
+
+        if (delta > 0 && x < limit) {
+          targetX.current[i] = Math.min(x + delta, limit);
+          return;
+        }
+
+        if (delta < 0 && x > 0) {
+          targetX.current[i] = Math.max(x + delta, 0);
+          return;
+        }
+
+        mode.current = 'vertical';
+        active.current = null;
+      }
+
+      // VERTICAL
+      targetY.current = Math.max(0, Math.min(targetY.current + delta, maxY()));
     };
 
     container.addEventListener('wheel', handleWheel, { passive: false });
@@ -106,25 +126,26 @@ export function Prestations() {
     <div ref={containerRef} className="h-screen overflow-hidden bg-[rgb(15,15,15)]">
       <div ref={contentRef} className="will-change-transform">
 
-        <SiteHeader title="Prestations" showBack />
+        {/* MORPH FEEL HEADER */}
+        <div className="transition-all duration-700 ease-out">
+          <SiteHeader title="Prestations" showBack />
+        </div>
+
         <VideoHero />
 
-        {/* PHOTOS */}
         <ImageCarousel
           images={photosImages}
-          ref={(el) => (carouselRefs.current[0] = el)}
+          ref={(el) => (refs.current[0] = el)}
         />
 
-        {/* CAPTATIONS */}
         <ImageCarousel
           images={livesImages}
-          ref={(el) => (carouselRefs.current[1] = el)}
+          ref={(el) => (refs.current[1] = el)}
         />
 
-        {/* CLIPS */}
         <ImageCarousel
           images={clipsImages}
-          ref={(el) => (carouselRefs.current[2] = el)}
+          ref={(el) => (refs.current[2] = el)}
         />
 
       </div>
