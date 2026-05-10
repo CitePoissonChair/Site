@@ -3,8 +3,8 @@ import { SiteHeader } from '../components/SiteHeader';
 import { VideoHero } from '../components/VideoHero';
 import { ImageCarousel } from '../components/ImageCarousel';
 
-const SPEED = 1.1;
-const LERP = 0.045; // plus doux = plus stable
+const SPEED = 1.2;
+const LERP = 0.08;
 
 const photosImages = [
   { src: '/prestationscontenu/Cisnienie (1).jpg', alt: 'Photos', label: 'Photos', link: '/photos' },
@@ -24,13 +24,13 @@ const clipsImages = [
   { src: '/images/Ecrits/Station Soleil Bleu/Contenus/CPC_station_soleil_bleu_2.jpg', alt: 'Clips', link: '/clips' },
 ];
 
-const carousels = [photosImages, livesImages, clipsImages];
+const sections = [photosImages, livesImages, clipsImages];
 
 export function Prestations() {
   const containerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
-  const refs = useRef<(HTMLDivElement | null)[]>([]);
+  const carRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const targetY = useRef(0);
   const currentY = useRef(0);
@@ -43,18 +43,18 @@ export function Prestations() {
     const content = contentRef.current;
     if (!container || !content) return;
 
-    const maxY = () => content.scrollHeight - window.innerHeight;
+    const sectionHeight = window.innerHeight;
 
     const animate = () => {
-      // vertical smooth
+      // smooth vertical (snap feeling)
       currentY.current += (targetY.current - currentY.current) * LERP;
       content.style.transform = `translateY(-${currentY.current}px)`;
 
-      // horizontal smooth
+      // smooth horizontal per section
       for (let i = 0; i < 3; i++) {
         currentX.current[i] += (targetX.current[i] - currentX.current[i]) * LERP;
 
-        const el = refs.current[i];
+        const el = carRefs.current[i];
         if (el) {
           el.style.transform = `translateX(-${currentX.current[i]}px)`;
         }
@@ -69,69 +69,68 @@ export function Prestations() {
       e.preventDefault();
 
       const delta = e.deltaY * SPEED;
-      const y = currentY.current;
 
-      const sectionHeight = window.innerHeight;
-      const section = Math.floor(y / sectionHeight);
+      const nextY = targetY.current + delta;
 
-      // clamp vertical
-      targetY.current = Math.max(0, Math.min(targetY.current + delta, maxY()));
+      // SNAP VERTICAL (sections)
+      const snappedSection = Math.round(nextY / sectionHeight) * sectionHeight;
 
-      // horizontal ONLY if centered in section
-      const isCentered =
-        y % sectionHeight < sectionHeight * 0.8 &&
-        y % sectionHeight > sectionHeight * 0.2;
+      targetY.current = Math.max(
+        0,
+        Math.min(snappedSection, content.scrollHeight - sectionHeight)
+      );
 
-      if (section >= 0 && section < carousels.length && isCentered) {
-        const maxX = (carousels[section].length - 1) * window.innerWidth;
+      const sectionIndex = Math.round(targetY.current / sectionHeight);
 
-        const current = targetX.current[section];
+      if (sectionIndex >= 0 && sectionIndex < sections.length) {
+        const images = sections[sectionIndex];
 
-        // smoother horizontal influence
-        const horizontal = delta * 0.4;
+        const maxX = (images.length - 1) * window.innerWidth;
 
-        targetX.current[section] = Math.max(
+        const nextX = targetX.current[sectionIndex] + delta * 0.5;
+
+        // SNAP horizontal image by image
+        const snappedX =
+          Math.round(nextX / window.innerWidth) * window.innerWidth;
+
+        targetX.current[sectionIndex] = Math.max(
           0,
-          Math.min(current + horizontal, maxX)
+          Math.min(snappedX, maxX)
         );
       }
     };
 
     container.addEventListener('wheel', handleWheel, { passive: false });
 
-    return () => container.removeEventListener('wheel', handleWheel);
+    return () => {
+      container.removeEventListener('wheel', handleWheel);
+    };
   }, []);
 
   return (
-    <div ref={containerRef} className="h-screen overflow-hidden bg-[rgb(15,15,15)]">
+    <div
+      ref={containerRef}
+      className="h-screen overflow-hidden bg-[rgb(15,15,15)]"
+    >
       <div ref={contentRef} className="will-change-transform">
 
         <SiteHeader title="Prestations" showBack />
         <VideoHero />
 
-        {/* spacing BETWEEN sections = important */}
-        <div className="h-[10vh]" />
-
         <ImageCarousel
           images={photosImages}
-          ref={(el) => (refs.current[0] = el)}
+          ref={(el) => (carRefs.current[0] = el)}
         />
-
-        <div className="h-[10vh]" />
 
         <ImageCarousel
           images={livesImages}
-          ref={(el) => (refs.current[1] = el)}
+          ref={(el) => (carRefs.current[1] = el)}
         />
-
-        <div className="h-[10vh]" />
 
         <ImageCarousel
           images={clipsImages}
-          ref={(el) => (refs.current[2] = el)}
+          ref={(el) => (carRefs.current[2] = el)}
         />
-
-        <div className="h-[20vh]" />
 
       </div>
     </div>
