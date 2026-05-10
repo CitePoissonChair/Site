@@ -34,13 +34,29 @@ export const ImageCarousel = forwardRef<HTMLDivElement, ImageCarouselProps>(
                       src={image.src}
                       alt={image.alt}
                       loading="lazy"
-                      className="w-full h-full object-cover block transition-transform duration-500 group-hover:scale-105"
+                      className="
+                        w-full h-full object-cover block
+                        will-change-transform
+                        transition-transform duration-700 ease-out
+                        group-hover:scale-110
+                      "
                     />
 
-                    {/* LABEL PLUS GROS */}
+                    {/* léger voile cinéma */}
+                    <div className="absolute inset-0 bg-black/10 opacity-60 group-hover:opacity-30 transition-opacity duration-500" />
+
+                    {/* TITRE */}
                     {image.label && (
                       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                        <div className="text-[6vh] font-bold text-white transition-all duration-300 group-hover:text-yellow-400 group-hover:scale-110 tracking-wide">
+                        <div
+                          className="
+                            text-[7vh] font-bold text-white
+                            tracking-wide
+                            transition-all duration-300 ease-out
+                            group-hover:text-yellow-400
+                            group-hover:scale-110
+                          "
+                        >
                           {image.label}
                         </div>
                       </div>
@@ -53,13 +69,29 @@ export const ImageCarousel = forwardRef<HTMLDivElement, ImageCarouselProps>(
                       src={image.src}
                       alt={image.alt}
                       loading="lazy"
-                      className="w-full h-full object-cover block transition-transform duration-500 group-hover:scale-105"
+                      className="
+                        w-full h-full object-cover block
+                        will-change-transform
+                        transition-transform duration-700 ease-out
+                        group-hover:scale-110
+                      "
                     />
 
-                    {/* LABEL PLUS GROS */}
+                    {/* voile */}
+                    <div className="absolute inset-0 bg-black/10 opacity-60 group-hover:opacity-30 transition-opacity duration-500" />
+
+                    {/* TITRE */}
                     {image.label && (
                       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                        <div className="text-[6vh] font-bold text-white transition-all duration-300 group-hover:text-yellow-400 group-hover:scale-110 tracking-wide">
+                        <div
+                          className="
+                            text-[7vh] font-bold text-white
+                            tracking-wide
+                            transition-all duration-300 ease-out
+                            group-hover:text-yellow-400
+                            group-hover:scale-110
+                          "
+                        >
                           {image.label}
                         </div>
                       </div>
