@@ -3,8 +3,9 @@ import { SiteHeader } from '../components/SiteHeader';
 import { VideoHero } from '../components/VideoHero';
 import { ImageCarousel } from '../components/ImageCarousel';
 
-const SPEED = 1.1;
-const LERP = 0.045;
+const SPEED_Y = 1.2;
+const SPEED_X = 0.9;
+const LERP = 0.08;
 
 const photosImages = [
   { src: '/prestationscontenu/Cisnienie (1).jpg', alt: 'Photos', label: 'Photos', link: '/photos' },
@@ -30,8 +31,10 @@ export function Prestations() {
   const containerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
-  // ✅ FIX TS BUILD SAFE
-  const carRefs = useRef<Array<HTMLDivElement | null>>([]);
+  const carRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  const mode = useRef<'vertical' | 'horizontal'>('vertical');
+  const active = useRef(0);
 
   const targetY = useRef(0);
   const currentY = useRef(0);
@@ -47,9 +50,11 @@ export function Prestations() {
     const sectionHeight = window.innerHeight;
 
     const animate = () => {
+      // vertical
       currentY.current += (targetY.current - currentY.current) * LERP;
       content.style.transform = `translateY(-${currentY.current}px)`;
 
+      // horizontal
       for (let i = 0; i < sections.length; i++) {
         currentX.current[i] += (targetX.current[i] - currentX.current[i]) * LERP;
 
@@ -64,29 +69,68 @@ export function Prestations() {
 
     animate();
 
+    const getSection = () =>
+      Math.round(currentY.current / sectionHeight);
+
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
 
-      const delta = e.deltaY * SPEED;
+      const deltaY = e.deltaY * SPEED_Y;
 
-      targetY.current += delta;
+      // =========================
+      // MODE VERTICAL
+      // =========================
+      if (mode.current === 'vertical') {
+        targetY.current += deltaY;
 
-      const maxY = content.scrollHeight - sectionHeight;
-      targetY.current = Math.max(0, Math.min(targetY.current, maxY));
+        const section = getSection();
+        active.current = section;
 
-      const sectionIndex = Math.floor(targetY.current / sectionHeight);
+        // clamp
+        const maxY = content.scrollHeight - sectionHeight;
+        targetY.current = Math.max(0, Math.min(targetY.current, maxY));
 
-      if (sectionIndex >= 0 && sectionIndex < sections.length) {
-        const images = sections[sectionIndex];
+        // 🔥 entrer en mode horizontal si section carrousel
+        if (section >= 0 && section < sections.length) {
+          const elTop = section * sectionHeight;
+
+          const distance = Math.abs(targetY.current - elTop);
+
+          // si on est "assez proche", on lock horizontal
+          if (distance < 40) {
+            mode.current = 'horizontal';
+            targetY.current = elTop;
+          }
+        }
+      }
+
+      // =========================
+      // MODE HORIZONTAL
+      // =========================
+      else if (mode.current === 'horizontal') {
+        const i = active.current;
+        const images = sections[i];
 
         const maxX = (images.length - 1) * window.innerWidth;
 
-        targetX.current[sectionIndex] += delta * 0.35;
+        targetX.current[i] += deltaY * SPEED_X;
 
-        targetX.current[sectionIndex] = Math.max(
-          0,
-          Math.min(targetX.current[sectionIndex], maxX)
-        );
+        // clamp horizontal
+        if (targetX.current[i] <= 0) {
+          targetX.current[i] = 0;
+
+          // retour vertical vers haut
+          if (deltaY < 0) mode.current = 'vertical';
+        }
+
+        if (targetX.current[i] >= maxX) {
+          targetX.current[i] = maxX;
+
+          // fin → retour vertical
+          if (deltaY > 0) {
+            mode.current = 'vertical';
+          }
+        }
       }
     };
 
@@ -98,7 +142,10 @@ export function Prestations() {
   }, []);
 
   return (
-    <div ref={containerRef} className="h-screen overflow-hidden bg-[rgb(15,15,15)]">
+    <div
+      ref={containerRef}
+      className="h-screen overflow-hidden bg-[rgb(15,15,15)]"
+    >
       <div ref={contentRef} className="will-change-transform">
 
         <SiteHeader title="Prestations" showBack />
