@@ -3,8 +3,8 @@ import { SiteHeader } from '../components/SiteHeader';
 import { VideoHero } from '../components/VideoHero';
 import { ImageCarousel } from '../components/ImageCarousel';
 
-const SPEED = 1.1;   // ↓ un peu plus doux
-const LERP = 0.06;   // ↓ plus fluide
+const SPEED = 1.1;
+const LERP = 0.06;
 
 const photosImages = [
   { src: '/prestationscontenu/Cisnienie (1).jpg', alt: 'Photos', label: 'Photos', link: '/photos' },
@@ -46,14 +46,15 @@ export function Prestations() {
     const sectionHeight = window.innerHeight;
 
     let lastWheelTime = Date.now();
+    let snapTimeout: any = null;
 
     const animate = () => {
-      // smooth vertical
+      // vertical smooth
       currentY.current += (targetY.current - currentY.current) * LERP;
       content.style.transform = `translateY(-${currentY.current}px)`;
 
-      // smooth horizontal
-      for (let i = 0; i < 3; i++) {
+      // horizontal smooth
+      for (let i = 0; i < sections.length; i++) {
         currentX.current[i] += (targetX.current[i] - currentX.current[i]) * LERP;
 
         const el = carRefs.current[i];
@@ -78,10 +79,9 @@ export function Prestations() {
       const delta = e.deltaY * SPEED;
       lastWheelTime = Date.now();
 
-      // ❌ ON SUPPRIME LE SNAP DIRECT
+      // smooth vertical accumulation
       targetY.current += delta;
 
-      // clamp vertical normal (PAS snap ici)
       const maxY = content.scrollHeight - sectionHeight;
       targetY.current = Math.max(0, Math.min(targetY.current, maxY));
 
@@ -92,28 +92,28 @@ export function Prestations() {
 
         const maxX = (images.length - 1) * window.innerWidth;
 
-        // horizontal smooth (NO SNAP immédiat)
-        targetX.current[sectionIndex] += delta * 0.35;
+        // smooth horizontal
+        targetX.current[sectionIndex] += delta * 0.3;
 
         targetX.current[sectionIndex] = Math.max(
           0,
           Math.min(targetX.current[sectionIndex], maxX)
         );
       }
+
+      // debounce snap (IMPORTANT FIX)
+      if (snapTimeout) clearTimeout(snapTimeout);
+
+      snapTimeout = setTimeout(() => {
+        snapToSection();
+      }, 120);
     };
 
     container.addEventListener('wheel', handleWheel, { passive: false });
 
-    // 🔥 SNAP AUTOMATIQUE quand scroll s’arrête
-    const interval = setInterval(() => {
-      if (Date.now() - lastWheelTime > 120) {
-        snapToSection();
-      }
-    }, 100);
-
     return () => {
       container.removeEventListener('wheel', handleWheel);
-      clearInterval(interval);
+      if (snapTimeout) clearTimeout(snapTimeout);
     };
   }, []);
 
@@ -129,17 +129,17 @@ export function Prestations() {
 
         <ImageCarousel
           images={photosImages}
-          ref={(el) => (carRefs.current[0] = el)}
+          ref={(el) => { carRefs.current[0] = el }}
         />
 
         <ImageCarousel
           images={livesImages}
-          ref={(el) => (carRefs.current[1] = el)}
+          ref={(el) => { carRefs.current[1] = el }}
         />
 
         <ImageCarousel
           images={clipsImages}
-          ref={(el) => (carRefs.current[2] = el)}
+          ref={(el) => { carRefs.current[2] = el }}
         />
 
       </div>
