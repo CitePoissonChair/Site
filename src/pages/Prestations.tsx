@@ -3,7 +3,7 @@ import { SiteHeader } from '../components/SiteHeader';
 import { VideoHero } from '../components/VideoHero';
 import { ImageCarousel } from '../components/ImageCarousel';
 
-const SPEED = 1.2;
+const SPEED = 1;
 const LERP = 0.08;
 
 const photosImages = [
@@ -43,12 +43,14 @@ export function Prestations() {
     const content = contentRef.current;
     if (!container || !content) return;
 
+    const maxY = () => content.scrollHeight - window.innerHeight;
+
     const animate = () => {
-      // vertical smooth scroll
+      // vertical smooth
       currentY.current += (targetY.current - currentY.current) * LERP;
       content.style.transform = `translateY(-${currentY.current}px)`;
 
-      // horizontal smooth per section
+      // horizontal smooth
       for (let i = 0; i < sections.length; i++) {
         currentX.current[i] += (targetX.current[i] - currentX.current[i]) * LERP;
 
@@ -68,27 +70,29 @@ export function Prestations() {
 
       const delta = e.deltaY * SPEED;
 
-      targetY.current += delta;
-
-      const maxY = content.scrollHeight - window.innerHeight;
-      targetY.current = Math.max(0, Math.min(targetY.current, maxY));
-
-      // detect section (smooth, no snap)
-      const sectionIndex = Math.min(
-        sections.length - 1,
-        Math.max(0, Math.floor(targetY.current / window.innerHeight))
-      );
-
-      const images = sections[sectionIndex];
-
-      const maxX = (images.length - 1) * window.innerWidth;
-
-      targetX.current[sectionIndex] += delta * 0.3;
-
-      targetX.current[sectionIndex] = Math.max(
+      // 👉 vertical : fluid without snapping
+      targetY.current = Math.max(
         0,
-        Math.min(targetX.current[sectionIndex], maxX)
+        Math.min(targetY.current + delta, maxY())
       );
+
+      const sectionHeight = window.innerHeight;
+      const sectionIndex = Math.floor(targetY.current / sectionHeight);
+
+      if (sectionIndex >= 0 && sectionIndex < sections.length) {
+        const images = sections[sectionIndex];
+
+        const maxX = (images.length - 1) * window.innerWidth;
+
+        // 👉 horizontal progress smooth (NOT instant jump)
+        targetX.current[sectionIndex] = Math.max(
+          0,
+          Math.min(
+            targetX.current[sectionIndex] + delta * 0.4,
+            maxX
+          )
+        );
+      }
     };
 
     container.addEventListener('wheel', handleWheel, { passive: false });
