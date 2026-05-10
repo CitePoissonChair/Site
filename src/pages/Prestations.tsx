@@ -4,7 +4,7 @@ import { VideoHero } from '../components/VideoHero';
 import { ImageCarousel } from '../components/ImageCarousel';
 
 const SPEED = 1.1;
-const LERP = 0.045; // plus doux = plus stable
+const LERP = 0.045;
 
 const photosImages = [
   { src: '/prestationscontenu/Cisnienie (1).jpg', alt: 'Photos', label: 'Photos', link: '/photos' },
@@ -46,11 +46,9 @@ export function Prestations() {
     const maxY = () => content.scrollHeight - window.innerHeight;
 
     const animate = () => {
-      // vertical smooth
       currentY.current += (targetY.current - currentY.current) * LERP;
       content.style.transform = `translateY(-${currentY.current}px)`;
 
-      // horizontal smooth
       for (let i = 0; i < 3; i++) {
         currentX.current[i] += (targetX.current[i] - currentX.current[i]) * LERP;
 
@@ -74,20 +72,16 @@ export function Prestations() {
       const sectionHeight = window.innerHeight;
       const section = Math.floor(y / sectionHeight);
 
-      // clamp vertical
       targetY.current = Math.max(0, Math.min(targetY.current + delta, maxY()));
 
-      // horizontal ONLY if centered in section
       const isCentered =
         y % sectionHeight < sectionHeight * 0.8 &&
         y % sectionHeight > sectionHeight * 0.2;
 
       if (section >= 0 && section < carousels.length && isCentered) {
         const maxX = (carousels[section].length - 1) * window.innerWidth;
-
         const current = targetX.current[section];
 
-        // smoother horizontal influence
         const horizontal = delta * 0.4;
 
         targetX.current[section] = Math.max(
@@ -109,30 +103,28 @@ export function Prestations() {
         <SiteHeader title="Prestations" showBack />
         <VideoHero />
 
-        {/* spacing BETWEEN sections = important */}
         <div className="h-[10vh]" />
 
         <ImageCarousel
           images={photosImages}
-          ref={(el) => (refs.current[0] = el)}
+          ref={(el) => { refs.current[0] = el; }}
         />
 
         <div className="h-[10vh]" />
 
         <ImageCarousel
           images={livesImages}
-          ref={(el) => (refs.current[1] = el)}
+          ref={(el) => { refs.current[1] = el; }}
         />
 
         <div className="h-[10vh]" />
 
         <ImageCarousel
           images={clipsImages}
-          ref={(el) => (refs.current[2] = el)}
+          ref={(el) => { refs.current[2] = el; }}
         />
 
         <div className="h-[20vh]" />
-
       </div>
     </div>
   );
