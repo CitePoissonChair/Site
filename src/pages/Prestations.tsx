@@ -14,7 +14,7 @@ const photosImages = [
 
 const livesImages = [
   { src: '/prestationscontenu/24012026-Street Sects (6).jpg', alt: 'Lives 1', label: 'Live', link: '/captations' },
-  { src: '/prestationscontenu/Madame loyal (6).jpg' },
+  { src: '/prestationscontenu/Madame loyal (6).jpg', alt: 'Lives 2', label: 'Live', link: '/captations' },
   { src: '/images/Revues/Buddy System/Buddy 1/buddy_1_p2.jpg', alt: 'Lives 3', link: '/captations' },
 ];
 
