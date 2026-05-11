@@ -20,8 +20,8 @@ const livesImages = [
 
 const clipsImages = [
   { src: '/prestationscontenu/Clip father of sins.gif', alt: 'Clips 1', label: 'Video', link: '/clips' },
-  { src: '' },
-  { src: '' },
+  { src: '/prestationscontenu/Clip father of sins.gif', alt: 'Clips 2', label: 'Video', link: '/clips' },
+  { src: '/prestationscontenu/Clip father of sins.gif', alt: 'Clips 3', label: 'Video', link: '/clips' },
 ];
 
 const carousels = [photosImages, livesImages, clipsImages];
