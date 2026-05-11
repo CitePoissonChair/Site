@@ -7,19 +7,19 @@ const LERP = 0.08;
 const SPEED = 1.8;
 
 const photosImages = [
-  { src: '/prestationscontenu/Cisnienie (1).jpg', alt: 'Photos 1', label: 'Photos', link: '/photos' },
+  { src: '/prestationscontenu/Cisnienie (1).jpg', alt: 'Photos 1', label: 'Photographie', link: '/photos' },
   { src: '/prestationscontenu/Madame loyal (8).jpg', alt: 'Photos 2', link: '/photos' },
   { src: '/prestationscontenu/Youth Code (1).jpg', alt: 'Photos 3', link: '/photos' },
 ];
 
 const livesImages = [
-  { src: '/prestationscontenu/24012026-Street Sects (6).jpg', alt: 'Lives 1', label: 'Lives', link: '/captations' },
+  { src: '/prestationscontenu/24012026-Street Sects (6).jpg', alt: 'Lives 1', label: 'Live', link: '/captations' },
   { src: '/images/Revues/Buddy System/Buddy 1/buddy_1_p1.jpg', alt: 'Lives 2', link: '/captations' },
   { src: '/images/Revues/Buddy System/Buddy 1/buddy_1_p2.jpg', alt: 'Lives 3', link: '/captations' },
 ];
 
 const clipsImages = [
-  { src: '/prestationscontenu/Clip father of sins.gif', alt: 'Clips 1', label: 'Clips', link: '/clips' },
+  { src: '/prestationscontenu/Clip father of sins.gif', alt: 'Clips 1', label: 'Video', link: '/clips' },
   { src: '/images/Ecrits/Station Soleil Bleu/Contenus/CPC_station_soleil_bleu_1.jpg', alt: 'Clips 2', link: '/clips' },
   { src: '/images/Ecrits/Station Soleil Bleu/Contenus/CPC_station_soleil_bleu_2.jpg', alt: 'Clips 3', link: '/clips' },
 ];
