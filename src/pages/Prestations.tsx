@@ -20,8 +20,8 @@ const livesImages = [
 
 const clipsImages = [
   { src: '/prestationscontenu/Clip father of sins.gif', alt: 'Clips 1', label: 'Video', link: '/clips' },
-  { src: '/images/Ecrits/Station Soleil Bleu/Contenus/CPC_station_soleil_bleu_1.jpg', alt: 'Clips 2', link: '/clips' },
-  { src: '/images/Ecrits/Station Soleil Bleu/Contenus/CPC_station_soleil_bleu_2.jpg', alt: 'Clips 3', link: '/clips' },
+  { src: '' },
+  { src: '' },
 ];
 
 const carousels = [photosImages, livesImages, clipsImages];
