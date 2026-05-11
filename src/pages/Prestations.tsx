@@ -8,7 +8,7 @@ const SPEED = 1.8;
 
 const photosImages = [
   { src: '/prestationscontenu/Cisnienie (1).jpg', alt: 'Photos 1', label: 'Photographie', link: '/photos' },
-  { src: '/prestationscontenu/Madame loyal (8).jpg', alt: 'Photos 2', link: '/photos' },
+  { src: '/prestationscontenu/Madame loyal (8).jpg', alt: 'Photos 2', label: 'Concerts, Festivals, Événementiel, Portraits artistes, Backstage, Reportage',link: '/photos' },
   { src: '/prestationscontenu/Youth Code (1).jpg', alt: 'Photos 3', link: '/photos' },
 ];
 
