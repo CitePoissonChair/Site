@@ -1,4 +1,3 @@
-import { SiteHeader } from '../components/SiteHeader';
 import { useEffect, useRef } from 'react';
 import { ImageCarousel2 } from '../components/ImageCarousel2';
 
@@ -34,7 +33,6 @@ export function Photos() {
     const animate = () => {
       current += (target - current) * lerp;
       el.scrollLeft = current;
-
       raf = requestAnimationFrame(animate);
     };
 
@@ -44,7 +42,6 @@ export function Photos() {
 
     const onWheel = (e: WheelEvent) => {
       e.preventDefault();
-
       target += e.deltaY * 1.5;
       target = Math.max(0, Math.min(target, max()));
     };
@@ -58,31 +55,10 @@ export function Photos() {
   }, []);
 
   return (
-    <div className="h-screen w-screen bg-black text-white flex flex-col overflow-hidden">
+    <div className="h-screen w-screen bg-black text-white overflow-hidden">
 
-      {/* HEADER ULTRA LIGHT */}
-      <div className="shrink-0 z-20 relative">
-
-        <div className="flex items-center justify-between px-[4vh] pt-[2vh]">
-
-          {/* BACK */}
-          <div className="text-[1.5vh] uppercase tracking-widest opacity-80 hover:opacity-100 transition">
-            ← Retour
-          </div>
-
-          {/* TITLE */}
-          <div className="text-[2vh] uppercase tracking-[0.3em]">
-            Photos
-          </div>
-
-          {/* spacer (équilibre visuel) */}
-          <div className="w-[8vh]" />
-
-        </div>
-      </div>
-
-      {/* CAROUSEL REMONTÉ */}
-      <div className="flex-1 overflow-hidden -mt-[10vh]">
+      {/* CAROUSEL */}
+      <div className="h-full flex items-start pt-[3vh]">
 
         <ImageCarousel2
           images={photosImages}
@@ -90,6 +66,7 @@ export function Photos() {
         />
 
       </div>
+
     </div>
   );
 }
