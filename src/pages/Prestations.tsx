@@ -10,7 +10,7 @@ const photosImages = [
   {
     src: '/prestationscontenu/Cisnienie (1).jpg',
     alt: 'Photos 1',
-    label: 'Photographie',
+    label: 'PHOTOGRAPHIE',
     link: '/photos',
   },
 
@@ -29,7 +29,7 @@ const photosImages = [
     src: '/prestationscontenu/Youth Code (1).jpg',
     alt: 'Photos 3',
     label:
-      'Capturer l’énergie.\nLa lumière.\nLe moment exact.',
+      '',
     labelType: 'quote',
     link: '/photos',
   },
@@ -39,7 +39,7 @@ const livesImages = [
   {
     src: '/prestationscontenu/24012026-Street Sects (6).jpg',
     alt: 'Lives 1',
-    label: 'Captation Live',
+    label: 'CAPTATION LIVE',
     link: '/captations',
   },
 
@@ -56,7 +56,7 @@ const livesImages = [
     src: '/images/Revues/Buddy System/Buddy 1/buddy_1_p2.jpg',
     alt: 'Lives 3',
     label:
-      'Le son en images.\nL’énergie en mouvement.',
+      '',
     labelType: 'quote',
     link: '/captations',
   },
@@ -66,7 +66,7 @@ const clipsImages = [
   {
     src: '/prestationscontenu/Clip father of sins.gif',
     alt: 'Clips 1',
-    label: 'Vidéo',
+    label: 'VIDÉO',
     link: '/clips',
   },
 
@@ -74,7 +74,7 @@ const clipsImages = [
     src: '/prestationscontenu/Clip father of sins.gif',
     alt: 'Clips 2',
     label:
-      'CLIPS\nLIVE SESSIONS\nSOCIAL CONTENT\nDIRECTION VISUELLE',
+      'CLIPS\nSOCIAL CONTENT\nDIRECTION ARTISTIQUE',
     labelType: 'list',
     link: '/clips',
   },
@@ -83,7 +83,7 @@ const clipsImages = [
     src: '/prestationscontenu/Clip father of sins.gif',
     alt: 'Clips 3',
     label:
-      'Des images vivantes.\nBrutes.\nSincères.',
+      '',
     labelType: 'quote',
     link: '/clips',
   },
