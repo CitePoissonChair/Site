@@ -14,7 +14,6 @@ const photosImages = [
 export function Photos() {
   const carouselRef = useRef<HTMLDivElement | null>(null);
 
-  // preload images
   useEffect(() => {
     photosImages.forEach((img) => {
       const i = new Image();
@@ -29,7 +28,7 @@ export function Photos() {
     let target = el.scrollLeft;
     let current = el.scrollLeft;
 
-    const lerp = 0.07; // un peu plus fluide (Apple feel)
+    const lerp = 0.07;
     let raf: number;
 
     const animate = () => {
@@ -41,16 +40,13 @@ export function Photos() {
 
     animate();
 
-    const getMax = () => el.scrollWidth - el.clientWidth;
+    const max = () => el.scrollWidth - el.clientWidth;
 
     const onWheel = (e: WheelEvent) => {
       e.preventDefault();
 
-      const speed = 1.5;
-
-      target += e.deltaY * speed;
-
-      target = Math.max(0, Math.min(target, getMax()));
+      target += e.deltaY * 1.5;
+      target = Math.max(0, Math.min(target, max()));
     };
 
     el.addEventListener('wheel', onWheel, { passive: false });
@@ -64,15 +60,29 @@ export function Photos() {
   return (
     <div className="h-screen w-screen bg-black text-white flex flex-col overflow-hidden">
 
-      {/* HEADER (reste visible mais on "laisse respirer dessous") */}
+      {/* HEADER ULTRA LIGHT */}
       <div className="shrink-0 z-20 relative">
-        <div className="flex justify-center py-[3vh]">
-          <SiteHeader title="Photos" showBack backTo="/prestations" />
+
+        <div className="flex items-center justify-between px-[4vh] pt-[2vh]">
+
+          {/* BACK */}
+          <div className="text-[1.5vh] uppercase tracking-widest opacity-80 hover:opacity-100 transition">
+            ← Retour
+          </div>
+
+          {/* TITLE */}
+          <div className="text-[2vh] uppercase tracking-[0.3em]">
+            Photos
+          </div>
+
+          {/* spacer (équilibre visuel) */}
+          <div className="w-[8vh]" />
+
         </div>
       </div>
 
-      {/* CAROUSEL QUI MONTE SOUS LE HEADER */}
-      <div className="flex-1 overflow-hidden -mt-[6vh]">
+      {/* CAROUSEL REMONTÉ */}
+      <div className="flex-1 overflow-hidden -mt-[10vh]">
 
         <ImageCarousel2
           images={photosImages}
