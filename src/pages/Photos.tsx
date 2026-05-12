@@ -1,5 +1,4 @@
 import { SiteHeader } from '../components/SiteHeader';
-import { motion } from 'framer-motion';
 
 const photos = [
   '/prestationscontenu/Madame loyal (6).jpg',
@@ -14,8 +13,8 @@ const photos = [
 
 export function Photos() {
   return (
-    <div className="min-h-screen bg-[#050505] overflow-hidden text-white">
-      {/* background blur */}
+    <div className="min-h-screen bg-[#050505] text-white relative overflow-hidden">
+      {/* background glow */}
       <div className="fixed inset-0 pointer-events-none opacity-30">
         <div className="absolute top-[-20vh] left-[-10vw] w-[40vw] h-[40vw] bg-white blur-[180px] rounded-full" />
       </div>
@@ -28,30 +27,37 @@ export function Photos() {
         {/* gallery */}
         <div className="columns-1 sm:columns-2 lg:columns-3 gap-[1.5vh] space-y-[1.5vh]">
           {photos.map((photo, index) => (
-            <motion.div
+            <div
               key={index}
-              initial={{ opacity: 0, y: 60 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{
-                duration: 0.7,
-                delay: index * 0.04,
-              }}
-              viewport={{ once: true }}
-              className="group relative overflow-hidden rounded-[2.5vh]"
+              className="
+                group
+                relative
+                overflow-hidden
+                rounded-[2.5vh]
+                break-inside-avoid
+                cursor-pointer
+              "
             >
               {/* image */}
               <img
                 src={photo}
                 alt=""
-                className="w-full object-cover transition duration-700 group-hover:scale-[1.03]"
+                className="
+                  w-full
+                  object-cover
+                  transition-all
+                  duration-500
+                  group-hover:scale-[1.03]
+                  group-hover:brightness-110
+                "
               />
 
-              {/* dark overlay */}
+              {/* overlay hover */}
               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition duration-500" />
 
-              {/* glow border */}
+              {/* subtle border glow */}
               <div className="absolute inset-0 rounded-[2.5vh] border border-white/0 group-hover:border-white/10 transition duration-500" />
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>
