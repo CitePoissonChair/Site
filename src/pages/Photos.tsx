@@ -1,5 +1,5 @@
-import { useEffect, useRef } from 'react';
 import { SiteHeader } from '../components/SiteHeader';
+import { useEffect } from 'react';
 
 const photos = [
   '/prestationscontenu/Madame loyal (6).jpg',
@@ -13,9 +13,7 @@ const photos = [
 ];
 
 export function Photos() {
-  const containerRef = useRef<HTMLDivElement | null>(null);
-
-  // preload
+  // preload images
   useEffect(() => {
     photos.forEach((src) => {
       const img = new Image();
@@ -24,7 +22,8 @@ export function Photos() {
   }, []);
 
   return (
-    <div className="w-full h-screen bg-black text-white overflow-hidden">
+    <div className="h-screen w-screen bg-black text-white overflow-hidden">
+      
       {/* header */}
       <div className="absolute top-0 left-0 w-full z-20">
         <div className="flex justify-center py-[3vh]">
@@ -32,47 +31,41 @@ export function Photos() {
         </div>
       </div>
 
-      {/* SCROLL AREA */}
+      {/* IMPORTANT: scroll container */}
       <div
-        ref={containerRef}
         className="
           flex
-          h-screen
-          w-screen
-          overflow-x-scroll
+          h-full
+          w-max
+          overflow-x-auto
           overflow-y-hidden
           snap-x
           snap-mandatory
-          scroll-smooth
         "
-        style={{ scrollSnapType: 'x mandatory' }}
+        style={{
+          scrollBehavior: 'smooth',
+        }}
       >
         {photos.map((photo, i) => (
           <div
             key={i}
             className="
-              min-w-full
+              w-screen
               h-screen
               flex
               items-center
               justify-center
               snap-center
+              shrink-0
               relative
             "
           >
             <img
               src={photo}
-              className="
-                w-full
-                h-full
-                object-cover
-                select-none
-                pointer-events-none
-              "
+              className="w-full h-full object-cover"
             />
 
-            {/* vignette */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/40" />
+            <div className="absolute inset-0 bg-black/30" />
           </div>
         ))}
       </div>
