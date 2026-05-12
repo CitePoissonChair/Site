@@ -1,5 +1,5 @@
 import { SiteHeader } from '../components/SiteHeader';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 const photos = [
   '/prestationscontenu/Madame loyal (6).jpg',
@@ -13,6 +13,8 @@ const photos = [
 ];
 
 export function Photos() {
+  const containerRef = useRef<HTMLDivElement | null>(null);
+
   // preload images
   useEffect(() => {
     photos.forEach((src) => {
@@ -21,29 +23,46 @@ export function Photos() {
     });
   }, []);
 
+  // Wheel → horizontal scroll (Apple style)
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault();
+
+      // smooth horizontal scroll
+      el.scrollLeft += e.deltaY * 0.8;
+    };
+
+    el.addEventListener('wheel', onWheel, { passive: false });
+
+    return () => el.removeEventListener('wheel', onWheel);
+  }, []);
+
   return (
     <div className="h-screen w-screen bg-black text-white flex flex-col overflow-hidden">
 
-      {/* HEADER (fixe, toujours visible) */}
+      {/* HEADER */}
       <div className="shrink-0 z-20">
         <div className="flex justify-center py-[3vh]">
           <SiteHeader title="Photos" showBack backTo="/prestations" />
         </div>
       </div>
 
-      {/* CAROUSEL AREA */}
+      {/* CAROUSEL */}
       <div className="flex-1 overflow-hidden">
 
-        {/* SCROLLER */}
         <div
+          ref={containerRef}
           className="
             flex
             h-full
             w-full
-            overflow-x-auto
-            overflow-y-hidden
+            overflow-x-hidden
             snap-x
             snap-mandatory
+            scroll-smooth
           "
         >
           {photos.map((photo, i) => (
@@ -60,18 +79,19 @@ export function Photos() {
                 relative
               "
             >
-              {/* IMAGE (NOT fullscreen now, contains nicely) */}
+              {/* BIG IMAGE */}
               <img
                 src={photo}
                 className="
-                  max-h-[80%]
-                  max-w-[90%]
+                  w-[85%]
+                  h-[85%]
                   object-cover
-                  rounded-[2vh]
+                  rounded-[3vh]
+                  shadow-2xl
                 "
               />
 
-              {/* overlay léger */}
+              {/* soft vignette */}
               <div className="absolute inset-0 bg-black/20 pointer-events-none" />
             </div>
           ))}
