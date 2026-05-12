@@ -37,7 +37,7 @@ const photosImages = [
 
 const livesImages = [
   {
-    src: 'public/prestationscontenu/Puce Mary (1).jpg',
+    src: '/prestationscontenu/Madame loyal (5).jpg',
     alt: 'Lives 1',
     label: 'CAPTATION LIVE',
     link: '/captations',
