@@ -37,7 +37,7 @@ const photosImages = [
 
 const livesImages = [
   {
-    src: '/prestationscontenu/24012026-Street Sects (6).jpg',
+    src: 'public/prestationscontenu/Puce Mary (1).jpg',
     alt: 'Lives 1',
     label: 'CAPTATION LIVE',
     link: '/captations',
@@ -53,7 +53,7 @@ const livesImages = [
   },
 
   {
-    src: '/images/Revues/Buddy System/Buddy 1/buddy_1_p2.jpg',
+    src: '/prestationscontenu/Street Sects (2).jpg',
     alt: 'Lives 3',
     label:
       '',
