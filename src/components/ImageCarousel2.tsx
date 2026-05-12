@@ -18,34 +18,35 @@ export const ImageCarousel2 = forwardRef<HTMLDivElement, Props>(
     return (
       <div className="w-full h-full overflow-hidden">
 
-        {/* SCROLL CONTAINER (IMPORTANT) */}
+        {/* SCROLL TRACK (controlled externally) */}
         <div
           ref={ref}
           className="
             flex
-            h-full
-            w-full
+            h-[80vh]
+            items-start
+            pt-[6vh]
             overflow-x-auto
             overflow-y-hidden
             scroll-smooth
             no-scrollbar
-            items-center
           "
         >
 
           {images.map((image, index) => (
             <div
               key={index}
+              data-snap
               className="
                 flex-none
                 w-[85vw]
                 h-[70vh]
                 mx-[2vw]
                 relative
-                rounded-[3vh]
                 overflow-hidden
-                shrink-0
+                rounded-[3vh]
                 group
+                shrink-0
               "
             >
 
