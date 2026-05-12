@@ -3,64 +3,54 @@ import { useEffect, useRef } from 'react';
 import { ImageCarousel2 } from '../components/ImageCarousel2';
 
 const photosImages = [
-  {
-    src: '/prestationscontenu/Madame loyal (6).jpg',
-    alt: 'Photo 1',
-    link: '#',
-  },
-  {
-    src: '/prestationscontenu/Youth Code (3).jpg',
-    alt: 'Photo 2',
-  },
-  {
-    src: '/prestationscontenu/Madame loyal (4).jpg',
-    alt: 'Photo 3',
-  },
-  {
-    src: '/prestationscontenu/Author & Punisher (1).jpg',
-    alt: 'Photo 4',
-  },
-  {
-    src: '/prestationscontenu/King Yosef (1).jpg',
-    alt: 'Photo 5',
-  },
-  {
-    src: '/prestationscontenu/Cisnienie (2).jpg',
-    alt: 'Photo 6',
-  },
-  {
-    src: '/prestationscontenu/Madame loyal (2).jpg',
-    alt: 'Photo 7',
-  },
-  {
-    src: '/prestationscontenu/Cisnienie (4).jpg',
-    alt: 'Photo 8',
-  },
+  { src: '/prestationscontenu/Madame loyal (6).jpg', alt: '1' },
+  { src: '/prestationscontenu/Youth Code (3).jpg', alt: '2' },
+  { src: '/prestationscontenu/Madame loyal (4).jpg', alt: '3' },
+  { src: '/prestationscontenu/Author & Punisher (1).jpg', alt: '4' },
+  { src: '/prestationscontenu/King Yosef (1).jpg', alt: '5' },
+  { src: '/prestationscontenu/Cisnienie (2).jpg', alt: '6' },
 ];
 
 export function Photos() {
   const carouselRef = useRef<HTMLDivElement | null>(null);
 
-  // preload images (important pour fluidité Apple-like)
+  // PRELOAD
   useEffect(() => {
     photosImages.forEach((img) => {
-      const image = new Image();
-      image.src = img.src;
+      const i = new Image();
+      i.src = img.src;
     });
+  }, []);
+
+  // 🔥 WHEEL → HORIZONTAL SCROLL
+  useEffect(() => {
+    const el = carouselRef.current;
+    if (!el) return;
+
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault();
+
+      // IMPORTANT: smooth horizontal movement
+      el.scrollLeft += e.deltaY * 1.2;
+    };
+
+    el.addEventListener('wheel', onWheel, { passive: false });
+
+    return () => el.removeEventListener('wheel', onWheel);
   }, []);
 
   return (
     <div className="h-screen w-screen bg-black text-white flex flex-col overflow-hidden">
 
-      {/* HEADER FIXE */}
-      <div className="shrink-0 z-20">
+      {/* HEADER */}
+      <div className="shrink-0">
         <div className="flex justify-center py-[3vh]">
           <SiteHeader title="Photos" showBack backTo="/prestations" />
         </div>
       </div>
 
       {/* CAROUSEL AREA */}
-      <div className="flex-1 flex items-center">
+      <div className="flex-1 overflow-hidden">
 
         <ImageCarousel2
           images={photosImages}
