@@ -7,21 +7,86 @@ const LERP = 0.08;
 const SPEED = 1.8;
 
 const photosImages = [
-  { src: '/prestationscontenu/Cisnienie (1).jpg', alt: 'Photos 1', label: 'Photographie', link: '/photos' },
-  { src: '/prestationscontenu/Madame loyal (8).jpg', alt: 'Photos 2', label: 'Concerts, Festivals, Portraits, Backstage, Reportage',link: '/photos' },
-  { src: '/prestationscontenu/Youth Code (1).jpg', alt: 'Photos 3', link: '/photos' },
+  {
+    src: '/prestationscontenu/Cisnienie (1).jpg',
+    alt: 'Photos 1',
+    label: 'Photographie',
+    link: '/photos',
+  },
+
+  // IMAGE 2 → LISTE PRESTATIONS
+  {
+    src: '/prestationscontenu/Madame loyal (8).jpg',
+    alt: 'Photos 2',
+    label:
+      'CONCERTS\nFESTIVALS\nPORTRAITS\nBACKSTAGE\nREPORTAGE',
+    labelType: 'list',
+    link: '/photos',
+  },
+
+  // IMAGE 3 → TEXTE ÉMOTIONNEL
+  {
+    src: '/prestationscontenu/Youth Code (1).jpg',
+    alt: 'Photos 3',
+    label:
+      'Capturer l’énergie.\nLa lumière.\nLe moment exact.',
+    labelType: 'quote',
+    link: '/photos',
+  },
 ];
 
 const livesImages = [
-  { src: '/prestationscontenu/24012026-Street Sects (6).jpg', alt: 'Lives 1', label: 'Live', link: '/captations' },
-  { src: '/prestationscontenu/Madame loyal (6).jpg', alt: 'Lives 2', label: 'Live', link: '/captations' },
-  { src: '/images/Revues/Buddy System/Buddy 1/buddy_1_p2.jpg', alt: 'Lives 3', link: '/captations' },
+  {
+    src: '/prestationscontenu/24012026-Street Sects (6).jpg',
+    alt: 'Lives 1',
+    label: 'Captation Live',
+    link: '/captations',
+  },
+
+  {
+    src: '/prestationscontenu/Madame loyal (6).jpg',
+    alt: 'Lives 2',
+    label:
+      'LIVE SESSIONS\nMULTICAM\nCONCERTS\nSTREAMING\nAFTERMOVIES',
+    labelType: 'list',
+    link: '/captations',
+  },
+
+  {
+    src: '/images/Revues/Buddy System/Buddy 1/buddy_1_p2.jpg',
+    alt: 'Lives 3',
+    label:
+      'Le son en images.\nL’énergie en mouvement.',
+    labelType: 'quote',
+    link: '/captations',
+  },
 ];
 
 const clipsImages = [
-  { src: '/prestationscontenu/Clip father of sins.gif', alt: 'Clips 1', label: 'Video', link: '/clips' },
-  { src: '/prestationscontenu/Clip father of sins.gif', alt: 'Clips 2', label: 'Video', link: '/clips' },
-  { src: '/prestationscontenu/Clip father of sins.gif', alt: 'Clips 3', label: 'Video', link: '/clips' },
+  {
+    src: '/prestationscontenu/Clip father of sins.gif',
+    alt: 'Clips 1',
+    label: 'Vidéo',
+    link: '/clips',
+  },
+
+  {
+    src: '/prestationscontenu/Clip father of sins.gif',
+    alt: 'Clips 2',
+    label:
+      'CLIPS\nLIVE SESSIONS\nSOCIAL CONTENT\nDIRECTION VISUELLE',
+    labelType: 'list',
+    link: '/clips',
+  },
+
+  {
+    src: '/prestationscontenu/Clip father of sins.gif',
+    alt: 'Clips 3',
+    label:
+      'Des images vivantes.\nBrutes.\nSincères.',
+    labelType: 'quote',
+    link: '/clips',
+  },
 ];
 
 const carousels = [photosImages, livesImages, clipsImages];
@@ -31,38 +96,54 @@ export function Prestations() {
   const contentRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef<number | null>(null);
 
-  const carouselInnerRefs = useRef<Array<HTMLDivElement | null>>([null, null, null]);
+  const carouselInnerRefs = useRef<Array<HTMLDivElement | null>>([
+    null,
+    null,
+    null,
+  ]);
 
   const targetYRef = useRef(0);
   const targetXRefs = useRef([0, 0, 0]);
+
   const currentYRef = useRef(0);
   const currentXRefs = useRef([0, 0, 0]);
 
-  const cachedOffsetsRef = useRef<{ top: number; height: number }[]>([]);
+  const cachedOffsetsRef = useRef<{ top: number; height: number }[]>(
+    []
+  );
 
-  // ✅ CLEAN ref setter (fix TS2322)
-  const setCarouselRef = (index: number) => (el: HTMLDivElement | null) => {
-    carouselInnerRefs.current[index] = el;
-  };
+  const setCarouselRef =
+    (index: number) => (el: HTMLDivElement | null) => {
+      carouselInnerRefs.current[index] = el;
+    };
 
   useEffect(() => {
     const container = containerRef.current;
     const content = contentRef.current;
+
     if (!container || !content) return;
 
-    const getMaxScrollY = () => content.scrollHeight - window.innerHeight;
-    const getMaxScrollX = (numImages: number) => (numImages - 1) * (window.innerWidth + 50);
+    const getMaxScrollY = () =>
+      content.scrollHeight - window.innerHeight;
+
+    const getMaxScrollX = (numImages: number) =>
+      (numImages - 1) * (window.innerWidth + 50);
 
     const cacheOffsets = () => {
       const children = content.children;
 
       cachedOffsetsRef.current = [2, 3, 4].map((i) => {
         const el = children[i] as HTMLElement;
-        return { top: el.offsetTop, height: el.offsetHeight };
+
+        return {
+          top: el.offsetTop,
+          height: el.offsetHeight,
+        };
       });
     };
 
     cacheOffsets();
+
     window.addEventListener('resize', cacheOffsets);
 
     const getActiveCarousel = () => {
@@ -71,22 +152,32 @@ export function Prestations() {
 
       for (let i = 0; i < offsets.length; i++) {
         const { top, height } = offsets[i];
-        if (y >= top - 2 && y < top + height - 2) return i;
+
+        if (y >= top - 2 && y < top + height - 2) {
+          return i;
+        }
       }
+
       return -1;
     };
 
     const animate = () => {
-      const diffY = targetYRef.current - currentYRef.current;
+      const diffY =
+        targetYRef.current - currentYRef.current;
+
       currentYRef.current += diffY * LERP;
 
       content.style.transform = `translateY(-${currentYRef.current}px)`;
 
       for (let i = 0; i < 3; i++) {
-        const diffX = targetXRefs.current[i] - currentXRefs.current[i];
+        const diffX =
+          targetXRefs.current[i] -
+          currentXRefs.current[i];
+
         currentXRefs.current[i] += diffX * LERP;
 
         const el = carouselInnerRefs.current[i];
+
         if (el) {
           el.style.transform = `translateX(-${currentXRefs.current[i]}px)`;
         }
@@ -101,36 +192,70 @@ export function Prestations() {
       e.preventDefault();
 
       const delta = e.deltaY * SPEED;
+
       const maxY = getMaxScrollY();
+
       const carouselIndex = getActiveCarousel();
 
       if (carouselIndex === -1) {
-        targetYRef.current = Math.max(0, Math.min(targetYRef.current + delta, maxY));
+        targetYRef.current = Math.max(
+          0,
+          Math.min(targetYRef.current + delta, maxY)
+        );
+
         return;
       }
 
       const offsets = cachedOffsetsRef.current;
-      const numImages = carousels[carouselIndex].length;
+
+      const numImages =
+        carousels[carouselIndex].length;
+
       const maxX = getMaxScrollX(numImages);
-      const currentX = targetXRefs.current[carouselIndex];
+
+      const currentX =
+        targetXRefs.current[carouselIndex];
 
       if (delta > 0 && currentX < maxX) {
-        targetYRef.current = offsets[carouselIndex].top;
-        targetXRefs.current[carouselIndex] = Math.min(currentX + delta, maxX);
+        targetYRef.current =
+          offsets[carouselIndex].top;
+
+        targetXRefs.current[carouselIndex] =
+          Math.min(currentX + delta, maxX);
       } else if (delta < 0 && currentX > 0) {
-        targetYRef.current = offsets[carouselIndex].top;
-        targetXRefs.current[carouselIndex] = Math.max(currentX + delta, 0);
+        targetYRef.current =
+          offsets[carouselIndex].top;
+
+        targetXRefs.current[carouselIndex] =
+          Math.max(currentX + delta, 0);
       } else {
-        targetYRef.current = Math.max(0, Math.min(targetYRef.current + delta, maxY));
+        targetYRef.current = Math.max(
+          0,
+          Math.min(targetYRef.current + delta, maxY)
+        );
       }
     };
 
-    container.addEventListener('wheel', handleWheel, { passive: false });
+    container.addEventListener(
+      'wheel',
+      handleWheel,
+      { passive: false }
+    );
 
     return () => {
-      container.removeEventListener('wheel', handleWheel);
-      window.removeEventListener('resize', cacheOffsets);
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      container.removeEventListener(
+        'wheel',
+        handleWheel
+      );
+
+      window.removeEventListener(
+        'resize',
+        cacheOffsets
+      );
+
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+      }
     };
   }, []);
 
@@ -140,26 +265,39 @@ export function Prestations() {
       className="h-screen overflow-hidden relative"
       style={{ background: 'rgb(15,15,15)' }}
     >
-      <div ref={contentRef} className="will-change-transform">
-
+      <div
+        ref={contentRef}
+        className="will-change-transform"
+      >
         <div className="flex flex-col items-center">
-          <SiteHeader title="Prestations" showBack />
+          <SiteHeader
+            title="Prestations"
+            showBack
+          />
         </div>
 
         <VideoHero />
 
         <div className="mb-10">
-          <ImageCarousel images={photosImages} ref={setCarouselRef(0)} />
+          <ImageCarousel
+            images={photosImages}
+            ref={setCarouselRef(0)}
+          />
         </div>
 
         <div className="mb-10">
-          <ImageCarousel images={livesImages} ref={setCarouselRef(1)} />
+          <ImageCarousel
+            images={livesImages}
+            ref={setCarouselRef(1)}
+          />
         </div>
 
         <div className="mb-10">
-          <ImageCarousel images={clipsImages} ref={setCarouselRef(2)} />
+          <ImageCarousel
+            images={clipsImages}
+            ref={setCarouselRef(2)}
+          />
         </div>
-
       </div>
     </div>
   );
