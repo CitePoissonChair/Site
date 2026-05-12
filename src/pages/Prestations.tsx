@@ -47,7 +47,7 @@ const livesImages = [
     src: '/prestationscontenu/Madame loyal (6).jpg',
     alt: 'Lives 2',
     label:
-      'LIVE SESSIONS\nMULTICAM\nCONCERTS\nSTREAMING\nAFTERMOVIES',
+      'LIVE SESSIONS\nMULTICAM\nCONCERTS\nÉVÉNEMENTS\nAFTERMOVIES',
     labelType: 'list',
     link: '/captations',
   },
