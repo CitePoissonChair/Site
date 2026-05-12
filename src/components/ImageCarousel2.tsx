@@ -1,5 +1,4 @@
 import { forwardRef } from 'react';
-import { Link } from 'react-router-dom';
 
 type ImageItem = {
   src: string;
@@ -22,10 +21,10 @@ export const ImageCarousel2 = forwardRef<HTMLDivElement, Props>(
             flex
             h-[85vh]
             items-start
-            pt-[0vh]
             overflow-x-auto
             overflow-y-hidden
             no-scrollbar
+            will-change-transform
           "
         >
 
