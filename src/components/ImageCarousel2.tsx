@@ -16,88 +16,87 @@ type Props = {
 export const ImageCarousel2 = forwardRef<HTMLDivElement, Props>(
   ({ images }, ref) => {
     return (
-      <div className="w-full relative flex-none">
+      <div className="w-full h-full overflow-hidden">
 
-        {/* VIEWPORT */}
-        <div className="w-full overflow-hidden">
+        {/* SCROLL CONTAINER (IMPORTANT) */}
+        <div
+          ref={ref}
+          className="
+            flex
+            h-full
+            w-full
+            overflow-x-auto
+            overflow-y-hidden
+            scroll-smooth
+            no-scrollbar
+            items-center
+          "
+        >
 
-          {/* TRACK (controlled by parent RAF system) */}
-          <div
-            ref={ref}
-            className="
-              flex
-              h-[75vh]
-              items-center
-              will-change-transform
-              select-none
-              pr-[10vw]
-            "
-          >
+          {images.map((image, index) => (
+            <div
+              key={index}
+              className="
+                flex-none
+                w-[85vw]
+                h-[70vh]
+                mx-[2vw]
+                relative
+                rounded-[3vh]
+                overflow-hidden
+                shrink-0
+                group
+              "
+            >
 
-            {images.map((image, index) => (
-              <div
-                key={index}
-                className="
-                  flex-none
-                  w-[85vw]
-                  h-[70vh]
-                  mx-[2vw]
-                  relative
-                  overflow-hidden
-                  rounded-[3vh]
-                  group
-                "
-              >
+              {image.link ? (
+                <Link to={image.link} className="block w-full h-full relative">
 
-                {image.link ? (
-                  <Link to={image.link} className="block w-full h-full relative">
+                  <img
+                    src={image.src}
+                    alt={image.alt}
+                    loading="lazy"
+                    className="
+                      absolute inset-0
+                      w-full h-full
+                      object-cover
+                      transition-transform
+                      duration-[1200ms]
+                      ease-out
+                      group-hover:scale-105
+                    "
+                  />
 
-                    <img
-                      src={image.src}
-                      alt={image.alt}
-                      loading="lazy"
-                      className="
-                        absolute inset-0
-                        w-full h-full
-                        object-cover
-                        transition-transform
-                        duration-[1200ms]
-                        ease-out
-                        group-hover:scale-105
-                      "
-                    />
+                  <div className="absolute inset-0 bg-black/25 group-hover:bg-black/10 transition" />
 
-                    <div className="absolute inset-0 bg-black/25 group-hover:bg-black/10 transition" />
+                </Link>
+              ) : (
+                <>
+                  <img
+                    src={image.src}
+                    alt={image.alt}
+                    loading="lazy"
+                    className="
+                      absolute inset-0
+                      w-full h-full
+                      object-cover
+                      transition-transform
+                      duration-[1200ms]
+                      ease-out
+                      group-hover:scale-105
+                    "
+                  />
 
-                  </Link>
-                ) : (
-                  <>
-                    <img
-                      src={image.src}
-                      alt={image.alt}
-                      loading="lazy"
-                      className="
-                        absolute inset-0
-                        w-full h-full
-                        object-cover
-                        transition-transform
-                        duration-[1200ms]
-                        ease-out
-                        group-hover:scale-105
-                      "
-                    />
+                  <div className="absolute inset-0 bg-black/25 group-hover:bg-black/10 transition" />
+                </>
+              )}
 
-                    <div className="absolute inset-0 bg-black/25 group-hover:bg-black/10 transition" />
-                  </>
-                )}
+            </div>
+          ))}
 
-              </div>
-            ))}
+          {/* spacing fin */}
+          <div className="flex-none w-[10vw] h-full" />
 
-            {/* spacing fin */}
-            <div className="flex-none w-[10vw] h-full" />
-
-          </div>
         </div>
       </div>
     );
