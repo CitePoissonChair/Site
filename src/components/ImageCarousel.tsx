@@ -1,11 +1,11 @@
-import React, { forwardRef } from 'react';
+import { forwardRef } from 'react';
 import { Link } from 'react-router-dom';
 
 type ImageItem = {
   src: string;
   alt: string;
   label?: string;
-  labelType?: 'list' | 'quote';
+  labelType?: string;
   link?: string;
 };
 
