@@ -44,7 +44,7 @@ const livesImages = [
   },
 
   {
-    src: 'public/prestationscontenu/Madame.jpg',
+    src: 'public/prestationscontenu/Madame loyal (9).jpg',
     alt: 'Lives 2',
     label:
       'LIVE SESSIONS\nMULTICAM\nCONCERTS\nÉVÉNEMENTS\nAFTERMOVIES',
