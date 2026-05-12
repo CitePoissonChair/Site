@@ -14,7 +14,7 @@ const photosImages = [
 export function Photos() {
   const carouselRef = useRef<HTMLDivElement | null>(null);
 
-  // PRELOAD (fluidité + instant display)
+  // preload images
   useEffect(() => {
     photosImages.forEach((img) => {
       const i = new Image();
@@ -29,13 +29,9 @@ export function Photos() {
     let target = el.scrollLeft;
     let current = el.scrollLeft;
 
-    const lerp = 0.08; // inertie Apple
+    const lerp = 0.07; // un peu plus fluide (Apple feel)
     let raf: number;
-    let snapTimeout: any;
 
-    const getMax = () => el.scrollWidth - el.clientWidth;
-
-    // 🔥 ANIMATION LOOP (smooth + inertia)
     const animate = () => {
       current += (target - current) * lerp;
       el.scrollLeft = current;
@@ -45,40 +41,16 @@ export function Photos() {
 
     animate();
 
-    // 🔥 MAGNETIC SNAP
-    const snap = () => {
-      const items = el.querySelectorAll('[data-snap]');
-      if (!items.length) return;
+    const getMax = () => el.scrollWidth - el.clientWidth;
 
-      const scroll = el.scrollLeft;
-
-      let closest = 0;
-      let minDist = Infinity;
-
-      items.forEach((item) => {
-        const left = (item as HTMLElement).offsetLeft;
-        const dist = Math.abs(left - scroll);
-
-        if (dist < minDist) {
-          minDist = dist;
-          closest = left;
-        }
-      });
-
-      target = closest;
-    };
-
-    // 🔥 WHEEL CONTROL
     const onWheel = (e: WheelEvent) => {
       e.preventDefault();
 
-      const speed = 1.4;
+      const speed = 1.5;
 
       target += e.deltaY * speed;
-      target = Math.max(0, Math.min(target, getMax()));
 
-      clearTimeout(snapTimeout);
-      snapTimeout = setTimeout(snap, 120);
+      target = Math.max(0, Math.min(target, getMax()));
     };
 
     el.addEventListener('wheel', onWheel, { passive: false });
@@ -92,15 +64,15 @@ export function Photos() {
   return (
     <div className="h-screen w-screen bg-black text-white flex flex-col overflow-hidden">
 
-      {/* HEADER */}
-      <div className="shrink-0 z-20">
+      {/* HEADER (reste visible mais on "laisse respirer dessous") */}
+      <div className="shrink-0 z-20 relative">
         <div className="flex justify-center py-[3vh]">
           <SiteHeader title="Photos" showBack backTo="/prestations" />
         </div>
       </div>
 
-      {/* CAROUSEL */}
-      <div className="flex-1 overflow-hidden">
+      {/* CAROUSEL QUI MONTE SOUS LE HEADER */}
+      <div className="flex-1 overflow-hidden -mt-[6vh]">
 
         <ImageCarousel2
           images={photosImages}
