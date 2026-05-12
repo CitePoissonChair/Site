@@ -13,6 +13,7 @@ const photosImages = [
 export function Photos() {
   const carouselRef = useRef<HTMLDivElement | null>(null);
 
+  // preload
   useEffect(() => {
     photosImages.forEach((img) => {
       const i = new Image();
@@ -20,6 +21,7 @@ export function Photos() {
     });
   }, []);
 
+  // smooth inertia scroll
   useEffect(() => {
     const el = carouselRef.current;
     if (!el) return;
@@ -42,6 +44,7 @@ export function Photos() {
 
     const onWheel = (e: WheelEvent) => {
       e.preventDefault();
+
       target += e.deltaY * 1.5;
       target = Math.max(0, Math.min(target, max()));
     };
@@ -55,10 +58,29 @@ export function Photos() {
   }, []);
 
   return (
-    <div className="h-screen w-screen bg-black text-white overflow-hidden">
+    <div className="h-screen w-screen bg-black text-white overflow-hidden relative">
 
-      {/* CAROUSEL */}
-      <div className="h-full flex items-start pt-[3vh]">
+      {/* HEADER OVERLAY MINIMAL */}
+
+      {/* BACK */}
+      <div className="absolute top-[3vh] left-[3vh] z-30">
+        <a
+          href="/prestations"
+          className="text-[1.4vh] uppercase tracking-widest opacity-70 hover:opacity-100 transition"
+        >
+          ← Retour
+        </a>
+      </div>
+
+      {/* TITLE */}
+      <div className="absolute top-[3vh] left-1/2 -translate-x-1/2 z-30">
+        <div className="text-[1.8vh] uppercase tracking-[0.35em] opacity-80">
+          Photographie
+        </div>
+      </div>
+
+      {/* CAROUSEL (under header visually) */}
+      <div className="h-full flex items-start pt-[6vh]">
 
         <ImageCarousel2
           images={photosImages}
