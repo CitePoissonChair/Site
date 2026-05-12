@@ -16,71 +16,259 @@ type Props = {
 export const ImageCarousel = forwardRef<HTMLDivElement, Props>(
   ({ images }, ref) => {
     return (
-      <div className="overflow-hidden w-full">
+      <div className="w-full h-screen relative flex-none overflow-hidden">
+
+        {/* VIEWPORT */}
         <div
-          ref={ref}
-          className="flex gap-[50px] will-change-transform"
+          className="
+            w-full h-full
+            flex items-center
+            overflow-x-auto overflow-y-hidden
+            no-scrollbar
+          "
         >
-          {images.map((image, index) => {
-            const content = (
-              <div className="relative w-screen h-[80vh] flex-shrink-0 overflow-hidden">
-                <img
-                  src={image.src}
-                  alt={image.alt}
-                  className="w-full h-full object-cover"
-                />
 
-                {image.label && (
-                  <div className="absolute inset-0 flex items-end p-8 md:p-14 bg-black/20">
-                    <p
-                      className={`
-                        whitespace-pre-line
-                        text-white
+          {/* TRACK */}
+          <div
+            ref={ref}
+            className="
+              flex h-full
+              select-none
+              will-change-transform
+              pr-[50px]
+            "
+          >
 
-                        ${
-                          image.labelType === 'list'
-                            ? 'text-xs md:text-sm uppercase tracking-[0.28em] leading-relaxed font-light'
-                            : ''
-                        }
+            {images.map((image, index) => (
+              <div
+                key={index}
+                className="
+                  flex-none
+                  w-screen
+                  h-full
+                  relative
+                  group
+                  overflow-hidden
+                "
+              >
 
-                        ${
-                          image.labelType === 'quote'
-                            ? 'text-2xl md:text-5xl leading-tight font-light max-w-[600px]'
-                            : ''
-                        }
+                {image.link ? (
+                  <Link
+                    to={image.link}
+                    className="
+                      w-full h-full
+                      block
+                      relative
+                      overflow-hidden
+                    "
+                  >
 
-                        ${
-                          !image.labelType
-                            ? 'text-3xl md:text-6xl font-medium'
-                            : ''
-                        }
-                      `}
-                    >
-                      {image.label}
-                    </p>
-                  </div>
+                    {/* IMAGE */}
+                    <img
+                      src={image.src}
+                      alt={image.alt}
+                      loading="lazy"
+                      className="
+                        absolute inset-0
+                        w-full h-full
+                        object-cover object-center
+
+                        scale-100
+                        group-hover:scale-110
+
+                        transition-transform
+                        duration-[1600ms]
+                        ease-out
+
+                        will-change-transform
+                      "
+                    />
+
+                    {/* OVERLAY */}
+                    <div
+                      className="
+                        absolute inset-0
+                        bg-black/30
+
+                        group-hover:bg-black/15
+
+                        transition-all
+                        duration-700
+                      "
+                    />
+
+                    {/* LABEL */}
+                    {image.label && (
+                      <div
+                        className="
+                          absolute inset-0
+                          flex items-center justify-center
+                          pointer-events-none
+                          p-8 md:p-14
+                        "
+                      >
+
+                        <div
+                          className={`
+                            whitespace-pre-line
+                            text-white
+                            text-center
+
+                            transition-all
+                            duration-500
+                            ease-out
+
+                            group-hover:scale-105
+
+                            ${image.labelType === 'list'
+                              ? `
+                                text-[11px]
+                                md:text-sm
+                                uppercase
+                                tracking-[0.35em]
+                                leading-[1.9]
+                                font-light
+                              `
+                              : ''
+                            }
+
+                            ${image.labelType === 'quote'
+                              ? `
+                                text-2xl
+                                md:text-5xl
+                                leading-tight
+                                font-light
+                                max-w-[700px]
+                              `
+                              : ''
+                            }
+
+                            ${!image.labelType
+                              ? `
+                                text-[7vh]
+                                font-bold
+                                tracking-wide
+
+                                group-hover:text-yellow-400
+                              `
+                              : ''
+                            }
+                          `}
+                        >
+                          {image.label}
+                        </div>
+                      </div>
+                    )}
+
+                  </Link>
+                ) : (
+                  <>
+                    {/* IMAGE */}
+                    <img
+                      src={image.src}
+                      alt={image.alt}
+                      loading="lazy"
+                      className="
+                        absolute inset-0
+                        w-full h-full
+                        object-cover object-center
+
+                        scale-100
+                        group-hover:scale-110
+
+                        transition-transform
+                        duration-[1600ms]
+                        ease-out
+
+                        will-change-transform
+                      "
+                    />
+
+                    {/* OVERLAY */}
+                    <div
+                      className="
+                        absolute inset-0
+                        bg-black/30
+
+                        group-hover:bg-black/15
+
+                        transition-all
+                        duration-700
+                      "
+                    />
+
+                    {/* LABEL */}
+                    {image.label && (
+                      <div
+                        className="
+                          absolute inset-0
+                          flex items-center justify-center
+                          pointer-events-none
+                          p-8 md:p-14
+                        "
+                      >
+
+                        <div
+                          className={`
+                            whitespace-pre-line
+                            text-white
+                            text-center
+
+                            transition-all
+                            duration-500
+                            ease-out
+
+                            group-hover:scale-105
+
+                            ${image.labelType === 'list'
+                              ? `
+                                text-[11px]
+                                md:text-sm
+                                uppercase
+                                tracking-[0.35em]
+                                leading-[1.9]
+                                font-light
+                              `
+                              : ''
+                            }
+
+                            ${image.labelType === 'quote'
+                              ? `
+                                text-2xl
+                                md:text-5xl
+                                leading-tight
+                                font-light
+                                max-w-[700px]
+                              `
+                              : ''
+                            }
+
+                            ${!image.labelType
+                              ? `
+                                text-[7vh]
+                                font-bold
+                                tracking-wide
+
+                                group-hover:text-yellow-400
+                              `
+                              : ''
+                            }
+                          `}
+                        >
+                          {image.label}
+                        </div>
+                      </div>
+                    )}
+                  </>
                 )}
-              </div>
-            );
 
-            if (image.link) {
-              return (
-                <Link
-                  key={index}
-                  to={image.link}
-                  className="block"
-                >
-                  {content}
-                </Link>
-              );
-            }
-
-            return (
-              <div key={index}>
-                {content}
               </div>
-            );
-          })}
+            ))}
+
+            {/* SPACING FIN */}
+            <div className="flex-none w-[50px] h-full" />
+
+          </div>
         </div>
       </div>
     );
