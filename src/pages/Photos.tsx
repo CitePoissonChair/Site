@@ -1,22 +1,58 @@
 import { SiteHeader } from '../components/SiteHeader';
+import { motion } from 'framer-motion';
+
+const photos = [
+  '/prestationscontenu/Madame loyal (6).jpg',
+  '/prestationscontenu/Youth Code (3).jpg',
+  '/prestationscontenu/Madame loyal (4).jpg',
+  '/prestationscontenu/Author & Punisher (1).jpg',
+  '/prestationscontenu/King Yosef (1).jpg',
+  '/prestationscontenu/Cisnienie (2).jpg',
+  '/prestationscontenu/Madame loyal (2).jpg',
+  '/prestationscontenu/Cisnienie (4).jpg',
+];
 
 export function Photos() {
   return (
-    <div className="w-full min-h-screen bg-[rgb(15,15,15)] text-[rgb(250,250,250)] px-[10vh] py-[4vh] max-[1000px]:px-[5vh]">
-      <div className="w-full flex justify-center">
-        <SiteHeader title="Photos" showBack backTo="/prestations" />
+    <div className="min-h-screen bg-[#050505] overflow-hidden text-white">
+      {/* background blur */}
+      <div className="fixed inset-0 pointer-events-none opacity-30">
+        <div className="absolute top-[-20vh] left-[-10vw] w-[40vw] h-[40vw] bg-white blur-[180px] rounded-full" />
       </div>
 
-      <div className="mt-[4vh] flex gap-[5vh] max-[1000px]:flex-col max-[1000px]:gap-[3vh]">
-        <div className="flex-[0_0_35%] sticky top-[35vh] h-fit max-[1000px]:relative max-[1000px]:top-auto max-[1000px]:flex-1">
-          <h1 className="text-[2.5vh] mb-[1.5vh] leading-[1.4]">
-            <b className="font-bold">Photos</b>
-          </h1>
-          <p className="text-[1.5vh] leading-[1.8] mb-[2vh]">Galerie de photos - À venir</p>
+      <div className="relative z-10 px-[3vh] py-[3vh]">
+        <div className="flex justify-center mb-[6vh]">
+          <SiteHeader title="Photos" showBack backTo="/prestations" />
         </div>
 
-        <div className="flex-1 flex flex-col gap-[3vh]">
-          <p className="text-[1.5vh]">Contenu à venir...</p>
+        {/* gallery */}
+        <div className="columns-1 sm:columns-2 lg:columns-3 gap-[1.5vh] space-y-[1.5vh]">
+          {photos.map((photo, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 60 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.7,
+                delay: index * 0.04,
+              }}
+              viewport={{ once: true }}
+              className="group relative overflow-hidden rounded-[2.5vh]"
+            >
+              {/* image */}
+              <img
+                src={photo}
+                alt=""
+                className="w-full object-cover transition duration-700 group-hover:scale-[1.03]"
+              />
+
+              {/* dark overlay */}
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition duration-500" />
+
+              {/* glow border */}
+              <div className="absolute inset-0 rounded-[2.5vh] border border-white/0 group-hover:border-white/10 transition duration-500" />
+            </motion.div>
+          ))}
         </div>
       </div>
     </div>
