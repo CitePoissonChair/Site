@@ -15,6 +15,137 @@ type Props = {
 
 export const ImageCarousel = forwardRef<HTMLDivElement, Props>(
   ({ images }, ref) => {
+    const renderMedia = (image: ImageItem) => {
+      const isVideo =
+        image.src.endsWith('.mp4') ||
+        image.src.endsWith('.webm') ||
+        image.src.endsWith('.mov');
+
+      if (isVideo) {
+        return (
+          <video
+            src={image.src}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+
+            // IMPORTANT IOS
+            webkit-playsinline="true"
+
+            className="
+              absolute inset-0
+              w-full h-full
+
+              object-cover
+              object-center
+
+              transition-transform
+              duration-[1600ms]
+              ease-out
+
+              group-hover:scale-105
+
+              pointer-events-none
+              select-none
+            "
+          />
+        );
+      }
+
+      return (
+        <img
+          src={image.src}
+          alt={image.alt}
+          loading="lazy"
+          draggable={false}
+          className="
+            absolute inset-0
+            w-full h-full
+
+            object-cover
+            object-center
+
+            transition-transform
+            duration-[1600ms]
+            ease-out
+
+            group-hover:scale-105
+
+            pointer-events-none
+            select-none
+          "
+        />
+      );
+    };
+
+    const renderLabel = (image: ImageItem) => {
+      if (!image.label) return null;
+
+      return (
+        <div
+          className="
+            absolute inset-0
+            flex items-center justify-center
+            p-6 md:p-12
+            pointer-events-none
+          "
+        >
+          <div
+            className={`
+              whitespace-pre-line
+              text-white
+              text-center
+
+              transition-all
+              duration-500
+
+              group-hover:scale-105
+
+              ${
+                image.labelType === 'list'
+                  ? `
+                    text-[10px]
+                    md:text-sm
+                    uppercase
+                    tracking-[0.35em]
+                    leading-[1.9]
+                    font-light
+                  `
+                  : ''
+              }
+
+              ${
+                image.labelType === 'quote'
+                  ? `
+                    text-xl
+                    md:text-5xl
+                    leading-tight
+                    font-light
+                    max-w-[700px]
+                  `
+                  : ''
+              }
+
+              ${
+                !image.labelType
+                  ? `
+                    text-[5vh]
+                    md:text-[7vh]
+                    font-bold
+                    tracking-[0.15em]
+                  `
+                  : ''
+              }
+            `}
+          >
+            {image.label}
+          </div>
+        </div>
+      );
+    };
+
     return (
       <section className="w-full h-screen relative overflow-hidden">
 
@@ -77,55 +208,7 @@ export const ImageCarousel = forwardRef<HTMLDivElement, Props>(
                   >
 
                     {/* MEDIA */}
-                    {image.src.endsWith('.mp4') ? (
-                      <video
-                        src={image.src}
-                        autoPlay
-                        muted
-                        loop
-                        playsInline
-                        preload="auto"
-                        className="
-                          absolute inset-0
-                          w-full h-full
-
-                          object-cover
-                          object-center
-
-                          transition-transform
-                          duration-[1600ms]
-                          ease-out
-
-                          group-hover:scale-105
-
-                          pointer-events-none
-                          select-none
-                        "
-                      />
-                    ) : (
-                      <img
-                        src={image.src}
-                        alt={image.alt}
-                        loading="lazy"
-                        draggable={false}
-                        className="
-                          absolute inset-0
-                          w-full h-full
-
-                          object-cover
-                          object-center
-
-                          transition-transform
-                          duration-[1600ms]
-                          ease-out
-
-                          group-hover:scale-105
-
-                          pointer-events-none
-                          select-none
-                        "
-                      />
-                    )}
+                    {renderMedia(image)}
 
                     {/* OVERLAY */}
                     <div
@@ -141,120 +224,13 @@ export const ImageCarousel = forwardRef<HTMLDivElement, Props>(
                     />
 
                     {/* LABEL */}
-                    {image.label && (
-                      <div
-                        className="
-                          absolute inset-0
-                          flex items-center justify-center
-                          p-6 md:p-12
-                          pointer-events-none
-                        "
-                      >
-
-                        <div
-                          className={`
-                            whitespace-pre-line
-                            text-white
-                            text-center
-
-                            transition-all
-                            duration-500
-
-                            group-hover:scale-105
-
-                            ${image.labelType === 'list'
-                              ? `
-                                text-[10px]
-                                md:text-sm
-                                uppercase
-                                tracking-[0.35em]
-                                leading-[1.9]
-                                font-light
-                              `
-                              : ''
-                            }
-
-                            ${image.labelType === 'quote'
-                              ? `
-                                text-xl
-                                md:text-5xl
-                                leading-tight
-                                font-light
-                                max-w-[700px]
-                              `
-                              : ''
-                            }
-
-                            ${!image.labelType
-                              ? `
-                                text-[5vh]
-                                md:text-[7vh]
-                                font-bold
-                                tracking-[0.15em]
-                              `
-                              : ''
-                            }
-                          `}
-                        >
-                          {image.label}
-                        </div>
-
-                      </div>
-                    )}
+                    {renderLabel(image)}
 
                   </Link>
                 ) : (
                   <>
                     {/* MEDIA */}
-                    {image.src.endsWith('.mp4') ? (
-                      <video
-                        src={image.src}
-                        autoPlay
-                        muted
-                        loop
-                        playsInline
-                        preload="auto"
-                        className="
-                          absolute inset-0
-                          w-full h-full
-
-                          object-cover
-                          object-center
-
-                          transition-transform
-                          duration-[1600ms]
-                          ease-out
-
-                          group-hover:scale-105
-
-                          pointer-events-none
-                          select-none
-                        "
-                      />
-                    ) : (
-                      <img
-                        src={image.src}
-                        alt={image.alt}
-                        loading="lazy"
-                        draggable={false}
-                        className="
-                          absolute inset-0
-                          w-full h-full
-
-                          object-cover
-                          object-center
-
-                          transition-transform
-                          duration-[1600ms]
-                          ease-out
-
-                          group-hover:scale-105
-
-                          pointer-events-none
-                          select-none
-                        "
-                      />
-                    )}
+                    {renderMedia(image)}
 
                     {/* OVERLAY */}
                     <div
@@ -270,66 +246,7 @@ export const ImageCarousel = forwardRef<HTMLDivElement, Props>(
                     />
 
                     {/* LABEL */}
-                    {image.label && (
-                      <div
-                        className="
-                          absolute inset-0
-                          flex items-center justify-center
-                          p-6 md:p-12
-                          pointer-events-none
-                        "
-                      >
-
-                        <div
-                          className={`
-                            whitespace-pre-line
-                            text-white
-                            text-center
-
-                            transition-all
-                            duration-500
-
-                            group-hover:scale-105
-
-                            ${image.labelType === 'list'
-                              ? `
-                                text-[10px]
-                                md:text-sm
-                                uppercase
-                                tracking-[0.35em]
-                                leading-[1.9]
-                                font-light
-                              `
-                              : ''
-                            }
-
-                            ${image.labelType === 'quote'
-                              ? `
-                                text-xl
-                                md:text-5xl
-                                leading-tight
-                                font-light
-                                max-w-[700px]
-                              `
-                              : ''
-                            }
-
-                            ${!image.labelType
-                              ? `
-                                text-[5vh]
-                                md:text-[7vh]
-                                font-bold
-                                tracking-[0.15em]
-                              `
-                              : ''
-                            }
-                          `}
-                        >
-                          {image.label}
-                        </div>
-
-                      </div>
-                    )}
+                    {renderLabel(image)}
                   </>
                 )}
 
