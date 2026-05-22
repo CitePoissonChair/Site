@@ -3,7 +3,6 @@ import { forwardRef } from 'react';
 type ImageItem = {
   src: string;
   alt: string;
-  link?: string;
 };
 
 type Props = {
@@ -24,7 +23,13 @@ export const ImageCarousel2 = forwardRef<HTMLDivElement, Props>(
             overflow-x-auto
             overflow-y-hidden
             no-scrollbar
+
+            touch-pan-x
+            snap-x
+            snap-mandatory
+
             will-change-transform
+            [-webkit-overflow-scrolling:touch]
           "
         >
 
@@ -41,20 +46,29 @@ export const ImageCarousel2 = forwardRef<HTMLDivElement, Props>(
                 rounded-[3vh]
                 shrink-0
                 group
+                snap-center
               "
             >
 
               <img
                 src={image.src}
                 alt={image.alt}
+                loading="lazy"
+                draggable={false}
                 className="
                   absolute inset-0
                   w-full h-full
                   object-cover
                   object-[center_20%]
+
                   transition-transform
                   duration-[1200ms]
+                  ease-out
+
                   group-hover:scale-105
+
+                  select-none
+                  pointer-events-none
                 "
               />
 
