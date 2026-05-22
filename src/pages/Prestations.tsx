@@ -84,12 +84,6 @@ const clipsImages = [
   },
 ];
 
-const carousels = [
-  photosImages,
-  livesImages,
-  clipsImages,
-];
-
 export function Prestations() {
   const containerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
