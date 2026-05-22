@@ -34,7 +34,7 @@ const photosImages = [
 
 const livesImages = [
   {
-    src: '/prestationscontenu/Bank Myna mp4.mp4',
+    src: '/prestationscontenu/Bank-Myna.mp4',
     alt: 'Lives 1',
     label: 'CAPTATION LIVE',
     link: '/captations',
@@ -58,7 +58,7 @@ const livesImages = [
 
 const clipsImages = [
   {
-    src: '/prestationscontenu/Coyote crunch mp4.mp4',
+    src: '/prestationscontenu/Coyote-crunch.mp4',
     alt: 'Clips 1',
     label: 'VIDÉO',
     link: '/clips',
