@@ -20,39 +20,44 @@ export function Photos() {
     });
   }, []);
 
-  useEffect(() => {
-    const el = carouselRef.current;
-    if (!el) return;
+useEffect(() => {
+  const el = carouselRef.current;
+  if (!el) return;
 
-    let target = el.scrollLeft;
-    let current = el.scrollLeft;
+  // MOBILE → native touch scroll
+  if (window.innerWidth < 900) return;
 
-    const lerp = 0.07;
-    let raf: number;
+  let target = el.scrollLeft;
+  let current = el.scrollLeft;
 
-    const animate = () => {
-      current += (target - current) * lerp;
-      el.scrollLeft = current;
-      raf = requestAnimationFrame(animate);
-    };
+  const lerp = 0.07;
+  let raf: number;
 
-    animate();
+  const animate = () => {
+    current += (target - current) * lerp;
+    el.scrollLeft = current;
 
-    const max = () => el.scrollWidth - el.clientWidth;
+    raf = requestAnimationFrame(animate);
+  };
 
-    const onWheel = (e: WheelEvent) => {
-      e.preventDefault();
-      target += e.deltaY * 1.5;
-      target = Math.max(0, Math.min(target, max()));
-    };
+  animate();
 
-    el.addEventListener('wheel', onWheel, { passive: false });
+  const max = () => el.scrollWidth - el.clientWidth;
 
-    return () => {
-      el.removeEventListener('wheel', onWheel);
-      cancelAnimationFrame(raf);
-    };
-  }, []);
+  const onWheel = (e: WheelEvent) => {
+    e.preventDefault();
+
+    target += e.deltaY * 1.5;
+    target = Math.max(0, Math.min(target, max()));
+  };
+
+  el.addEventListener('wheel', onWheel, { passive: false });
+
+  return () => {
+    el.removeEventListener('wheel', onWheel);
+    cancelAnimationFrame(raf);
+  };
+}, []);
 
   return (
     <div className="h-screen w-screen bg-black text-white overflow-hidden relative">
