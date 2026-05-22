@@ -4,8 +4,9 @@ import { VideoHero } from '../components/VideoHero';
 import { ImageCarousel } from '../components/ImageCarousel';
 import { Link } from 'react-router-dom';
 
-const LERP = 0.075;
-const SPEED = 1.6;
+const LERP = 0.07;
+const SPEED = 1.25;
+const MOMENTUM = 0.92;
 
 const photosImages = [
   {
@@ -93,28 +94,25 @@ export function Prestations() {
     null,
   ]);
 
-  const sectionRefs = useRef<Array<HTMLElement | null>>([
-    null,
-    null,
-    null,
-  ]);
-
   const rafRef = useRef<number | null>(null);
 
   const targetYRef = useRef(0);
   const currentYRef = useRef(0);
 
+  const velocityYRef = useRef(0);
+
   const targetXRefs = useRef([0, 0, 0]);
   const currentXRefs = useRef([0, 0, 0]);
+
+  const velocityXRefs = useRef([0, 0, 0]);
+
+  const sectionOffsetsRef = useRef<
+    { center: number; height: number }[]
+  >([]);
 
   const setCarouselRef =
     (index: number) => (el: HTMLDivElement | null) => {
       carouselRefs.current[index] = el;
-    };
-
-  const setSectionRef =
-    (index: number) => (el: HTMLElement | null) => {
-      sectionRefs.current[index] = el;
     };
 
   useEffect(() => {
@@ -125,27 +123,53 @@ export function Prestations() {
 
     if (!container || !content) return;
 
+    const cacheOffsets = () => {
+      const sections =
+        content.querySelectorAll('[data-carousel-section]');
+
+      sectionOffsetsRef.current = Array.from(sections).map(
+        (el) => {
+          const htmlEl = el as HTMLElement;
+
+          const top = htmlEl.offsetTop;
+          const height = htmlEl.offsetHeight;
+
+          return {
+            height,
+            center:
+              top -
+              window.innerHeight / 2 +
+              height / 2,
+          };
+        }
+      );
+    };
+
+    cacheOffsets();
+
+    window.addEventListener('resize', cacheOffsets);
+
     const getMaxScrollY = () =>
       content.scrollHeight - window.innerHeight;
 
     const getActiveCarousel = () => {
       const y = currentYRef.current;
 
-      for (let i = 0; i < sectionRefs.current.length; i++) {
-        const section = sectionRefs.current[i];
+      for (
+        let i = 0;
+        i < sectionOffsetsRef.current.length;
+        i++
+      ) {
+        const section =
+          sectionOffsetsRef.current[i];
 
-        if (!section) continue;
+        const start =
+          section.center - section.height * 0.42;
 
-        const top = section.offsetTop;
-        const height = section.offsetHeight;
+        const end =
+          section.center + section.height * 0.42;
 
-        const triggerStart =
-          top - window.innerHeight * 0.35;
-
-        const triggerEnd =
-          top + height - window.innerHeight * 0.65;
-
-        if (y >= triggerStart && y <= triggerEnd) {
+        if (y >= start && y <= end) {
           return i;
         }
       }
@@ -154,6 +178,21 @@ export function Prestations() {
     };
 
     const animate = () => {
+      velocityYRef.current *= MOMENTUM;
+
+      if (Math.abs(velocityYRef.current) < 0.02) {
+        velocityYRef.current = 0;
+      }
+
+      targetYRef.current += velocityYRef.current;
+
+      const maxY = getMaxScrollY();
+
+      targetYRef.current = Math.max(
+        0,
+        Math.min(targetYRef.current, maxY)
+      );
+
       currentYRef.current +=
         (targetYRef.current -
           currentYRef.current) *
@@ -163,6 +202,25 @@ export function Prestations() {
 
       carouselRefs.current.forEach((el, i) => {
         if (!el) return;
+
+        velocityXRefs.current[i] *= MOMENTUM;
+
+        if (
+          Math.abs(velocityXRefs.current[i]) < 0.02
+        ) {
+          velocityXRefs.current[i] = 0;
+        }
+
+        targetXRefs.current[i] +=
+          velocityXRefs.current[i];
+
+        const maxX =
+          el.scrollWidth - window.innerWidth;
+
+        targetXRefs.current[i] = Math.max(
+          0,
+          Math.min(targetXRefs.current[i], maxX)
+        );
 
         currentXRefs.current[i] +=
           (targetXRefs.current[i] -
@@ -184,29 +242,22 @@ export function Prestations() {
 
       const delta = e.deltaY * SPEED;
 
-      const maxY = getMaxScrollY();
-
       const activeCarousel =
         getActiveCarousel();
 
-      // SCROLL NORMAL
+      // SCROLL VERTICAL NORMAL
       if (activeCarousel === -1) {
-        targetYRef.current = Math.max(
-          0,
-          Math.min(
-            targetYRef.current + delta,
-            maxY
-          )
-        );
-
+        velocityYRef.current += delta * 0.22;
         return;
       }
 
+      const section =
+        sectionOffsetsRef.current[
+          activeCarousel
+        ];
+
       const carousel =
         carouselRefs.current[activeCarousel];
-
-      const section =
-        sectionRefs.current[activeCarousel];
 
       if (!carousel || !section) return;
 
@@ -217,46 +268,29 @@ export function Prestations() {
       const currentX =
         targetXRefs.current[activeCarousel];
 
-      const atStart = currentX <= 2;
+      const goingForward = delta > 0;
+      const goingBackward = delta < 0;
+
       const atEnd = currentX >= maxX - 2;
+      const atStart = currentX <= 2;
 
-      const isForward = delta > 0;
-      const isBackward = delta < 0;
+      // CENTRAGE PARFAIT DU CARROUSEL
+      targetYRef.current = section.center;
 
-      // IMPORTANT :
-      // uniquement lock vertical
-      // SI le horizontal peut encore bouger
-
+      // HORIZONTAL
       if (
-        (isForward && !atEnd) ||
-        (isBackward && !atStart)
+        (goingForward && !atEnd) ||
+        (goingBackward && !atStart)
       ) {
-        // recentrage du carousel
-        const centeredY =
-          section.offsetTop -
-          window.innerHeight / 2 +
-          section.offsetHeight / 2;
-
-        targetYRef.current = centeredY;
-
-        targetXRefs.current[activeCarousel] =
-          Math.max(
-            0,
-            Math.min(currentX + delta, maxX)
-          );
+        velocityXRefs.current[
+          activeCarousel
+        ] += delta * 0.22;
 
         return;
       }
 
-      // SINON :
-      // on repasse en vertical normal
-      targetYRef.current = Math.max(
-        0,
-        Math.min(
-          targetYRef.current + delta,
-          maxY
-        )
-      );
+      // SORTIE DU CARROUSEL → REPART EN VERTICAL
+      velocityYRef.current += delta * 0.25;
     };
 
     container.addEventListener(
@@ -269,6 +303,11 @@ export function Prestations() {
       container.removeEventListener(
         'wheel',
         handleWheel
+      );
+
+      window.removeEventListener(
+        'resize',
+        cacheOffsets
       );
 
       if (rafRef.current) {
@@ -372,7 +411,7 @@ export function Prestations() {
         <VideoHero />
 
         <section
-          ref={setSectionRef(0)}
+          data-carousel-section
           className="mb-24"
         >
           <ImageCarousel
@@ -382,7 +421,7 @@ export function Prestations() {
         </section>
 
         <section
-          ref={setSectionRef(1)}
+          data-carousel-section
           className="mb-24"
         >
           <ImageCarousel
@@ -392,7 +431,7 @@ export function Prestations() {
         </section>
 
         <section
-          ref={setSectionRef(2)}
+          data-carousel-section
           className="pb-24"
         >
           <ImageCarousel
