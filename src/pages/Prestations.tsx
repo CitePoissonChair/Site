@@ -117,7 +117,12 @@ export function Prestations() {
       carouselInnerRefs.current[index] = el;
     };
 
-  useEffect(() => {
+ useEffect(() => {
+  const isMobile = window.innerWidth < 900;
+
+  if (isMobile) {
+    return;
+  }
     const container = containerRef.current;
     const content = contentRef.current;
 
