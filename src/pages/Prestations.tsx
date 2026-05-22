@@ -48,7 +48,7 @@ const livesImages = [
     link: '/captations',
   },
   {
-    src: '/prestationscontenu/Street Sects (2).jpg',
+    src: '/prestationscontenu/Bank Myna mp4.mp4',
     alt: 'Lives 3',
     label: '',
     labelType: 'quote',
