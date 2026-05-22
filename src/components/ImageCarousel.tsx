@@ -16,23 +16,22 @@ type Props = {
 export const ImageCarousel = forwardRef<HTMLDivElement, Props>(
   ({ images }, ref) => {
     return (
-      <div className="w-full h-screen relative flex-none overflow-hidden">
+      <section className="w-full h-screen relative overflow-hidden">
 
         {/* VIEWPORT */}
         <div
           className="
-            w-full h-full
-            flex items-center
+            w-full
+            h-full
 
             overflow-x-auto
             overflow-y-hidden
 
             no-scrollbar
+            touch-pan-x
 
             snap-x
             snap-mandatory
-
-            touch-pan-x
 
             [-webkit-overflow-scrolling:touch]
           "
@@ -42,10 +41,12 @@ export const ImageCarousel = forwardRef<HTMLDivElement, Props>(
           <div
             ref={ref}
             className="
-              flex h-full
-              select-none
+              flex
+              h-full
+              items-center
               will-change-transform
-              pr-[50px]
+              px-[6vw]
+              gap-[4vw]
             "
           >
 
@@ -54,26 +55,28 @@ export const ImageCarousel = forwardRef<HTMLDivElement, Props>(
                 key={index}
                 className="
                   flex-none
-                  w-screen
-                  h-full
                   relative
-                  group
                   overflow-hidden
+                  rounded-[2.5vh]
+                  group
+                  shrink-0
                   snap-center
+
+                  w-[88vw]
+                  h-[72vh]
+
+                  md:w-[78vw]
+                  md:h-[82vh]
                 "
               >
 
                 {image.link ? (
                   <Link
                     to={image.link}
-                    className="
-                      w-full h-full
-                      block
-                      relative
-                      overflow-hidden
-                    "
+                    className="block w-full h-full relative"
                   >
 
+                    {/* IMAGE */}
                     <img
                       src={image.src}
                       alt={image.alt}
@@ -82,39 +85,42 @@ export const ImageCarousel = forwardRef<HTMLDivElement, Props>(
                       className="
                         absolute inset-0
                         w-full h-full
-                        object-cover object-center
 
-                        scale-100
-                        group-hover:scale-110
+                        object-cover
+                        object-center
 
                         transition-transform
                         duration-[1600ms]
                         ease-out
 
-                        will-change-transform
+                        group-hover:scale-105
 
                         pointer-events-none
                         select-none
                       "
                     />
 
+                    {/* OVERLAY */}
                     <div
                       className="
                         absolute inset-0
                         bg-black/30
-                        group-hover:bg-black/15
+
                         transition-all
                         duration-700
+
+                        group-hover:bg-black/15
                       "
                     />
 
+                    {/* LABEL */}
                     {image.label && (
                       <div
                         className="
                           absolute inset-0
                           flex items-center justify-center
+                          p-6 md:p-12
                           pointer-events-none
-                          p-8 md:p-14
                         "
                       >
 
@@ -126,13 +132,12 @@ export const ImageCarousel = forwardRef<HTMLDivElement, Props>(
 
                             transition-all
                             duration-500
-                            ease-out
 
                             group-hover:scale-105
 
                             ${image.labelType === 'list'
                               ? `
-                                text-[11px]
+                                text-[10px]
                                 md:text-sm
                                 uppercase
                                 tracking-[0.35em]
@@ -144,7 +149,7 @@ export const ImageCarousel = forwardRef<HTMLDivElement, Props>(
 
                             ${image.labelType === 'quote'
                               ? `
-                                text-2xl
+                                text-xl
                                 md:text-5xl
                                 leading-tight
                                 font-light
@@ -155,9 +160,10 @@ export const ImageCarousel = forwardRef<HTMLDivElement, Props>(
 
                             ${!image.labelType
                               ? `
-                                text-[7vh]
+                                text-[5vh]
+                                md:text-[7vh]
                                 font-bold
-                                tracking-wide
+                                tracking-[0.15em]
                               `
                               : ''
                             }
@@ -170,16 +176,43 @@ export const ImageCarousel = forwardRef<HTMLDivElement, Props>(
                     )}
 
                   </Link>
-                ) : null}
+                ) : (
+                  <>
+                    <img
+                      src={image.src}
+                      alt={image.alt}
+                      loading="lazy"
+                      draggable={false}
+                      className="
+                        absolute inset-0
+                        w-full h-full
+
+                        object-cover
+                        object-center
+
+                        transition-transform
+                        duration-[1600ms]
+                        ease-out
+
+                        group-hover:scale-105
+
+                        pointer-events-none
+                        select-none
+                      "
+                    />
+
+                    <div className="absolute inset-0 bg-black/20" />
+                  </>
+                )}
 
               </div>
             ))}
 
-            <div className="flex-none w-[50px] h-full" />
+            <div className="flex-none w-[6vw]" />
 
           </div>
         </div>
-      </div>
+      </section>
     );
   }
 );
