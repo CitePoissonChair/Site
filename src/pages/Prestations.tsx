@@ -34,7 +34,7 @@ const photosImages = [
 
 const livesImages = [
   {
-    src: '/prestationscontenu/Madame loyal (5).jpg',
+    src: '/prestationscontenu/Bank Myna mp4.mp4',
     alt: 'Lives 1',
     label: 'CAPTATION LIVE',
     link: '/captations',
@@ -48,7 +48,7 @@ const livesImages = [
     link: '/captations',
   },
   {
-    src: '/prestationscontenu/Bank Myna mp4.mp4',
+    src: '/prestationscontenu/Madame loyal (5).jpg',
     alt: 'Lives 3',
     label: '',
     labelType: 'quote',
