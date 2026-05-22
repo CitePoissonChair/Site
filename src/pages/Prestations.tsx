@@ -10,13 +10,13 @@ const MOMENTUM = 0.92;
 
 const photosImages = [
   {
-    src: '/prestationscontenu/Cisnienie (1).jpg',
+    src: '/prestationscontenu/Madame loyal (8).jpg',
     alt: 'Photos 1',
     label: 'PHOTOGRAPHIE',
     link: '/photos',
   },
   {
-    src: '/prestationscontenu/Madame loyal (8).jpg',
+    src: '/prestationscontenu/Cisnienie (1).jpg',
     alt: 'Photos 2',
     label:
       'CONCERTS\nFESTIVALS\nPORTRAITS\nBACKSTAGE\nREPORTAGE',
