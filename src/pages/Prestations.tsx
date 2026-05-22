@@ -199,56 +199,77 @@ export function Prestations() {
     rafRef.current =
       requestAnimationFrame(animate);
 
-    const handleWheel = (e: WheelEvent) => {
-      e.preventDefault();
+  const handleWheel = (e: WheelEvent) => {
+  e.preventDefault();
 
-      const delta = e.deltaY * SPEED;
+  const delta = e.deltaY * SPEED;
 
-      const maxY = getMaxScrollY();
+  const maxY = getMaxScrollY();
 
-      const activeCarousel =
-        getActiveCarousel();
+  const activeCarousel = getActiveCarousel();
 
-      if (activeCarousel === -1) {
-        targetYRef.current = Math.max(
-          0,
-          Math.min(
-            targetYRef.current + delta,
-            maxY
-          )
-        );
+  // PAS dans un carrousel
+  if (activeCarousel === -1) {
+    targetYRef.current = Math.max(
+      0,
+      Math.min(
+        targetYRef.current + delta,
+        maxY
+      )
+    );
 
-        return;
-      }
+    return;
+  }
 
-      const section =
-        sectionOffsetsRef.current[
-          activeCarousel
-        ];
+  const section =
+    sectionOffsetsRef.current[
+      activeCarousel
+    ];
 
-      // recentre TOUJOURS la section active
-      targetYRef.current = section.center;
+  const carousel =
+    carouselRefs.current[activeCarousel];
 
-      const carousel =
-        carouselRefs.current[activeCarousel];
+  if (!carousel) return;
 
-      if (!carousel) return;
+  const maxX =
+    carousel.scrollWidth -
+    window.innerWidth;
 
-      const maxX =
-        carousel.scrollWidth -
-        window.innerWidth;
+  const currentX =
+    targetXRefs.current[activeCarousel];
 
-      targetXRefs.current[activeCarousel] =
-        Math.max(
-          0,
-          Math.min(
-            targetXRefs.current[
-              activeCarousel
-            ] + delta,
-            maxX
-          )
-        );
-    };
+  const isGoingForward = delta > 0;
+  const isGoingBackward = delta < 0;
+
+  const atEnd = currentX >= maxX - 2;
+  const atStart = currentX <= 2;
+
+  // CENTRAGE parfait du carrousel actif
+  targetYRef.current = section.center;
+
+  // SCROLL HORIZONTAL
+  if (
+    (isGoingForward && !atEnd) ||
+    (isGoingBackward && !atStart)
+  ) {
+    targetXRefs.current[activeCarousel] =
+      Math.max(
+        0,
+        Math.min(currentX + delta, maxX)
+      );
+
+    return;
+  }
+
+  // FIN / DEBUT → on repart en vertical
+  targetYRef.current = Math.max(
+    0,
+    Math.min(
+      targetYRef.current + delta,
+      maxY
+    )
+  );
+};
 
     container.addEventListener(
       'wheel',
