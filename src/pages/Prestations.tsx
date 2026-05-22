@@ -85,6 +85,10 @@ const clipsImages = [
 ];
 
 export function Prestations() {
+  const isMobile =
+    typeof window !== 'undefined' &&
+    window.innerWidth < 900;
+
   const containerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -110,11 +114,47 @@ export function Prestations() {
       carouselInnerRefs.current[index] = el;
     };
 
+  // =========================
+  // MOBILE VERSION
+  // =========================
+
+  if (isMobile) {
+    return (
+      <div className="bg-[#0f0f0f] min-h-screen overflow-x-hidden">
+
+        <div className="flex justify-center">
+          <SiteHeader
+            title="Prestations"
+            showBack
+          />
+        </div>
+
+        <VideoHero />
+
+        <div className="flex flex-col gap-[5vh] pb-[8vh]">
+
+          <ImageCarousel
+            images={[photosImages[0]]}
+          />
+
+          <ImageCarousel
+            images={[livesImages[0]]}
+          />
+
+          <ImageCarousel
+            images={[clipsImages[0]]}
+          />
+
+        </div>
+      </div>
+    );
+  }
+
+  // =========================
+  // DESKTOP EXPERIENCE
+  // =========================
+
   useEffect(() => {
-    const isMobile = window.innerWidth < 900;
-
-    if (isMobile) return;
-
     const container = containerRef.current;
     const content = contentRef.current;
 
@@ -127,12 +167,12 @@ export function Prestations() {
       const sections =
         content.querySelectorAll('[data-carousel]');
 
-      cachedOffsetsRef.current = Array.from(sections).map(
-        (el) => ({
-          top: (el as HTMLElement).offsetTop,
-          height: (el as HTMLElement).offsetHeight,
-        })
-      );
+      cachedOffsetsRef.current = Array.from(
+        sections
+      ).map((el) => ({
+        top: (el as HTMLElement).offsetTop,
+        height: (el as HTMLElement).offsetHeight,
+      }));
     };
 
     cacheOffsets();
@@ -141,7 +181,8 @@ export function Prestations() {
 
     const animate = () => {
       currentYRef.current +=
-        (targetYRef.current - currentYRef.current) *
+        (targetYRef.current -
+          currentYRef.current) *
         LERP;
 
       content.style.transform = `
@@ -173,6 +214,9 @@ export function Prestations() {
     const getActiveCarousel = () => {
       const y = currentYRef.current;
 
+      const viewportMiddle =
+        y + window.innerHeight * 0.5;
+
       for (
         let i = 0;
         i < cachedOffsetsRef.current.length;
@@ -181,9 +225,18 @@ export function Prestations() {
         const section =
           cachedOffsetsRef.current[i];
 
+        const start =
+          section.top +
+          window.innerHeight * 0.15;
+
+        const end =
+          section.top +
+          section.height -
+          window.innerHeight * 0.15;
+
         if (
-          y >= section.top - 50 &&
-          y < section.top + section.height - 50
+          viewportMiddle >= start &&
+          viewportMiddle <= end
         ) {
           return i;
         }
@@ -269,7 +322,9 @@ export function Prestations() {
       );
 
       if (rafRef.current) {
-        cancelAnimationFrame(rafRef.current);
+        cancelAnimationFrame(
+          rafRef.current
+        );
       }
     };
   }, []);
@@ -279,8 +334,7 @@ export function Prestations() {
       ref={containerRef}
       className="
         h-screen
-        overflow-y-auto
-        md:overflow-hidden
+        overflow-hidden
         bg-[#0f0f0f]
       "
     >
