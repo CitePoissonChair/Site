@@ -76,29 +76,56 @@ export const ImageCarousel = forwardRef<HTMLDivElement, Props>(
                     className="block w-full h-full relative"
                   >
 
-                    {/* IMAGE */}
-                    <img
-                      src={image.src}
-                      alt={image.alt}
-                      loading="lazy"
-                      draggable={false}
-                      className="
-                        absolute inset-0
-                        w-full h-full
+                    {/* MEDIA */}
+                    {image.src.endsWith('.mp4') ? (
+                      <video
+                        src={image.src}
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                        preload="auto"
+                        className="
+                          absolute inset-0
+                          w-full h-full
 
-                        object-cover
-                        object-center
+                          object-cover
+                          object-center
 
-                        transition-transform
-                        duration-[1600ms]
-                        ease-out
+                          transition-transform
+                          duration-[1600ms]
+                          ease-out
 
-                        group-hover:scale-105
+                          group-hover:scale-105
 
-                        pointer-events-none
-                        select-none
-                      "
-                    />
+                          pointer-events-none
+                          select-none
+                        "
+                      />
+                    ) : (
+                      <img
+                        src={image.src}
+                        alt={image.alt}
+                        loading="lazy"
+                        draggable={false}
+                        className="
+                          absolute inset-0
+                          w-full h-full
+
+                          object-cover
+                          object-center
+
+                          transition-transform
+                          duration-[1600ms]
+                          ease-out
+
+                          group-hover:scale-105
+
+                          pointer-events-none
+                          select-none
+                        "
+                      />
+                    )}
 
                     {/* OVERLAY */}
                     <div
@@ -178,53 +205,133 @@ export const ImageCarousel = forwardRef<HTMLDivElement, Props>(
                   </Link>
                 ) : (
                   <>
+                    {/* MEDIA */}
                     {image.src.endsWith('.mp4') ? (
-  <video
-    src={image.src}
-    autoPlay
-    muted
-    loop
-    playsInline
-    preload="auto"
-    className="
-      absolute inset-0
-      w-full h-full
-      object-cover
-      object-center
+                      <video
+                        src={image.src}
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                        preload="auto"
+                        className="
+                          absolute inset-0
+                          w-full h-full
 
-      transition-transform
-      duration-[1600ms]
-      ease-out
+                          object-cover
+                          object-center
 
-      group-hover:scale-105
+                          transition-transform
+                          duration-[1600ms]
+                          ease-out
 
-      pointer-events-none
-      select-none
-    "
-  />
-) : (
-  <img
-    src={image.src}
-    alt={image.alt}
-    loading="lazy"
-    draggable={false}
-    className="
-      absolute inset-0
-      w-full h-full
-      object-cover
-      object-center
+                          group-hover:scale-105
 
-      transition-transform
-      duration-[1600ms]
-      ease-out
+                          pointer-events-none
+                          select-none
+                        "
+                      />
+                    ) : (
+                      <img
+                        src={image.src}
+                        alt={image.alt}
+                        loading="lazy"
+                        draggable={false}
+                        className="
+                          absolute inset-0
+                          w-full h-full
 
-      group-hover:scale-105
+                          object-cover
+                          object-center
 
-      pointer-events-none
-      select-none
-    "
-  />
-)}
+                          transition-transform
+                          duration-[1600ms]
+                          ease-out
+
+                          group-hover:scale-105
+
+                          pointer-events-none
+                          select-none
+                        "
+                      />
+                    )}
+
+                    {/* OVERLAY */}
+                    <div
+                      className="
+                        absolute inset-0
+                        bg-black/30
+
+                        transition-all
+                        duration-700
+
+                        group-hover:bg-black/15
+                      "
+                    />
+
+                    {/* LABEL */}
+                    {image.label && (
+                      <div
+                        className="
+                          absolute inset-0
+                          flex items-center justify-center
+                          p-6 md:p-12
+                          pointer-events-none
+                        "
+                      >
+
+                        <div
+                          className={`
+                            whitespace-pre-line
+                            text-white
+                            text-center
+
+                            transition-all
+                            duration-500
+
+                            group-hover:scale-105
+
+                            ${image.labelType === 'list'
+                              ? `
+                                text-[10px]
+                                md:text-sm
+                                uppercase
+                                tracking-[0.35em]
+                                leading-[1.9]
+                                font-light
+                              `
+                              : ''
+                            }
+
+                            ${image.labelType === 'quote'
+                              ? `
+                                text-xl
+                                md:text-5xl
+                                leading-tight
+                                font-light
+                                max-w-[700px]
+                              `
+                              : ''
+                            }
+
+                            ${!image.labelType
+                              ? `
+                                text-[5vh]
+                                md:text-[7vh]
+                                font-bold
+                                tracking-[0.15em]
+                              `
+                              : ''
+                            }
+                          `}
+                        >
+                          {image.label}
+                        </div>
+
+                      </div>
+                    )}
+                  </>
+                )}
 
               </div>
             ))}
