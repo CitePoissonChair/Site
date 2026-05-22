@@ -34,13 +34,13 @@ const photosImages = [
 
 const livesImages = [
   {
-    src: '/prestationscontenu/Bank-Myna.mp4',
+    src: '/prestationscontenu/Madame loyal (9).jpg',
     alt: 'Lives 1',
     label: 'CAPTATION LIVE',
     link: '/captations',
   },
   {
-    src: '/prestationscontenu/Madame loyal (9).jpg',
+    src: '/prestationscontenu/Bank-Myna.mp4',
     alt: 'Lives 2',
     label:
       'LIVE SESSIONS\nMULTICAM\nCONCERTS\nÉVÉNEMENTS\nAFTERMOVIES',
@@ -58,13 +58,13 @@ const livesImages = [
 
 const clipsImages = [
   {
-    src: '/prestationscontenu/Coyote-crunch.mp4',
+    src: '/prestationscontenu/Puce Mary (1).jpg',
     alt: 'Clips 1',
     label: 'VIDÉO',
     link: '/clips',
   },
   {
-    src: '/prestationscontenu/Clip father of sins.gif',
+    src: '/prestationscontenu/Coyote-crunch.mp4',
     alt: 'Clips 2',
     label:
       'CLIPS\nSOCIAL CONTENT\nDIRECTION ARTISTIQUE',
