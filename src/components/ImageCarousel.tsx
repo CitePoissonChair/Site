@@ -178,32 +178,53 @@ export const ImageCarousel = forwardRef<HTMLDivElement, Props>(
                   </Link>
                 ) : (
                   <>
-                    <img
-                      src={image.src}
-                      alt={image.alt}
-                      loading="lazy"
-                      draggable={false}
-                      className="
-                        absolute inset-0
-                        w-full h-full
+                    {image.src.endsWith('.mp4') ? (
+  <video
+    src={image.src}
+    autoPlay
+    muted
+    loop
+    playsInline
+    preload="auto"
+    className="
+      absolute inset-0
+      w-full h-full
+      object-cover
+      object-center
 
-                        object-cover
-                        object-center
+      transition-transform
+      duration-[1600ms]
+      ease-out
 
-                        transition-transform
-                        duration-[1600ms]
-                        ease-out
+      group-hover:scale-105
 
-                        group-hover:scale-105
+      pointer-events-none
+      select-none
+    "
+  />
+) : (
+  <img
+    src={image.src}
+    alt={image.alt}
+    loading="lazy"
+    draggable={false}
+    className="
+      absolute inset-0
+      w-full h-full
+      object-cover
+      object-center
 
-                        pointer-events-none
-                        select-none
-                      "
-                    />
+      transition-transform
+      duration-[1600ms]
+      ease-out
 
-                    <div className="absolute inset-0 bg-black/20" />
-                  </>
-                )}
+      group-hover:scale-105
+
+      pointer-events-none
+      select-none
+    "
+  />
+)}
 
               </div>
             ))}
