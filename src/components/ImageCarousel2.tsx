@@ -18,18 +18,24 @@ export const ImageCarousel2 = forwardRef<HTMLDivElement, Props>(
           ref={ref}
           className="
             flex
-            h-[85vh]
             items-start
+
             overflow-x-auto
             overflow-y-hidden
-            no-scrollbar
 
+            no-scrollbar
             touch-pan-x
+
             snap-x
             snap-mandatory
 
-            will-change-transform
             [-webkit-overflow-scrolling:touch]
+
+            pt-[12vh]
+            pb-[4vh]
+
+            px-[4vw]
+            gap-[4vw]
           "
         >
 
@@ -38,15 +44,18 @@ export const ImageCarousel2 = forwardRef<HTMLDivElement, Props>(
               key={index}
               className="
                 flex-none
-                w-[88vw]
-                h-[78vh]
-                mx-[2vw]
                 relative
                 overflow-hidden
                 rounded-[3vh]
                 shrink-0
                 group
                 snap-center
+
+                w-[90vw]
+                h-[72vh]
+
+                md:w-[78vw]
+                md:h-[82vh]
               "
             >
 
@@ -58,11 +67,12 @@ export const ImageCarousel2 = forwardRef<HTMLDivElement, Props>(
                 className="
                   absolute inset-0
                   w-full h-full
+
                   object-cover
-                  object-[center_20%]
+                  object-center
 
                   transition-transform
-                  duration-[1200ms]
+                  duration-[1400ms]
                   ease-out
 
                   group-hover:scale-105
@@ -72,12 +82,22 @@ export const ImageCarousel2 = forwardRef<HTMLDivElement, Props>(
                 "
               />
 
-              <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition" />
+              <div
+                className="
+                  absolute inset-0
+                  bg-black/20
+
+                  transition-all
+                  duration-700
+
+                  group-hover:bg-black/10
+                "
+              />
 
             </div>
           ))}
 
-          <div className="flex-none w-[10vw]" />
+          <div className="flex-none w-[4vw]" />
 
         </div>
       </div>
