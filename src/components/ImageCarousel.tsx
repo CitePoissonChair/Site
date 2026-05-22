@@ -16,69 +16,78 @@ type Props = {
 export const ImageCarousel = forwardRef<HTMLDivElement, Props>(
   ({ images }, ref) => {
     const renderMedia = (image: ImageItem) => {
-      const isVideo =
-        image.src.endsWith('.mp4') ||
-        image.src.endsWith('.webm') ||
-        image.src.endsWith('.mov');
+  const isVideo =
+    image.src.endsWith('.mp4') ||
+    image.src.endsWith('.webm') ||
+    image.src.endsWith('.mov');
 
-      if (isVideo) {
-        return (
-          <video
-            src={image.src}
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="auto"
+  if (isVideo) {
+    return (
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
 
-            // IMPORTANT IOS
-            webkit-playsinline="true"
+        preload="metadata"
 
-            className="
-              absolute inset-0
-              w-full h-full
+        onLoadedData={(e) => {
+          const video = e.currentTarget;
 
-              object-cover
-              object-center
+          video.muted = true;
+          video.play().catch(() => {});
+        }}
 
-              transition-transform
-              duration-[1600ms]
-              ease-out
+        className="
+          absolute inset-0
+          w-full h-full
 
-              group-hover:scale-105
+          object-cover
+          object-center
 
-              pointer-events-none
-              select-none
-            "
-          />
-        );
-      }
+          transition-transform
+          duration-[1600ms]
+          ease-out
 
-      return (
-        <img
+          group-hover:scale-105
+
+          pointer-events-none
+          select-none
+        "
+      >
+        <source
           src={image.src}
-          alt={image.alt}
-          loading="lazy"
-          draggable={false}
-          className="
-            absolute inset-0
-            w-full h-full
-
-            object-cover
-            object-center
-
-            transition-transform
-            duration-[1600ms]
-            ease-out
-
-            group-hover:scale-105
-
-            pointer-events-none
-            select-none
-          "
+          type="video/mp4"
         />
-      );
-    };
+      </video>
+    );
+  }
+
+  return (
+    <img
+      src={image.src}
+      alt={image.alt}
+      loading="lazy"
+      draggable={false}
+      className="
+        absolute inset-0
+        w-full h-full
+
+        object-cover
+        object-center
+
+        transition-transform
+        duration-[1600ms]
+        ease-out
+
+        group-hover:scale-105
+
+        pointer-events-none
+        select-none
+      "
+    />
+  );
+};
 
     const renderLabel = (image: ImageItem) => {
       if (!image.label) return null;
