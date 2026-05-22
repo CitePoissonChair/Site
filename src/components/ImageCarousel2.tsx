@@ -27,7 +27,7 @@ export const ImageCarousel2 = forwardRef<HTMLDivElement, Props>(
             touch-pan-x
 
             snap-x
-            snap-mandatory
+            snap-proximity
 
             [-webkit-overflow-scrolling:touch]
 
