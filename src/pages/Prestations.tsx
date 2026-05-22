@@ -58,7 +58,7 @@ const livesImages = [
 
 const clipsImages = [
   {
-    src: '/prestationscontenu/Clip father of sins.gif',
+    src: '/prestationscontenu/Coyote crunch mp4.mp4',
     alt: 'Clips 1',
     label: 'VIDÉO',
     link: '/clips',
