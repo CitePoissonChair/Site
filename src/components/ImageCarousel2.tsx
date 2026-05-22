@@ -68,7 +68,7 @@ export const ImageCarousel2 = forwardRef<HTMLDivElement, Props>(
                   absolute inset-0
                   w-full h-full
 
-                  object-cover
+                  object-contain
                   object-center
 
                   transition-transform
