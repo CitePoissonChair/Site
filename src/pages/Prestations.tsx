@@ -93,6 +93,12 @@ export function Prestations() {
     null,
   ]);
 
+  const sectionRefs = useRef<Array<HTMLElement | null>>([
+    null,
+    null,
+    null,
+  ]);
+
   const rafRef = useRef<number | null>(null);
 
   const targetYRef = useRef(0);
@@ -101,13 +107,14 @@ export function Prestations() {
   const targetXRefs = useRef([0, 0, 0]);
   const currentXRefs = useRef([0, 0, 0]);
 
-  const sectionOffsetsRef = useRef<
-    { top: number; center: number; height: number }[]
-  >([]);
-
   const setCarouselRef =
     (index: number) => (el: HTMLDivElement | null) => {
       carouselRefs.current[index] = el;
+    };
+
+  const setSectionRef =
+    (index: number) => (el: HTMLElement | null) => {
+      sectionRefs.current[index] = el;
     };
 
   useEffect(() => {
@@ -118,54 +125,27 @@ export function Prestations() {
 
     if (!container || !content) return;
 
-    const cacheOffsets = () => {
-      const sections =
-        content.querySelectorAll('[data-carousel-section]');
-
-      sectionOffsetsRef.current = Array.from(sections).map(
-        (el) => {
-          const htmlEl = el as HTMLElement;
-
-          const top = htmlEl.offsetTop;
-          const height = htmlEl.offsetHeight;
-
-          return {
-            top,
-            height,
-            center:
-              top -
-              window.innerHeight / 2 +
-              height / 2,
-          };
-        }
-      );
-    };
-
-    cacheOffsets();
-
-    window.addEventListener('resize', cacheOffsets);
-
     const getMaxScrollY = () =>
       content.scrollHeight - window.innerHeight;
 
     const getActiveCarousel = () => {
       const y = currentYRef.current;
 
-      for (
-        let i = 0;
-        i < sectionOffsetsRef.current.length;
-        i++
-      ) {
-        const section =
-          sectionOffsetsRef.current[i];
+      for (let i = 0; i < sectionRefs.current.length; i++) {
+        const section = sectionRefs.current[i];
 
-        const start =
-          section.center - section.height * 0.45;
+        if (!section) continue;
 
-        const end =
-          section.center + section.height * 0.45;
+        const top = section.offsetTop;
+        const height = section.offsetHeight;
 
-        if (y >= start && y <= end) {
+        const triggerStart =
+          top - window.innerHeight * 0.35;
+
+        const triggerEnd =
+          top + height - window.innerHeight * 0.65;
+
+        if (y >= triggerStart && y <= triggerEnd) {
           return i;
         }
       }
@@ -199,77 +179,85 @@ export function Prestations() {
     rafRef.current =
       requestAnimationFrame(animate);
 
-  const handleWheel = (e: WheelEvent) => {
-  e.preventDefault();
+    const handleWheel = (e: WheelEvent) => {
+      e.preventDefault();
 
-  const delta = e.deltaY * SPEED;
+      const delta = e.deltaY * SPEED;
 
-  const maxY = getMaxScrollY();
+      const maxY = getMaxScrollY();
 
-  const activeCarousel = getActiveCarousel();
+      const activeCarousel =
+        getActiveCarousel();
 
-  // PAS dans un carrousel
-  if (activeCarousel === -1) {
-    targetYRef.current = Math.max(
-      0,
-      Math.min(
-        targetYRef.current + delta,
-        maxY
-      )
-    );
+      // SCROLL NORMAL
+      if (activeCarousel === -1) {
+        targetYRef.current = Math.max(
+          0,
+          Math.min(
+            targetYRef.current + delta,
+            maxY
+          )
+        );
 
-    return;
-  }
+        return;
+      }
 
-  const section =
-    sectionOffsetsRef.current[
-      activeCarousel
-    ];
+      const carousel =
+        carouselRefs.current[activeCarousel];
 
-  const carousel =
-    carouselRefs.current[activeCarousel];
+      const section =
+        sectionRefs.current[activeCarousel];
 
-  if (!carousel) return;
+      if (!carousel || !section) return;
 
-  const maxX =
-    carousel.scrollWidth -
-    window.innerWidth;
+      const maxX =
+        carousel.scrollWidth -
+        window.innerWidth;
 
-  const currentX =
-    targetXRefs.current[activeCarousel];
+      const currentX =
+        targetXRefs.current[activeCarousel];
 
-  const isGoingForward = delta > 0;
-  const isGoingBackward = delta < 0;
+      const atStart = currentX <= 2;
+      const atEnd = currentX >= maxX - 2;
 
-  const atEnd = currentX >= maxX - 2;
-  const atStart = currentX <= 2;
+      const isForward = delta > 0;
+      const isBackward = delta < 0;
 
-  // CENTRAGE parfait du carrousel actif
-  targetYRef.current = section.center;
+      // IMPORTANT :
+      // uniquement lock vertical
+      // SI le horizontal peut encore bouger
 
-  // SCROLL HORIZONTAL
-  if (
-    (isGoingForward && !atEnd) ||
-    (isGoingBackward && !atStart)
-  ) {
-    targetXRefs.current[activeCarousel] =
-      Math.max(
+      if (
+        (isForward && !atEnd) ||
+        (isBackward && !atStart)
+      ) {
+        // recentrage du carousel
+        const centeredY =
+          section.offsetTop -
+          window.innerHeight / 2 +
+          section.offsetHeight / 2;
+
+        targetYRef.current = centeredY;
+
+        targetXRefs.current[activeCarousel] =
+          Math.max(
+            0,
+            Math.min(currentX + delta, maxX)
+          );
+
+        return;
+      }
+
+      // SINON :
+      // on repasse en vertical normal
+      targetYRef.current = Math.max(
         0,
-        Math.min(currentX + delta, maxX)
+        Math.min(
+          targetYRef.current + delta,
+          maxY
+        )
       );
-
-    return;
-  }
-
-  // FIN / DEBUT → on repart en vertical
-  targetYRef.current = Math.max(
-    0,
-    Math.min(
-      targetYRef.current + delta,
-      maxY
-    )
-  );
-};
+    };
 
     container.addEventListener(
       'wheel',
@@ -283,18 +271,13 @@ export function Prestations() {
         handleWheel
       );
 
-      window.removeEventListener(
-        'resize',
-        cacheOffsets
-      );
-
       if (rafRef.current) {
         cancelAnimationFrame(rafRef.current);
       }
     };
   }, [isMobile]);
 
-  // MOBILE VERSION
+  // MOBILE
   if (isMobile) {
     return (
       <div className="bg-[#0f0f0f] min-h-screen text-white">
@@ -369,7 +352,7 @@ export function Prestations() {
     );
   }
 
-  // DESKTOP VERSION
+  // DESKTOP
   return (
     <div
       ref={containerRef}
@@ -389,7 +372,7 @@ export function Prestations() {
         <VideoHero />
 
         <section
-          data-carousel-section
+          ref={setSectionRef(0)}
           className="mb-24"
         >
           <ImageCarousel
@@ -399,7 +382,7 @@ export function Prestations() {
         </section>
 
         <section
-          data-carousel-section
+          ref={setSectionRef(1)}
           className="mb-24"
         >
           <ImageCarousel
@@ -409,7 +392,7 @@ export function Prestations() {
         </section>
 
         <section
-          data-carousel-section
+          ref={setSectionRef(2)}
           className="pb-24"
         >
           <ImageCarousel
